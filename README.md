@@ -115,6 +115,19 @@ Apply formatter output with `npm run format` and safe linter fixes with `npm run
 
 See [Code quality](docs/quality/README.md) for lint rules, feature-boundary checks, and bundle budgets.
 
+## Frontend security
+
+Run the frontend security guardrails:
+
+```bash
+npm run security:check
+npm run security:test
+```
+
+The baseline blocks sanitizer bypass APIs, direct Web Storage access, direct script-readable cookie access, and console logging in application TypeScript. Client-side configuration is treated as public and must never contain secrets.
+
+See [Frontend security](docs/security/README.md) for the sanitization, storage, cookies, logging, and client-configuration policy.
+
 ## Architecture
 
 The application is organized around feature ownership:
@@ -166,6 +179,7 @@ The template currently includes:
 - **v0.4 Unit testing foundation** — Vitest runner conventions and examples for components, services/data-access, HTTP, and routing;
 - **v0.4.1 Coverage & test conventions** — reproducible coverage gates plus typed fixtures and mock factories;
 - **v0.4.2 Playwright E2E** — headless Chromium smoke tests for bootstrap, navigation, and the reference flow;
-- **v0.5 Code quality baseline** — ESLint, Prettier, bundle budgets, and feature import guardrails.
+- **v0.5 Code quality baseline** — ESLint, Prettier, bundle budgets, and feature import guardrails;
+- **v0.5.1 Frontend security baseline** — sanitization, browser storage, cookie, logging, and public client-config guardrails.
 
-The v0.5 quality/security block has started. Frontend security and dependency/browser hardening continue in the next two v0.5 subissues.
+The v0.5 quality/security block is in progress. Dependency and browser security hardening continues in v0.5.2.
