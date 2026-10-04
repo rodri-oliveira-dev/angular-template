@@ -81,12 +81,12 @@ This sanitizer is defense in depth, not permission to send arbitrary objects. Ca
 
 The HTTP pipeline emits exactly one `http.client.request` event per completed, failed, or cancelled request.
 
-| Attribute | Meaning |
-| --- | --- |
-| `method` | HTTP method such as GET or POST |
-| `outcome` | `success`, `error`, or `cancelled` |
-| `status` | HTTP status when available |
-| `durationMs` | client-observed request duration in milliseconds |
+| Attribute       | Meaning                                                                   |
+| --------------- | ------------------------------------------------------------------------- |
+| `method`        | HTTP method such as GET or POST                                           |
+| `outcome`       | `success`, `error`, or `cancelled`                                        |
+| `status`        | HTTP status when available                                                |
+| `durationMs`    | client-observed request duration in milliseconds                          |
 | `correlationId` | response correlation ID when available, otherwise the outgoing request ID |
 
 The event intentionally omits full URLs/query strings, bodies, headers, cookies, and authentication values.

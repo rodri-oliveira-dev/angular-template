@@ -9,39 +9,36 @@ export interface PerformanceRuntime {
   onPageHide(callback: () => void): (() => void) | null;
 }
 
-export const PERFORMANCE_RUNTIME = new InjectionToken<PerformanceRuntime>(
-  'PERFORMANCE_RUNTIME',
-  {
-    factory: () => ({
-      now: () => globalThis.performance?.now?.() ?? Date.now(),
-      observe: (type, callback) => {
-        if (
-          typeof PerformanceObserver === 'undefined' ||
-          !PerformanceObserver.supportedEntryTypes?.includes(type)
-        ) {
-          return null;
-        }
+export const PERFORMANCE_RUNTIME = new InjectionToken<PerformanceRuntime>('PERFORMANCE_RUNTIME', {
+  factory: () => ({
+    now: () => globalThis.performance?.now?.() ?? Date.now(),
+    observe: (type, callback) => {
+      if (
+        typeof PerformanceObserver === 'undefined' ||
+        !PerformanceObserver.supportedEntryTypes?.includes(type)
+      ) {
+        return null;
+      }
 
-        const observer = new PerformanceObserver((list) => {
-          callback(list.getEntries());
-        });
+      const observer = new PerformanceObserver((list) => {
+        callback(list.getEntries());
+      });
 
-        observer.observe({
-          type,
-          buffered: true,
-        });
+      observer.observe({
+        type,
+        buffered: true,
+      });
 
-        return () => observer.disconnect();
-      },
-      onPageHide: (callback) => {
-        if (typeof window === 'undefined') {
-          return null;
-        }
+      return () => observer.disconnect();
+    },
+    onPageHide: (callback) => {
+      if (typeof window === 'undefined') {
+        return null;
+      }
 
-        window.addEventListener('pagehide', callback);
+      window.addEventListener('pagehide', callback);
 
-        return () => window.removeEventListener('pagehide', callback);
-      },
-    }),
-  },
-);
+      return () => window.removeEventListener('pagehide', callback);
+    },
+  }),
+});

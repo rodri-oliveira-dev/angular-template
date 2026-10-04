@@ -45,12 +45,8 @@ describe('OpenTelemetryTelemetryExporter', () => {
       },
     });
 
-    expect(bridge.recordError).toHaveBeenCalledWith(
-      'application.error',
-      'TypeError',
-      {
-        source: 'global',
-      },
-    );
+    expect(bridge.recordError).toHaveBeenCalledWith('application.error', 'TypeError', {
+      source: 'global',
+    });
   });
 });

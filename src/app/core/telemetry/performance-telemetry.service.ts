@@ -1,8 +1,4 @@
-import {
-  DestroyRef,
-  Injectable,
-  inject,
-} from '@angular/core';
+import { DestroyRef, Injectable, inject } from '@angular/core';
 import {
   NavigationCancel,
   NavigationEnd,
@@ -35,11 +31,7 @@ export class PerformanceTelemetryService {
   private flushedVitals = false;
 
   start(): void {
-    if (
-      this.started ||
-      !this.config.enabled ||
-      !this.config.performance?.enabled
-    ) {
+    if (this.started || !this.config.enabled || !this.config.performance?.enabled) {
       return;
     }
 
@@ -61,32 +53,26 @@ export class PerformanceTelemetryService {
   }
 
   private observeNavigation(): void {
-    this.router.events
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((event) => {
-        if (event instanceof NavigationStart) {
-          this.navigationStartedAt.set(event.id, this.runtime.now());
-          return;
-        }
+    this.router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
+      if (event instanceof NavigationStart) {
+        this.navigationStartedAt.set(event.id, this.runtime.now());
+        return;
+      }
 
-        if (event instanceof NavigationEnd) {
-          this.recordNavigation(
-            event.id,
-            'success',
-            routePattern(this.router),
-          );
-          return;
-        }
+      if (event instanceof NavigationEnd) {
+        this.recordNavigation(event.id, 'success', routePattern(this.router));
+        return;
+      }
 
-        if (event instanceof NavigationCancel) {
-          this.recordNavigation(event.id, 'cancelled');
-          return;
-        }
+      if (event instanceof NavigationCancel) {
+        this.recordNavigation(event.id, 'cancelled');
+        return;
+      }
 
-        if (event instanceof NavigationError) {
-          this.recordNavigation(event.id, 'error');
-        }
-      });
+      if (event instanceof NavigationError) {
+        this.recordNavigation(event.id, 'error');
+      }
+    });
   }
 
   private recordNavigation(
