@@ -76,13 +76,19 @@ Run explicitly:
 npm run test:unit
 ```
 
+Generate coverage with enforced thresholds:
+
+```bash
+npm run test:coverage
+```
+
 Watch mode:
 
 ```bash
 npm run test:unit:watch
 ```
 
-The test foundation includes standalone component, service/data-access, HTTP, interceptor, and routing examples. See [Testing](docs/testing/README.md).
+The test foundation includes standalone component, service/data-access, HTTP, interceptor, and routing examples. Coverage gates enforce 80% statements/lines/functions and 75% branches. See [Testing](docs/testing/README.md).
 
 ## Architecture
 
@@ -132,6 +138,7 @@ The template currently includes:
 - **v0.1 Angular foundation** — strict standalone Angular baseline;
 - **v0.2 Architecture** — feature-first boundaries, lazy loading, conventions, and a small reference feature;
 - **v0.3 HTTP & API integration** — provider-based HTTP, Problem Details, correlation, feature data-access, and local GET/POST examples;
-- **v0.4 Unit testing foundation** — Vitest runner conventions and examples for components, services/data-access, HTTP, and routing.
+- **v0.4 Unit testing foundation** — Vitest runner conventions and examples for components, services/data-access, HTTP, and routing;
+- **v0.4.1 Coverage & test conventions** — reproducible coverage gates plus typed fixtures and mock factories.
 
 Coverage conventions and Playwright are intentionally deferred to the next two v0.4 subissues. Security, observability, CI/CD, and BFF integration remain later roadmap phases.
