@@ -12,11 +12,28 @@ export function isProblemDetails(value: unknown): value is ProblemDetails {
     return false;
   }
 
-  return (
-    'type' in value ||
-    'title' in value ||
-    'status' in value ||
-    'detail' in value ||
-    'instance' in value
+  const record = value as Record<string, unknown>;
+  const hasStandardMember = ['type', 'title', 'status', 'detail', 'instance'].some(
+    (key) => Object.prototype.hasOwnProperty.call(record, key),
   );
+
+  if (!hasStandardMember) {
+    return false;
+  }
+
+  return (
+    isOptionalString(record['type']) &&
+    isOptionalString(record['title']) &&
+    isOptionalStatus(record['status']) &&
+    isOptionalString(record['detail']) &&
+    isOptionalString(record['instance'])
+  );
+}
+
+function isOptionalString(value: unknown): boolean {
+  return value === undefined || typeof value === 'string';
+}
+
+function isOptionalStatus(value: unknown): boolean {
+  return value === undefined || (typeof value === 'number' && Number.isInteger(value));
 }
