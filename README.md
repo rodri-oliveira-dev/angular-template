@@ -136,7 +136,7 @@ See [Frontend security](docs/security/README.md) for sanitization, storage, cook
 
 The template provides a vendor-neutral `TelemetryClient` with local and no-op implementations plus a global Angular `ErrorHandler` adapter.
 
-The local implementation keeps only sanitized, bounded in-memory records. It does not write telemetry to console, browser storage, or an external collector.
+The local implementation keeps only sanitized, bounded in-memory records. It does not write telemetry to console, browser storage, or an external collector. HTTP requests emit a single structured event with method, outcome, status, duration, and correlation ID while omitting URLs and payloads.
 
 See [Observability](docs/observability/README.md) for configuration, error handling, and sensitive-data rules.
 
@@ -194,6 +194,7 @@ The template currently includes:
 - **v0.5 Code quality baseline** — ESLint, Prettier, bundle budgets, and feature import guardrails;
 - **v0.5.1 Frontend security baseline** — sanitization, browser storage, cookie, logging, and public client-config guardrails;
 - **v0.5.2 Dependency & browser security hardening** — dependency audit policy, Angular autoCSP, browser response headers, CORS guidance, and secure-cookie hardening;
-- **v0.6 Telemetry foundation** — vendor-neutral structured telemetry, local/no-op providers, sanitization, and global error reporting.
+- **v0.6 Telemetry foundation** — vendor-neutral structured telemetry, local/no-op providers, sanitization, and global error reporting;
+- **v0.6.1 HTTP telemetry & correlation** — request duration/status/outcome events, correlation handling, and single-path HTTP failure reporting.
 
-The v0.6 observability block has started. HTTP/correlation telemetry and performance/OpenTelemetry integration continue in the next two v0.6 subissues.
+The v0.6 observability block is in progress. Performance telemetry and the optional OpenTelemetry adapter remain for v0.6.2.
