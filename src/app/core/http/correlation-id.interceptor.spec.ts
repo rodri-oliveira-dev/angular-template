@@ -6,7 +6,7 @@ describe('createCorrelationId', () => {
   });
 
   it('falls back to a compatible correlation ID when randomUUID is unavailable', () => {
-    expect(() => createCorrelationId(undefined)).not.toThrow();
-    expect(createCorrelationId(undefined)).toMatch(/^corr-[a-z0-9]+-[a-z0-9]+$/);
+    expect(() => createCorrelationId(null)).not.toThrow();
+    expect(createCorrelationId(null)).toMatch(/^corr-[a-z0-9]+-[a-z0-9]+$/);
   });
 });
