@@ -81,9 +81,16 @@ module.exports = tseslint.config(
             'Direct sessionStorage access is blocked. Browser storage must not hold credentials or sensitive tokens.',
         },
         {
-          selector: "MemberExpression[object.name='document'][property.name='cookie']",
+          selector:
+            "MemberExpression[object.name='document'][computed=false][property.name='cookie']",
           message:
             'Direct document.cookie access is blocked. Session cookies should be server-managed and HttpOnly when applicable.',
+        },
+        {
+          selector:
+            "MemberExpression[object.name='document'][computed=true][property.value='cookie']",
+          message:
+            'Computed document[\'cookie\'] access is blocked. Session cookies should be server-managed and HttpOnly when applicable.',
         },
       ],
     },
