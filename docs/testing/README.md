@@ -64,12 +64,12 @@ npx playwright install --with-deps chromium
 
 The initial global thresholds are intentionally demanding enough to catch regressions without turning the template into a coverage-number exercise:
 
-| Metric | Minimum |
-| --- | ---: |
-| Statements | 80% |
-| Branches | 75% |
-| Functions | 80% |
-| Lines | 80% |
+| Metric     | Minimum |
+| ---------- | ------: |
+| Statements |     80% |
+| Branches   |     75% |
+| Functions  |     80% |
+| Lines      |     80% |
 
 The bootstrap entry point, test files, and the application composition root are excluded from coverage. Application and feature behavior remain included.
 

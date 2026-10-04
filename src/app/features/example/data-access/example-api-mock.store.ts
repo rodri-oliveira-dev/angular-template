@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import {
-  CreateExampleItemDto,
-  ExampleItemDto,
-} from './example-api.dto';
+import { CreateExampleItemDto, ExampleItemDto } from './example-api.dto';
 
 @Injectable({ providedIn: 'root' })
 export class ExampleApiMockStore {

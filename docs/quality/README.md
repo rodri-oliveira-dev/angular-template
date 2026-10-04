@@ -66,10 +66,10 @@ If two features need the same abstraction, move the smallest reusable responsibi
 
 Production build budgets remain enforced in `angular.json`:
 
-| Budget | Warning | Error |
-| --- | ---: | ---: |
-| Initial bundle | 500 kB | 1 MB |
-| Any component style | 4 kB | 8 kB |
+| Budget              | Warning | Error |
+| ------------------- | ------: | ----: |
+| Initial bundle      |  500 kB |  1 MB |
+| Any component style |    4 kB |  8 kB |
 
 Budget changes should be explicit and justified in the pull request rather than raised automatically to make a build pass.
 

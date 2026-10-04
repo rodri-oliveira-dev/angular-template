@@ -9,9 +9,7 @@ interface ExampleApiClientMockOptions {
   readonly createResult?: ExampleItem;
 }
 
-export function createExampleApiClientMock(
-  options: ExampleApiClientMockOptions = {},
-) {
+export function createExampleApiClientMock(options: ExampleApiClientMockOptions = {}) {
   const listResult = options.listResult ?? [createExampleItem()];
   const createResult =
     options.createResult ??

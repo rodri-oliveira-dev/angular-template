@@ -1,8 +1,5 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import {
-  HttpTestingController,
-  provideHttpClientTesting,
-} from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
 import { provideApiConfig } from '../../../core/config/api.config';
@@ -25,9 +22,7 @@ describe('ExampleApiClient', () => {
           basePath: '/api',
           useLocalMock: false,
         }),
-        provideHttpClient(
-          withInterceptors([correlationIdInterceptor, httpErrorInterceptor]),
-        ),
+        provideHttpClient(withInterceptors([correlationIdInterceptor, httpErrorInterceptor])),
         provideHttpClientTesting(),
       ],
     });

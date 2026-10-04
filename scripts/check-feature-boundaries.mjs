@@ -43,7 +43,9 @@ for (const file of walk(featuresRoot)) {
 }
 
 if (violations.length > 0) {
-  console.error('Cross-feature imports are not allowed. Promote shared code to core/shared or document an explicit architectural exception.');
+  console.error(
+    'Cross-feature imports are not allowed. Promote shared code to core/shared or document an explicit architectural exception.',
+  );
   for (const violation of violations) {
     console.error(`- ${violation}`);
   }

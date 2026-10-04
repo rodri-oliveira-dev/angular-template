@@ -4,10 +4,7 @@ import { map, Observable } from 'rxjs';
 
 import { API_CONFIG } from '../../../core/config/api.config';
 import { ExampleItem } from '../models/example-item';
-import {
-  CreateExampleItemDto,
-  ExampleItemDto,
-} from './example-api.dto';
+import { CreateExampleItemDto, ExampleItemDto } from './example-api.dto';
 
 @Injectable({ providedIn: 'root' })
 export class ExampleApiClient {
