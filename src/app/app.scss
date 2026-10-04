@@ -9,6 +9,10 @@
   padding: 2rem;
 }
 
+router-outlet {
+  display: none;
+}
+
 .hero {
   width: min(42rem, 100%);
   padding: 2.5rem;
