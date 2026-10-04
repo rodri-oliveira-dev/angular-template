@@ -136,7 +136,7 @@ See [Frontend security](docs/security/README.md) for sanitization, storage, cook
 
 The template provides a vendor-neutral `TelemetryClient` with local and no-op implementations plus a global Angular `ErrorHandler` adapter.
 
-The local implementation keeps only sanitized, bounded in-memory records. It does not write telemetry to console, browser storage, or an external collector. HTTP requests emit a single structured event with method, outcome, status, duration, and correlation ID while omitting URLs and payloads.
+The local implementation keeps only sanitized, bounded in-memory records. It does not write telemetry to console, browser storage, or an external collector. HTTP, Angular navigation, LCP, and CLS telemetry are configurable and use low-cardinality/sanitized attributes. An optional exporter boundary can be bridged to OpenTelemetry without making an SDK or collector mandatory.
 
 See [Observability](docs/observability/README.md) for configuration, error handling, and sensitive-data rules.
 
@@ -195,6 +195,7 @@ The template currently includes:
 - **v0.5.1 Frontend security baseline** — sanitization, browser storage, cookie, logging, and public client-config guardrails;
 - **v0.5.2 Dependency & browser security hardening** — dependency audit policy, Angular autoCSP, browser response headers, CORS guidance, and secure-cookie hardening;
 - **v0.6 Telemetry foundation** — vendor-neutral structured telemetry, local/no-op providers, sanitization, and global error reporting;
-- **v0.6.1 HTTP telemetry & correlation** — request duration/status/outcome events, correlation handling, and single-path HTTP failure reporting.
+- **v0.6.1 HTTP telemetry & correlation** — request duration/status/outcome events, correlation handling, and single-path HTTP failure reporting;
+- **v0.6.2 Performance telemetry & OpenTelemetry adapter** — safe route navigation telemetry, selected LCP/CLS metrics, configurable collection, and an optional collector-free exporter bridge.
 
-The v0.6 observability block is in progress. Performance telemetry and the optional OpenTelemetry adapter remain for v0.6.2.
+The v0.6 observability block is complete. CI/CD and BFF integration remain later roadmap phases.
