@@ -5,6 +5,7 @@ import { provideRouter } from '@angular/router';
 import { provideApiConfig } from './core/config/api.config';
 import { correlationIdInterceptor } from './core/http/correlation-id.interceptor';
 import { httpErrorInterceptor } from './core/http/http-error.interceptor';
+import { httpTelemetryInterceptor } from './core/http/http-telemetry.interceptor';
 import { TelemetryErrorHandler } from './core/telemetry/telemetry-error-handler';
 import { provideTelemetry } from './core/telemetry/telemetry.provider';
 import { exampleApiMockInterceptor } from './features/example/data-access/example-api-mock.interceptor';
@@ -28,7 +29,12 @@ export const appConfig: ApplicationConfig = {
       useClass: TelemetryErrorHandler,
     },
     provideHttpClient(
-      withInterceptors([correlationIdInterceptor, httpErrorInterceptor, exampleApiMockInterceptor]),
+      withInterceptors([
+        correlationIdInterceptor,
+        httpTelemetryInterceptor,
+        httpErrorInterceptor,
+        exampleApiMockInterceptor,
+      ]),
     ),
   ],
 };
