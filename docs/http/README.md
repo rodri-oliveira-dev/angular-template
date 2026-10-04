@@ -8,6 +8,7 @@ The template keeps transport concerns outside components and pages.
 
 - typed API configuration;
 - correlation ID interceptor;
+- HTTP telemetry interceptor;
 - standardized HTTP error interceptor;
 - optional local example mock.
 
@@ -49,6 +50,8 @@ For errors, the standardized mapper looks for correlation information in this or
 
 Do not put credentials or sensitive payload values in correlation headers.
 
+HTTP telemetry records the response correlation ID when available and otherwise preserves the outgoing request ID. Correlation IDs are recorded as structured metadata, never embedded into event names.
+
 ## Problem Details
 
 HTTP failures compatible with RFC 7807/Problem Details are mapped to `ApiError`.
@@ -56,6 +59,20 @@ HTTP failures compatible with RFC 7807/Problem Details are mapped to `ApiError`.
 The UI can use the standardized status, message, Problem Details payload, and correlation ID without depending on `HttpErrorResponse`.
 
 Non-HTTP errors are not rewritten by the interceptor.
+
+The HTTP telemetry interceptor emits one `http.client.request` event for success/failure/cancellation and does not emit a separate telemetry error record. This prevents duplicate reporting of the same HTTP failure.
+
+## HTTP telemetry schema
+
+The client records only low-cardinality transport metadata:
+
+- method;
+- outcome;
+- status when available;
+- duration in milliseconds;
+- correlation ID.
+
+Full URL/query strings, bodies, headers, cookies, and auth values are deliberately omitted.
 
 ## Loading, errors, and cancellation
 
