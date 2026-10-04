@@ -167,7 +167,6 @@ npm run ci:verify
 
 Do not hide a failing gate with `continue-on-error`. Fix the underlying problem or explicitly change repository policy in a reviewed pull request.
 
-
 ## Dependency automation
 
 Dependabot is configured in `.github/dependabot.yml` for both npm and GitHub Actions.
