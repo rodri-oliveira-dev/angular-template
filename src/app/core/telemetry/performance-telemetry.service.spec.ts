@@ -161,6 +161,7 @@ describe('PerformanceTelemetryService', () => {
       unit: 'score',
     });
   });
+
   it('omits CLS when layout-shift observation is unsupported', () => {
     const callbacks = new Map<string, (entries: readonly PerformanceEntry[]) => void>();
     let onPageHide: (() => void) | undefined;
@@ -271,5 +272,4 @@ describe('PerformanceTelemetryService', () => {
       unit: 'score',
     });
   });
-
 });
