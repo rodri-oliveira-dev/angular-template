@@ -5,6 +5,7 @@ The template separates static analysis from formatting:
 - **ESLint** owns code-quality, Angular, TypeScript, and template rules.
 - **Prettier** owns formatting.
 - **Feature boundary check** prevents direct imports from one feature into another.
+- **Frontend security check** rejects high-risk client-side patterns such as sanitizer bypasses and direct credential-prone browser storage access.
 
 This avoids duplicate or conflicting style rules between the linter and formatter.
 
@@ -14,6 +15,7 @@ Run lint and architecture guardrails:
 
 ```bash
 npm run lint
+npm run security:test
 ```
 
 Apply safe ESLint fixes and rerun the architecture check:
