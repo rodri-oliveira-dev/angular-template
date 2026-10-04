@@ -32,6 +32,6 @@ describe('sanitizeTelemetryAttributes', () => {
   it('limits long string attributes', () => {
     const value = 'x'.repeat(300);
 
-    expect(String(sanitizeTelemetryAttributes({ value }).value)).toHaveLength(256);
+    expect(String(sanitizeTelemetryAttributes({ value })['value'])).toHaveLength(256);
   });
 });
