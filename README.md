@@ -14,6 +14,7 @@ A modern Angular foundation intended to evolve into a reusable GitHub template f
 - Feature-first architecture with lazy-loaded feature entry points
 - Provider-based `HttpClient` with typed API configuration
 - Angular native unit-test builder with Vitest
+- ESLint + Prettier quality baseline
 
 ## Prerequisites
 
@@ -96,6 +97,24 @@ npm run e2e
 
 The test foundation includes standalone component, service/data-access, HTTP, interceptor, routing, and browser-level smoke examples. Coverage gates enforce 80% statements/lines/functions and 75% branches. See [Testing](docs/testing/README.md).
 
+## Code quality
+
+Run static analysis and architecture guardrails:
+
+```bash
+npm run lint
+```
+
+Check repository formatting:
+
+```bash
+npm run format:check
+```
+
+Apply formatter output with `npm run format` and safe linter fixes with `npm run lint:fix`.
+
+See [Code quality](docs/quality/README.md) for lint rules, feature-boundary checks, and bundle budgets.
+
 ## Architecture
 
 The application is organized around feature ownership:
@@ -146,6 +165,7 @@ The template currently includes:
 - **v0.3 HTTP & API integration** — provider-based HTTP, Problem Details, correlation, feature data-access, and local GET/POST examples;
 - **v0.4 Unit testing foundation** — Vitest runner conventions and examples for components, services/data-access, HTTP, and routing;
 - **v0.4.1 Coverage & test conventions** — reproducible coverage gates plus typed fixtures and mock factories;
-- **v0.4.2 Playwright E2E** — headless Chromium smoke tests for bootstrap, navigation, and the reference flow.
+- **v0.4.2 Playwright E2E** — headless Chromium smoke tests for bootstrap, navigation, and the reference flow;
+- **v0.5 Code quality baseline** — ESLint, Prettier, bundle budgets, and feature import guardrails.
 
-The v0.4 testing block is complete. Security, observability, CI/CD, and BFF integration remain later roadmap phases.
+The v0.5 quality/security block has started. Frontend security and dependency/browser hardening continue in the next two v0.5 subissues.
