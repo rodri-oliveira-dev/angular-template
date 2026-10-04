@@ -110,7 +110,7 @@ Do not log:
 - sensitive PII;
 - raw authentication or payment payloads.
 
-When the observability layer is introduced, logging must use a dedicated abstraction with explicit field selection and redaction. Logging an object wholesale is not considered safe redaction.
+Observability uses the dedicated `TelemetryClient` abstraction with explicit field selection and sanitization. Logging an object wholesale is not considered safe redaction. The baseline local adapter records only bounded, sanitized in-memory entries and does not write to console, storage, or network endpoints.
 
 Correlation IDs are acceptable because they identify a request, not an authenticated user or credential. They must not embed sensitive values.
 
