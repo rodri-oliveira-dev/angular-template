@@ -10,7 +10,7 @@
 
   <div class="boundary-grid">
     @for (boundary of boundaries; track boundary.name) {
-      <app-boundary-card [boundary]="boundary" />
+    <app-boundary-card [boundary]="boundary" />
     }
   </div>
 
@@ -25,25 +25,19 @@
     </div>
 
     <div class="api-actions">
-      <button type="button" (click)="reloadExamples()" [disabled]="isLoading()">
-        Reload
-      </button>
-      <button type="button" (click)="addExample()" [disabled]="isLoading()">
-        Add example
-      </button>
+      <button type="button" (click)="reloadExamples()" [disabled]="isLoading()">Reload</button>
+      <button type="button" (click)="addExample()" [disabled]="isLoading()">Add example</button>
     </div>
 
     @if (isLoading()) {
-      <p role="status">Loading API data…</p>
-    }
-
-    @if (errorMessage(); as error) {
-      <p class="api-error" role="alert">{{ error }}</p>
+    <p role="status">Loading API data…</p>
+    } @if (errorMessage(); as error) {
+    <p class="api-error" role="alert">{{ error }}</p>
     }
 
     <ul class="api-items">
       @for (item of items(); track item.id) {
-        <li>{{ item.label }}</li>
+      <li>{{ item.label }}</li>
       }
     </ul>
   </section>

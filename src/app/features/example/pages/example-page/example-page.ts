@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  inject,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EMPTY, catchError, finalize } from 'rxjs';
 
@@ -95,7 +89,7 @@ export class ExamplePage {
   private handleError(error: unknown) {
     const message =
       error instanceof ApiError
-        ? error.problemDetails?.detail ?? error.message
+        ? (error.problemDetails?.detail ?? error.message)
         : 'Unexpected error while contacting the API.';
 
     this.errorMessage.set(message);

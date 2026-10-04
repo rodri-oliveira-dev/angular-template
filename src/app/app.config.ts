@@ -1,8 +1,5 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import {
-  ApplicationConfig,
-  provideBrowserGlobalErrorListeners,
-} from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { provideApiConfig } from './core/config/api.config';
@@ -20,11 +17,7 @@ export const appConfig: ApplicationConfig = {
       useLocalMock: true,
     }),
     provideHttpClient(
-      withInterceptors([
-        correlationIdInterceptor,
-        httpErrorInterceptor,
-        exampleApiMockInterceptor,
-      ]),
+      withInterceptors([correlationIdInterceptor, httpErrorInterceptor, exampleApiMockInterceptor]),
     ),
   ],
 };

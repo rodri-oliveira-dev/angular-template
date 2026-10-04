@@ -1,8 +1,4 @@
-import {
-  EnvironmentProviders,
-  InjectionToken,
-  makeEnvironmentProviders,
-} from '@angular/core';
+import { EnvironmentProviders, InjectionToken, makeEnvironmentProviders } from '@angular/core';
 
 export interface ApiConfig {
   readonly basePath: string;

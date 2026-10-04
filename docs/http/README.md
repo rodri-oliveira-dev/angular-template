@@ -93,4 +93,8 @@ Set `useLocalMock: false` when a real API or development proxy is available.
 
 ## Security baseline
 
-Do not store sensitive access or refresh tokens in browser storage as part of this HTTP layer. Authentication and BFF-specific session handling are intentionally addressed in later roadmap phases.
+Do not store sensitive access or refresh tokens in browser storage as part of this HTTP layer. Do not log authorization headers, cookies, or raw sensitive request/response payloads.
+
+Client-side configuration is public and must not contain secrets.
+
+See [Frontend security baseline](../security/README.md) for sanitization, storage, cookies, logging, and client-configuration rules. Authentication and BFF-specific session handling are intentionally addressed in later roadmap phases.

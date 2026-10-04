@@ -13,8 +13,8 @@ export function isProblemDetails(value: unknown): value is ProblemDetails {
   }
 
   const record = value as Record<string, unknown>;
-  const hasStandardMember = ['type', 'title', 'status', 'detail', 'instance'].some(
-    (key) => Object.prototype.hasOwnProperty.call(record, key),
+  const hasStandardMember = ['type', 'title', 'status', 'detail', 'instance'].some((key) =>
+    Object.prototype.hasOwnProperty.call(record, key),
   );
 
   if (!hasStandardMember) {

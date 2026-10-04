@@ -1,0 +1,19 @@
+# Provider-neutral production response headers for the Angular SPA.
+# Adapt connect-src/img-src/font-src only when the application genuinely needs other origins.
+#
+# Angular security.autoCsp generates the script policy in a CSP <meta> tag.
+# Therefore this complementary HTTP CSP intentionally omits both default-src and script-src.
+#
+# Component styles inserted by Angular require inline styles unless you inject a unique
+# per-response style nonce at the hosting layer.
+
+Content-Security-Policy: style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; connect-src 'self'; img-src 'self' data:; font-src 'self'; manifest-src 'self'; upgrade-insecure-requests
+Referrer-Policy: strict-origin-when-cross-origin
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+
+# HTTPS-only deployments should also consider HSTS at the hosting/reverse-proxy layer:
+# Strict-Transport-Security: max-age=31536000; includeSubDomains
+#
+# Enable includeSubDomains only when every subdomain is HTTPS-ready.

@@ -5,9 +5,7 @@ test.describe('application smoke', () => {
     await page.goto('/');
 
     await expect(page).toHaveURL(/\/example$/);
-    await expect(
-      page.getByRole('heading', { name: 'Feature-first by default' }),
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Feature-first by default' })).toBeVisible();
 
     const architectureLink = page.getByRole('link', {
       name: 'Architecture example',
@@ -18,9 +16,7 @@ test.describe('application smoke', () => {
     await expect(page).toHaveURL(/\/example$/);
   });
 
-  test('completes the reference write flow with the local API mock', async ({
-    page,
-  }) => {
+  test('completes the reference write flow with the local API mock', async ({ page }) => {
     await page.goto('/example');
 
     const items = page.locator('.api-items li');

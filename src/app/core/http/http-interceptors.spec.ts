@@ -1,15 +1,9 @@
 import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
-import {
-  HttpTestingController,
-  provideHttpClientTesting,
-} from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
 import { ApiError } from './api-error';
-import {
-  CORRELATION_ID_HEADER,
-  correlationIdInterceptor,
-} from './correlation-id.interceptor';
+import { CORRELATION_ID_HEADER, correlationIdInterceptor } from './correlation-id.interceptor';
 import { httpErrorInterceptor } from './http-error.interceptor';
 
 describe('HTTP interceptors', () => {
@@ -19,9 +13,7 @@ describe('HTTP interceptors', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        provideHttpClient(
-          withInterceptors([correlationIdInterceptor, httpErrorInterceptor]),
-        ),
+        provideHttpClient(withInterceptors([correlationIdInterceptor, httpErrorInterceptor])),
         provideHttpClientTesting(),
       ],
     });
@@ -55,9 +47,7 @@ describe('HTTP interceptors', () => {
 
     const request = httpTestingController.expectOne('/api/examples');
 
-    expect(request.request.headers.get(CORRELATION_ID_HEADER)).toBe(
-      'caller-correlation',
-    );
+    expect(request.request.headers.get(CORRELATION_ID_HEADER)).toBe('caller-correlation');
 
     request.flush([]);
   });
