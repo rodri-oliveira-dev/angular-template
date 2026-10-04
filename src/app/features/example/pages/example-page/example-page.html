@@ -1,0 +1,16 @@
+<section class="architecture-example" aria-labelledby="architecture-title">
+  <div class="intro">
+    <p class="eyebrow">v0.2 architecture</p>
+    <h1 id="architecture-title">Feature-first by default</h1>
+    <p>
+      Keep business capabilities together and move code to core or shared only when the
+      responsibility is genuinely cross-cutting.
+    </p>
+  </div>
+
+  <div class="boundary-grid">
+    @for (boundary of boundaries; track boundary.name) {
+      <app-boundary-card [boundary]="boundary" />
+    }
+  </div>
+</section>

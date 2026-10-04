@@ -1,0 +1,10 @@
+<article class="boundary-card">
+  <h2>{{ boundary().name }}</h2>
+  <p>{{ boundary().purpose }}</p>
+
+  <ul>
+    @for (example of boundary().examples; track example) {
+      <li>{{ example }}</li>
+    }
+  </ul>
+</article>

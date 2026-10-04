@@ -1,0 +1,30 @@
+:host {
+  display: block;
+}
+
+.boundary-card {
+  height: 100%;
+  padding: 1.5rem;
+  border: 1px solid #dce3ee;
+  border-radius: 0.875rem;
+  background: #ffffff;
+  box-shadow: 0 0.5rem 1.5rem rgb(23 32 51 / 6%);
+}
+
+h2 {
+  margin: 0;
+  font-size: 1.125rem;
+}
+
+p {
+  margin: 0.75rem 0;
+  color: #526078;
+  line-height: 1.6;
+}
+
+ul {
+  margin: 0;
+  padding-left: 1.25rem;
+  color: #526078;
+  line-height: 1.7;
+}
