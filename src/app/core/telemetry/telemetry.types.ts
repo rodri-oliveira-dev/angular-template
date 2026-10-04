@@ -2,10 +2,17 @@ export type TelemetryAttributeValue = string | number | boolean | null | undefin
 
 export type TelemetryAttributes = Readonly<Record<string, TelemetryAttributeValue>>;
 
+export interface TelemetryPerformanceConfig {
+  readonly enabled: boolean;
+  readonly navigation?: boolean;
+  readonly webVitals?: boolean;
+}
+
 export interface TelemetryConfig {
   readonly enabled: boolean;
   readonly mode: 'local' | 'noop';
   readonly localBufferSize?: number;
+  readonly performance?: TelemetryPerformanceConfig;
 }
 
 export interface TelemetryEventRecord {
