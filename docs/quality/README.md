@@ -16,6 +16,7 @@ Run lint and architecture guardrails:
 ```bash
 npm run lint
 npm run security:test
+npm run security:audit
 ```
 
 Apply safe ESLint fixes and rerun the architecture check:
@@ -86,4 +87,4 @@ npm run build
 npm test
 ```
 
-Coverage and E2E remain available through `npm run test:coverage` and `npm run e2e`.
+Coverage and E2E remain available through `npm run test:coverage` and `npm run e2e`. The security gate can be executed with `npm run security:all`.
