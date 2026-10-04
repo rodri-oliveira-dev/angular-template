@@ -63,3 +63,9 @@ jobs:
 
       - name: Coverage gate
         run: npm run test:coverage
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E smoke
+        run: npm run e2e
