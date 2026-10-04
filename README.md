@@ -13,6 +13,7 @@ A modern Angular foundation intended to evolve into a reusable GitHub template f
 - Node.js 24 LTS
 - Feature-first architecture with lazy-loaded feature entry points
 - Provider-based `HttpClient` with typed API configuration
+- Angular native unit-test builder with Vitest
 
 ## Prerequisites
 
@@ -69,6 +70,32 @@ Run the unit test suite once:
 npm test
 ```
 
+Run explicitly:
+
+```bash
+npm run test:unit
+```
+
+Generate coverage with enforced thresholds:
+
+```bash
+npm run test:coverage
+```
+
+Watch mode:
+
+```bash
+npm run test:unit:watch
+```
+
+Run the Playwright smoke suite:
+
+```bash
+npm run e2e
+```
+
+The test foundation includes standalone component, service/data-access, HTTP, interceptor, routing, and browser-level smoke examples. Coverage gates enforce 80% statements/lines/functions and 75% branches. See [Testing](docs/testing/README.md).
+
 ## Architecture
 
 The application is organized around feature ownership:
@@ -116,6 +143,9 @@ The template currently includes:
 
 - **v0.1 Angular foundation** — strict standalone Angular baseline;
 - **v0.2 Architecture** — feature-first boundaries, lazy loading, conventions, and a small reference feature;
-- **v0.3 HTTP & API integration** — provider-based HTTP, Problem Details, correlation, feature data-access, and local GET/POST examples.
+- **v0.3 HTTP & API integration** — provider-based HTTP, Problem Details, correlation, feature data-access, and local GET/POST examples;
+- **v0.4 Unit testing foundation** — Vitest runner conventions and examples for components, services/data-access, HTTP, and routing;
+- **v0.4.1 Coverage & test conventions** — reproducible coverage gates plus typed fixtures and mock factories;
+- **v0.4.2 Playwright E2E** — headless Chromium smoke tests for bootstrap, navigation, and the reference flow.
 
-Advanced testing, security, observability, CI/CD, and BFF integration are intentionally introduced by later roadmap phases.
+The v0.4 testing block is complete. Security, observability, CI/CD, and BFF integration remain later roadmap phases.

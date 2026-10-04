@@ -44,6 +44,24 @@ describe('HTTP interceptors', () => {
     request.flush([]);
   });
 
+  it('preserves a caller-provided correlation ID', () => {
+    httpClient
+      .get('/api/examples', {
+        headers: {
+          [CORRELATION_ID_HEADER]: 'caller-correlation',
+        },
+      })
+      .subscribe();
+
+    const request = httpTestingController.expectOne('/api/examples');
+
+    expect(request.request.headers.get(CORRELATION_ID_HEADER)).toBe(
+      'caller-correlation',
+    );
+
+    request.flush([]);
+  });
+
   it('maps Problem Details responses to ApiError', () => {
     let receivedError: unknown;
 
