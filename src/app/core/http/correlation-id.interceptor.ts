@@ -16,9 +16,9 @@ export const correlationIdInterceptor: HttpInterceptorFn = (request, next) => {
 };
 
 export function createCorrelationId(
-  randomUUID: (() => string) | undefined = globalThis.crypto?.randomUUID?.bind(
+  randomUUID: (() => string) | null = globalThis.crypto?.randomUUID?.bind(
     globalThis.crypto,
-  ),
+  ) ?? null,
 ): string {
   if (randomUUID) {
     return randomUUID();
