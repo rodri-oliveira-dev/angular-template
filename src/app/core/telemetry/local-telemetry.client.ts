@@ -1,5 +1,3 @@
-import { Injectable } from '@angular/core';
-
 import { TelemetryClient } from './telemetry.client';
 import { sanitizeTelemetryAttributes } from './telemetry-sanitizer';
 import {
@@ -9,7 +7,6 @@ import {
   TelemetryRecord,
 } from './telemetry.types';
 
-@Injectable()
 export class LocalTelemetryClient extends TelemetryClient {
   private readonly records: TelemetryRecord[] = [];
 
