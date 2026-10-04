@@ -88,7 +88,13 @@ Watch mode:
 npm run test:unit:watch
 ```
 
-The test foundation includes standalone component, service/data-access, HTTP, interceptor, and routing examples. Coverage gates enforce 80% statements/lines/functions and 75% branches. See [Testing](docs/testing/README.md).
+Run the Playwright smoke suite:
+
+```bash
+npm run e2e
+```
+
+The test foundation includes standalone component, service/data-access, HTTP, interceptor, routing, and browser-level smoke examples. Coverage gates enforce 80% statements/lines/functions and 75% branches. See [Testing](docs/testing/README.md).
 
 ## Architecture
 
@@ -139,6 +145,7 @@ The template currently includes:
 - **v0.2 Architecture** — feature-first boundaries, lazy loading, conventions, and a small reference feature;
 - **v0.3 HTTP & API integration** — provider-based HTTP, Problem Details, correlation, feature data-access, and local GET/POST examples;
 - **v0.4 Unit testing foundation** — Vitest runner conventions and examples for components, services/data-access, HTTP, and routing;
-- **v0.4.1 Coverage & test conventions** — reproducible coverage gates plus typed fixtures and mock factories.
+- **v0.4.1 Coverage & test conventions** — reproducible coverage gates plus typed fixtures and mock factories;
+- **v0.4.2 Playwright E2E** — headless Chromium smoke tests for bootstrap, navigation, and the reference flow.
 
-Coverage conventions and Playwright are intentionally deferred to the next two v0.4 subissues. Security, observability, CI/CD, and BFF integration remain later roadmap phases.
+The v0.4 testing block is complete. Security, observability, CI/CD, and BFF integration remain later roadmap phases.
