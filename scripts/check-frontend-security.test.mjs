@@ -13,34 +13,45 @@ test('accepts ordinary Angular-safe bindings and application code', () => {
   assert.deepEqual(findFrontendSecurityViolations(source, 'src/app/example.ts'), []);
 });
 
+test('ignores browser API names inside comments and string literals', () => {
+  const source = `
+    // Never put tokens in localStorage or sessionStorage.
+    const guidance = 'Do not persist credentials in localStorage';
+  `;
+
+  assert.deepEqual(findFrontendSecurityViolations(source, 'src/app/example.ts'), []);
+});
+
 test('rejects Angular sanitizer bypass calls', () => {
   const source = `
     sanitizer.bypassSecurityTrustHtml(untrustedHtml);
+    sanitizer['bypassSecurityTrustUrl'](untrustedUrl);
   `;
 
   const violations = findFrontendSecurityViolations(source, 'src/app/example.ts');
 
-  assert.equal(violations.length, 1);
-  assert.equal(violations[0].policy, 'sanitizer bypass');
+  assert.equal(violations.filter((item) => item.policy === 'sanitizer bypass').length, 2);
 });
 
-test('rejects direct Web Storage access', () => {
+test('rejects direct Web Storage access including computed properties', () => {
   const source = `
     window.localStorage.setItem('access_token', token);
-    sessionStorage.setItem('refresh_token', refreshToken);
+    window['sessionStorage'].setItem('refresh_token', refreshToken);
+    const storage = localStorage;
   `;
 
   const violations = findFrontendSecurityViolations(source, 'src/app/auth.ts');
 
-  assert.equal(violations.filter((item) => item.policy === 'Web Storage').length, 2);
+  assert.equal(violations.filter((item) => item.policy === 'Web Storage').length, 3);
 });
 
-test('rejects script-readable cookie access', () => {
-  const violations = findFrontendSecurityViolations(
-    `const cookies = document.cookie;`,
-    'src/app/auth.ts',
-  );
+test('rejects dot and computed script-readable cookie access', () => {
+  const source = `
+    const first = document.cookie;
+    const second = document['cookie'];
+  `;
 
-  assert.equal(violations.length, 1);
-  assert.equal(violations[0].policy, 'script-readable cookies');
+  const violations = findFrontendSecurityViolations(source, 'src/app/auth.ts');
+
+  assert.equal(violations.filter((item) => item.policy === 'script-readable cookies').length, 2);
 });
