@@ -166,3 +166,85 @@ npm run ci:verify
 `npm run ci:base` remains available for the original v0.7 format/lint/unit/build baseline.
 
 Do not hide a failing gate with `continue-on-error`. Fix the underlying problem or explicitly change repository policy in a reviewed pull request.
+
+
+## Dependency automation
+
+Dependabot is configured in `.github/dependabot.yml` for both npm and GitHub Actions.
+
+Both ecosystems run weekly on Monday in UTC.
+
+To reduce pull-request noise:
+
+- npm minor and patch updates are grouped into one PR when compatible;
+- GitHub Actions updates are grouped together;
+- major npm updates remain separate for explicit compatibility review;
+- each ecosystem is limited to five open version-update PRs.
+
+Dependabot updates the committed dependency/action references; normal CI and CodeQL checks still decide whether an update is safe to merge.
+
+Security updates are handled by GitHub independently of the weekly version-update cadence when Dependabot security updates are enabled for the repository.
+
+## CodeQL
+
+`.github/workflows/codeql.yml` analyzes JavaScript/TypeScript with GitHub CodeQL advanced setup.
+
+It runs on:
+
+- pull requests targeting `main`;
+- pushes to `main`;
+- a weekly Monday schedule.
+
+JavaScript/TypeScript uses CodeQL `build-mode: none`, so the security analysis is independent from the Angular production build already covered by CI.
+
+The CodeQL workflow declares only:
+
+```yaml
+permissions:
+  contents: read
+  security-events: write
+```
+
+`security-events: write` is required to publish CodeQL analysis. The application CI workflow remains `contents: read` only.
+
+## GitHub Action pinning
+
+Executable Actions are pinned to immutable full commit SHAs, with the corresponding release version retained as an inline comment:
+
+```yaml
+uses: actions/checkout@<full-commit-sha> # v7.0.1
+```
+
+This prevents a mutable tag from changing the code executed by an existing workflow revision.
+
+Dependabot monitors the `github-actions` ecosystem and can propose updated pins through normal pull requests. When adding a new Action:
+
+1. prefer GitHub-owned or otherwise well-maintained Actions;
+2. select a stable release;
+3. resolve the release tag to its full commit SHA;
+4. pin the workflow to that SHA;
+5. retain the human-readable version in a comment;
+6. let Dependabot maintain subsequent updates.
+
+Do not replace a SHA pin with a floating branch such as `main`.
+
+## Recommended branch protection / ruleset
+
+For `main`, configure a GitHub ruleset or branch protection rule that requires pull requests and the checks produced by the repository workflows.
+
+Recommended required checks after this block is merged:
+
+- **CI / Quality, coverage, E2E & build**;
+- **CodeQL / JavaScript / TypeScript**.
+
+Also recommended:
+
+- require the branch to be up to date before merge when the team's merge volume makes stale validation a material risk;
+- require at least one approving review;
+- dismiss stale approvals when the reviewed code changes materially;
+- require conversation resolution before merge;
+- block force pushes and branch deletion;
+- allow bypass only for explicitly trusted maintainers/automation;
+- do not require administrator bypass for ordinary maintenance unless repository governance demands it.
+
+The exact ruleset is a repository governance setting rather than application source, so the template documents it instead of attempting to mutate repository administration automatically.
