@@ -26,7 +26,11 @@ export class PerformanceTelemetryService {
   private readonly navigationStartedAt = new Map<number, number>();
   private readonly stopObservers: Array<() => void> = [];
   private latestLcpMs: number | null = null;
-  private cumulativeCls = 0;
+  private clsObserverInstalled = false;
+  private clsSessionStartMs: number | null = null;
+  private clsPreviousEntryMs: number | null = null;
+  private clsSessionValue = 0;
+  private maxClsSessionValue = 0;
   private started = false;
   private flushedVitals = false;
 
@@ -116,19 +120,22 @@ export class PerformanceTelemetryService {
         };
 
         if (!layoutShift.hadRecentInput && typeof layoutShift.value === 'number') {
-          this.cumulativeCls += layoutShift.value;
+          this.recordClsEntry(layoutShift.startTime, layoutShift.value);
         }
       }
     });
 
     if (stopCls) {
+      this.clsObserverInstalled = true;
       this.stopObservers.push(stopCls);
     }
 
-    const stopPageHide = this.runtime.onPageHide(() => this.flushWebVitals());
+    if (stopLcp || stopCls) {
+      const stopPageHide = this.runtime.onPageHide(() => this.flushWebVitals());
 
-    if (stopPageHide) {
-      this.stopObservers.push(stopPageHide);
+      if (stopPageHide) {
+        this.stopObservers.push(stopPageHide);
+      }
     }
   }
 
@@ -147,11 +154,31 @@ export class PerformanceTelemetryService {
       });
     }
 
-    this.telemetry.event(WEB_VITAL_TELEMETRY_EVENT, {
-      metric: 'CLS',
-      value: Number(this.cumulativeCls.toFixed(4)),
-      unit: 'score',
-    });
+    if (this.clsObserverInstalled) {
+      this.telemetry.event(WEB_VITAL_TELEMETRY_EVENT, {
+        metric: 'CLS',
+        value: Number(this.maxClsSessionValue.toFixed(4)),
+        unit: 'score',
+      });
+    }
+  }
+
+  private recordClsEntry(startTime: number, value: number): void {
+    const continuesCurrentWindow =
+      this.clsSessionStartMs !== null &&
+      this.clsPreviousEntryMs !== null &&
+      startTime - this.clsPreviousEntryMs < 1_000 &&
+      startTime - this.clsSessionStartMs < 5_000;
+
+    if (continuesCurrentWindow) {
+      this.clsSessionValue += value;
+    } else {
+      this.clsSessionStartMs = startTime;
+      this.clsSessionValue = value;
+    }
+
+    this.clsPreviousEntryMs = startTime;
+    this.maxClsSessionValue = Math.max(this.maxClsSessionValue, this.clsSessionValue);
   }
 }
 
