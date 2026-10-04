@@ -30,17 +30,24 @@ The baseline supports:
 - `noop` — discards telemetry;
 - `enabled: false` — also selects the no-op implementation.
 
-Example:
+Performance collection is controlled independently inside telemetry configuration:
 
 ```ts
 provideTelemetry({
   enabled: true,
   mode: 'local',
   localBufferSize: 100,
+  performance: {
+    enabled: true,
+    navigation: true,
+    webVitals: true,
+  },
 });
+
+providePerformanceTelemetry();
 ```
 
-A production vendor adapter can be introduced later without changing feature code.
+Disabling `performance.enabled` prevents router and browser-performance observers from being attached.
 
 ## Global errors
 
@@ -74,57 +81,103 @@ This sanitizer is defense in depth, not permission to send arbitrary objects. Ca
 
 The HTTP pipeline emits exactly one `http.client.request` event per completed, failed, or cancelled request.
 
-The minimum schema is:
-
-| Attribute       | Meaning                                                                   |
-| --------------- | ------------------------------------------------------------------------- |
-| `method`        | HTTP method such as GET or POST                                           |
-| `outcome`       | `success`, `error`, or `cancelled`                                        |
-| `status`        | HTTP status when available                                                |
-| `durationMs`    | client-observed request duration in milliseconds                          |
+| Attribute | Meaning |
+| --- | --- |
+| `method` | HTTP method such as GET or POST |
+| `outcome` | `success`, `error`, or `cancelled` |
+| `status` | HTTP status when available |
+| `durationMs` | client-observed request duration in milliseconds |
 | `correlationId` | response correlation ID when available, otherwise the outgoing request ID |
 
-The event intentionally does **not** contain:
-
-- full URLs or query strings;
-- request/response bodies;
-- headers;
-- cookies;
-- authentication values.
-
-This keeps cardinality and sensitive-data exposure low.
+The event intentionally omits full URLs/query strings, bodies, headers, cookies, and authentication values.
 
 ### Error strategy
 
 The HTTP telemetry interceptor observes failures but does not call `telemetry.error()`.
 
-`httpErrorInterceptor` remains the single place that converts Angular `HttpErrorResponse` into `ApiError`. HTTP telemetry then records the normalized status/correlation as a structured request event.
+`httpErrorInterceptor` remains the single place that converts Angular `HttpErrorResponse` into `ApiError`. HTTP telemetry records the normalized result as a structured request event, avoiding duplicate reporting.
 
-This avoids emitting both an HTTP event and a second error record for the same transport failure.
+## Navigation telemetry
 
-Interceptor order is intentional:
+Successful, cancelled, and failed Angular router navigations emit `navigation.completed`.
 
-1. correlation ID;
-2. HTTP telemetry;
-3. HTTP error normalization;
-4. feature/local transport adapters.
+The event contains:
 
-Because response processing unwinds in reverse, telemetry observes the already-normalized `ApiError`.
+- `outcome`;
+- `durationMs`;
+- `routePattern` when a successful route is known.
+
+The route pattern comes from Angular route configuration (for example `/orders/:id`), not the concrete browser URL. This avoids recording route parameters, query strings, fragments, or user-controlled identifiers.
+
+## Selected Web Vitals
+
+When enabled and supported by the browser, the template observes:
+
+- **LCP** — Largest Contentful Paint;
+- **CLS** — Cumulative Layout Shift.
+
+The latest LCP value and cumulative CLS score are flushed on `pagehide` as `performance.web_vital` events.
+
+The baseline intentionally does not implement a custom INP approximation. If a production application needs the complete evolving Core Web Vitals algorithm, use a maintained Web Vitals/OpenTelemetry integration behind the adapter boundary instead of duplicating browser-vitals algorithms in feature code.
+
+Browsers that do not support a requested `PerformanceObserver` entry type simply skip that metric.
+
+## Optional exporter boundary
+
+`LocalTelemetryClient` accepts an optional `TelemetryExporter`. The default exporter is a no-op, so **no collector is required**.
+
+The repository includes `OpenTelemetryTelemetryExporter`, which adapts sanitized telemetry records to an `OpenTelemetryBridge`:
+
+```ts
+const exporter = new OpenTelemetryTelemetryExporter({
+  recordEvent: (name, attributes) => {
+    // map to the OpenTelemetry API/SDK selected by the host application
+  },
+  recordError: (name, errorType, attributes) => {
+    // map to OpenTelemetry logs or span events
+  },
+});
+
+provideTelemetry(config, exporter);
+```
+
+The adapter deliberately does not import `@opentelemetry/*` packages. This keeps the base template collector-free and prevents components/features from depending on a vendor SDK.
+
+### Connecting an exporter/collector
+
+A production application can:
+
+1. install the OpenTelemetry web packages required by its chosen signal/exporter;
+2. configure SDK resources, batching, sampling, and endpoint at the composition root;
+3. implement `OpenTelemetryBridge` using that SDK;
+4. pass `OpenTelemetryTelemetryExporter` to `provideTelemetry`;
+5. keep collector endpoints and environment-specific settings outside feature code.
+
+Collector availability must not be required for application bootstrap. Export failure handling, batching, retries, and sampling belong in the host application's OpenTelemetry SDK configuration, not in components.
 
 ## Local telemetry
 
 `LocalTelemetryClient` keeps only a bounded in-memory buffer and never writes to console, browser storage, cookies, or network endpoints.
 
-The local adapter is deliberately simple. It exists so the abstraction is observable in tests and replaceable later, without introducing a vendor dependency in the foundation phase.
+Records are sanitized before they are added to the local buffer **and before they are passed to an optional exporter**.
 
-## Scope of v0.6
+## v0.6 responsibility boundaries
 
-The v0.6 and v0.6.1 phases now include HTTP duration/status instrumentation and correlation-aware HTTP events.
+The completed observability block provides:
 
-They intentionally do not yet add:
+- vendor-neutral structured telemetry;
+- global unexpected-error capture;
+- HTTP duration/status/outcome/correlation;
+- navigation duration/outcome using safe route patterns;
+- selected LCP/CLS telemetry;
+- configurable performance collection;
+- optional exporter/OpenTelemetry bridge.
 
-- route or Web Vitals telemetry;
-- OpenTelemetry SDK/exporter configuration;
-- external collectors or monitoring vendors.
+It intentionally does not require:
 
-Those concerns are introduced by v0.6.1 and v0.6.2.
+- an OpenTelemetry SDK;
+- an exporter package;
+- a collector;
+- a monitoring vendor.
+
+Feature components remain coupled only to application abstractions, not telemetry SDKs.
