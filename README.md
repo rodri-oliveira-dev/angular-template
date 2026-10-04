@@ -12,6 +12,7 @@ A modern Angular foundation intended to evolve into a reusable GitHub template f
 - npm with a committed `package-lock.json`
 - Node.js 24 LTS
 - Feature-first architecture with lazy-loaded feature entry points
+- Provider-based `HttpClient` with typed API configuration
 
 ## Prerequisites
 
@@ -44,7 +45,7 @@ npm start
 
 The Angular development server is available at `http://localhost:4200`.
 
-The root route redirects to the lazy-loaded architecture example at `/example`.
+The root route redirects to the lazy-loaded reference feature at `/example`. Its HTTP example uses a local in-memory mock by default, so no external backend is required.
 
 ## Build
 
@@ -95,11 +96,26 @@ Top-level features should prefer lazy loading. Do not import another feature's i
 
 See [Architecture](docs/architecture/README.md) and [ADR 0001](docs/adr/0001-feature-first-architecture.md) for the detailed rationale and dependency rules.
 
+## HTTP and API integration
+
+The template provides:
+
+- typed API base-path configuration;
+- functional correlation and error interceptors;
+- Problem Details mapping to a standardized `ApiError`;
+- feature-owned data-access services;
+- explicit DTO mapping;
+- loading/error state and lifecycle-aware request subscriptions;
+- a local mock demonstrating GET and POST without external infrastructure.
+
+See [HTTP and API integration](docs/http/README.md) for endpoint conventions and integration guidance.
+
 ## Current scope
 
 The template currently includes:
 
 - **v0.1 Angular foundation** — strict standalone Angular baseline;
-- **v0.2 Architecture** — feature-first boundaries, lazy loading, conventions, and a small reference feature.
+- **v0.2 Architecture** — feature-first boundaries, lazy loading, conventions, and a small reference feature;
+- **v0.3 HTTP & API integration** — provider-based HTTP, Problem Details, correlation, feature data-access, and local GET/POST examples.
 
-HTTP integration, advanced testing, security, observability, CI/CD, and BFF integration are intentionally introduced by later roadmap phases.
+Advanced testing, security, observability, CI/CD, and BFF integration are intentionally introduced by later roadmap phases.
