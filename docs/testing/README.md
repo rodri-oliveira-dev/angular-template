@@ -1,6 +1,8 @@
 # Testing
 
-The template uses Angular's native unit-test builder with **Vitest**. The goal is to test observable behavior with the smallest useful setup, while keeping framework integration tests close to Angular's official testing APIs.
+The template uses Angular's native unit-test builder with **Vitest** for unit/integration tests and **Playwright** for browser-level end-to-end smoke tests.
+
+The goal is to test observable behavior with the smallest useful setup while keeping framework integration close to official Angular and Playwright APIs.
 
 ## Commands
 
@@ -16,7 +18,7 @@ Equivalent explicit command:
 npm run test:unit
 ```
 
-Run in watch mode during development:
+Run unit tests in watch mode:
 
 ```bash
 npm run test:unit:watch
@@ -28,7 +30,35 @@ Generate and enforce code coverage:
 npm run test:coverage
 ```
 
-Coverage reports are written to `coverage/`, including HTML and LCOV output.
+Run Playwright E2E tests headless:
+
+```bash
+npm run e2e
+```
+
+Open Playwright UI mode for local diagnosis:
+
+```bash
+npm run e2e:ui
+```
+
+Open the last HTML report:
+
+```bash
+npm run e2e:report
+```
+
+Before the first local E2E run, install Chromium:
+
+```bash
+npx playwright install chromium
+```
+
+On Linux environments that also need browser system dependencies:
+
+```bash
+npx playwright install --with-deps chromium
+```
 
 ## Coverage policy
 
@@ -116,6 +146,32 @@ Prefer a real dependency when it is small and deterministic. Use a test double w
 
 Keep mocks scoped to the behavior under test.
 
+## End-to-end smoke tests
+
+Playwright is configured in `playwright.config.ts` and tests live under `e2e/`.
+
+The default project runs **Chromium headless**. The configuration starts the Angular development server automatically at `http://127.0.0.1:4200`.
+
+The smoke suite covers:
+
+- application bootstrap and root redirect;
+- primary navigation availability;
+- the reference GET flow;
+- the reference POST/write flow.
+
+The reference feature uses the local API mock, so the default E2E suite does not depend on a real backend, cloud service, or network API.
+
+### E2E diagnostics
+
+On failure:
+
+1. rerun the failing test locally with `npm run e2e`;
+2. use `npm run e2e:ui` for interactive inspection;
+3. inspect `playwright-report/`;
+4. inspect traces, screenshots, and videos retained by Playwright when applicable.
+
+Generated Playwright reports and test artifacts are ignored by Git.
+
 ## What should be tested
 
 Prioritize:
@@ -125,7 +181,8 @@ Prioritize:
 - request method, URL, body, and relevant headers;
 - error and retry-facing behavior;
 - routing outcomes;
-- cross-cutting infrastructure with observable effects.
+- cross-cutting infrastructure with observable effects;
+- a small number of critical browser-level journeys.
 
 Usually avoid:
 
@@ -133,10 +190,15 @@ Usually avoid:
 - Angular framework behavior already covered by Angular;
 - CSS-only implementation details;
 - trivial type/interface declarations;
-- assertions that merely repeat a constant with no behavior.
+- assertions that merely repeat a constant with no behavior;
+- duplicating every unit test again in E2E.
 
-## Scope of v0.4.1
+## Testing layers
 
-This phase adds coverage gates and repeatable conventions on top of the v0.4 unit-testing foundation.
+The template now has three deliberate layers:
 
-Playwright and end-to-end smoke tests remain deferred to **v0.4.2**, and CI execution remains deferred to **v0.7.x**.
+1. **Unit/component/data-access tests** — fast behavior checks with Vitest and Angular testing utilities.
+2. **Coverage gate** — global regression guard over application code.
+3. **E2E smoke tests** — a small set of high-value browser journeys with Playwright.
+
+Broader E2E matrices, visual regression, and CI execution remain opt-in/later concerns. CI integration is introduced in the v0.7 roadmap block.
