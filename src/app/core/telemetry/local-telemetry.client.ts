@@ -1,3 +1,4 @@
+import { NoopTelemetryExporter, TelemetryExporter } from './telemetry-exporter';
 import { TelemetryClient } from './telemetry.client';
 import { sanitizeTelemetryAttributes } from './telemetry-sanitizer';
 import {
@@ -10,7 +11,10 @@ import {
 export class LocalTelemetryClient extends TelemetryClient {
   private readonly records: TelemetryRecord[] = [];
 
-  constructor(private readonly bufferSize = 100) {
+  constructor(
+    private readonly bufferSize = 100,
+    private readonly exporter: TelemetryExporter = new NoopTelemetryExporter(),
+  ) {
     super();
   }
 
@@ -46,6 +50,7 @@ export class LocalTelemetryClient extends TelemetryClient {
 
   private append(record: TelemetryRecord): void {
     this.records.push(record);
+    this.exporter.export(record);
 
     if (this.records.length > this.bufferSize) {
       this.records.splice(0, this.records.length - this.bufferSize);
