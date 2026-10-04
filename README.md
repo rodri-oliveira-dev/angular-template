@@ -122,11 +122,14 @@ Run the frontend security guardrails:
 ```bash
 npm run security:check
 npm run security:test
+npm run security:audit
 ```
 
 The baseline blocks sanitizer bypass APIs, direct Web Storage access, direct script-readable cookie access, and console logging in application TypeScript. Client-side configuration is treated as public and must never contain secrets.
 
-See [Frontend security](docs/security/README.md) for the sanitization, storage, cookies, logging, and client-configuration policy.
+Production builds also enable Angular `security.autoCsp`, and the repository includes provider-neutral response-header guidance plus a High/Critical dependency-audit gate.
+
+See [Frontend security](docs/security/README.md) for sanitization, storage, cookies, dependency policy, CSP, CORS, and browser-header guidance.
 
 ## Architecture
 
@@ -180,6 +183,7 @@ The template currently includes:
 - **v0.4.1 Coverage & test conventions** — reproducible coverage gates plus typed fixtures and mock factories;
 - **v0.4.2 Playwright E2E** — headless Chromium smoke tests for bootstrap, navigation, and the reference flow;
 - **v0.5 Code quality baseline** — ESLint, Prettier, bundle budgets, and feature import guardrails;
-- **v0.5.1 Frontend security baseline** — sanitization, browser storage, cookie, logging, and public client-config guardrails.
+- **v0.5.1 Frontend security baseline** — sanitization, browser storage, cookie, logging, and public client-config guardrails;
+- **v0.5.2 Dependency & browser security hardening** — dependency audit policy, Angular autoCSP, browser response headers, CORS guidance, and secure-cookie hardening.
 
-The v0.5 quality/security block is in progress. Dependency and browser security hardening continues in v0.5.2.
+The v0.5 quality/security block is complete. Observability, CI/CD, and BFF integration remain later roadmap phases.
