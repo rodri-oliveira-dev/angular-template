@@ -172,6 +172,8 @@ On failure:
 
 Generated Playwright reports and test artifacts are ignored by Git.
 
+In CI, Playwright uses one worker, one retry, a 30-second per-test timeout, and a 5-second assertion timeout. When the CI job fails, the HTML report and test-result artifacts are uploaded for diagnosis and retained for 7 days. Successful runs do not upload these diagnostics.
+
 ## What should be tested
 
 Prioritize:
@@ -201,4 +203,4 @@ The template now has three deliberate layers:
 2. **Coverage gate** — global regression guard over application code.
 3. **E2E smoke tests** — a small set of high-value browser journeys with Playwright.
 
-Broader E2E matrices, visual regression, and CI execution remain opt-in/later concerns. CI integration is introduced in the v0.7 roadmap block.
+The unit coverage gate and Chromium E2E smoke suite run in CI as of v0.7.1. Broader browser matrices and visual regression remain opt-in concerns.
