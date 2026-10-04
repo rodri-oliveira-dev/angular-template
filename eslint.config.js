@@ -41,6 +41,51 @@ module.exports = tseslint.config(
           style: 'camelCase',
         },
       ],
+      'no-console': 'error',
+      'no-restricted-globals': [
+        'error',
+        {
+          name: 'localStorage',
+          message:
+            'Direct Web Storage access is blocked by the security baseline. Use a reviewed abstraction only for non-sensitive data.',
+        },
+        {
+          name: 'sessionStorage',
+          message:
+            'Direct Web Storage access is blocked by the security baseline. Use a reviewed abstraction only for non-sensitive data.',
+        },
+      ],
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: '@angular/platform-browser',
+              importNames: ['DomSanitizer'],
+              message:
+                'DomSanitizer bypass APIs require an explicit security-reviewed exception. Prefer normal Angular bindings and automatic sanitization.',
+            },
+          ],
+        },
+      ],
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "MemberExpression[property.name='localStorage']",
+          message:
+            'Direct localStorage access is blocked. Browser storage must not hold credentials or sensitive tokens.',
+        },
+        {
+          selector: "MemberExpression[property.name='sessionStorage']",
+          message:
+            'Direct sessionStorage access is blocked. Browser storage must not hold credentials or sensitive tokens.',
+        },
+        {
+          selector: "MemberExpression[object.name='document'][property.name='cookie']",
+          message:
+            'Direct document.cookie access is blocked. Session cookies should be server-managed and HttpOnly when applicable.',
+        },
+      ],
     },
   },
   {
