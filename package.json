@@ -24,7 +24,8 @@
     "security:audit": "npm audit --audit-level=high",
     "security:all": "npm run guardrails:test && npm run security:check && npm run security:audit",
     "architecture:test": "node --test scripts/check-feature-boundaries.test.mjs",
-    "guardrails:test": "npm run architecture:test && npm run security:test"
+    "guardrails:test": "npm run architecture:test && npm run security:test",
+    "ci:base": "npm run format:check && npm run lint && npm test && npm run build"
   },
   "engines": {
     "node": "^24.15.0"
