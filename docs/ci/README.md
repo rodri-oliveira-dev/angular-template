@@ -74,12 +74,12 @@ npm run test:coverage
 
 This runs the unit suite and applies the thresholds already configured in `angular.json`:
 
-| Metric | Minimum |
-| --- | ---: |
-| Statements | 80% |
-| Branches | 75% |
-| Functions | 80% |
-| Lines | 80% |
+| Metric     | Minimum |
+| ---------- | ------: |
+| Statements |     80% |
+| Branches   |     75% |
+| Functions  |     80% |
+| Lines      |     80% |
 
 A threshold violation exits non-zero and fails CI. The workflow does not maintain a second set of threshold values.
 
