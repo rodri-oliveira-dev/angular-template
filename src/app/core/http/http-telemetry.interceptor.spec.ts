@@ -51,9 +51,7 @@ describe('httpTelemetryInterceptor', () => {
   it('records successful HTTP duration, status, method, and response correlation', () => {
     httpClient.get('/api/examples?access_token=must-not-leak').subscribe();
 
-    const request = httpTestingController.expectOne(
-      '/api/examples?access_token=must-not-leak',
-    );
+    const request = httpTestingController.expectOne('/api/examples?access_token=must-not-leak');
 
     request.flush([], {
       status: 200,

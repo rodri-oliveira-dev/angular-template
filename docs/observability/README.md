@@ -76,12 +76,12 @@ The HTTP pipeline emits exactly one `http.client.request` event per completed, f
 
 The minimum schema is:
 
-| Attribute | Meaning |
-| --- | --- |
-| `method` | HTTP method such as GET or POST |
-| `outcome` | `success`, `error`, or `cancelled` |
-| `status` | HTTP status when available |
-| `durationMs` | client-observed request duration in milliseconds |
+| Attribute       | Meaning                                                                   |
+| --------------- | ------------------------------------------------------------------------- |
+| `method`        | HTTP method such as GET or POST                                           |
+| `outcome`       | `success`, `error`, or `cancelled`                                        |
+| `status`        | HTTP status when available                                                |
+| `durationMs`    | client-observed request duration in milliseconds                          |
 | `correlationId` | response correlation ID when available, otherwise the outgoing request ID |
 
 The event intentionally does **not** contain:
