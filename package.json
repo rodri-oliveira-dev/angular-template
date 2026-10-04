@@ -10,7 +10,10 @@
     "test": "npm run test:unit",
     "test:unit": "ng test --watch=false",
     "test:unit:watch": "ng test",
-    "test:coverage": "ng test --watch=false --coverage"
+    "test:coverage": "ng test --watch=false --coverage",
+    "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui",
+    "e2e:report": "playwright show-report"
   },
   "engines": {
     "node": "^24.15.0"
@@ -29,6 +32,7 @@
     "@angular/build": "^22.2.1",
     "@angular/cli": "^22.2.1",
     "@angular/compiler-cli": "^22.2.0",
+    "@playwright/test": "^1.63.0",
     "@vitest/coverage-v8": "^5.0.0",
     "jsdom": "^30.0.0",
     "prettier": "^3.8.1",
