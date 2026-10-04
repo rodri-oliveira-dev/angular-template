@@ -220,11 +220,11 @@ Or all three together:
 npm run security:all
 ```
 
-`security:check` scans application TypeScript/HTML and rejects:
+`security:check` parses application TypeScript and rejects executable references while ignoring comments and string literals:
 
 - Angular sanitizer bypass calls;
 - direct `localStorage` or `sessionStorage` access;
-- direct `document.cookie` access.
+- direct `document.cookie` access, including computed `document['cookie']` access.
 
 ESLint additionally rejects:
 
