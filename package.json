@@ -13,7 +13,12 @@
     "test:coverage": "ng test --watch=false --coverage",
     "e2e": "playwright test",
     "e2e:ui": "playwright test --ui",
-    "e2e:report": "playwright show-report"
+    "e2e:report": "playwright show-report",
+    "lint": "ng lint && npm run architecture:check",
+    "lint:fix": "ng lint --fix && npm run architecture:check",
+    "architecture:check": "node scripts/check-feature-boundaries.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "engines": {
     "node": "^24.15.0"
@@ -35,8 +40,13 @@
     "@playwright/test": "^1.63.0",
     "@vitest/coverage-v8": "^5.0.0",
     "jsdom": "^30.0.0",
-    "prettier": "^3.8.1",
+    "prettier": "^3.9.9",
     "typescript": "~6.0.2",
-    "vitest": "^5.0.0"
+    "vitest": "^5.0.0",
+    "@eslint/js": "^10.0.1",
+    "angular-eslint": "^22.5.0",
+    "eslint": "^10.12.0",
+    "eslint-config-prettier": "^10.1.8",
+    "typescript-eslint": "^8.71.0"
   }
 }
