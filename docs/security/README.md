@@ -2,7 +2,7 @@
 
 This template treats browser code, bundled configuration, and browser storage as **untrusted client-side territory**. Anything shipped to the browser can be inspected or modified by a user or by JavaScript running in the same origin.
 
-This phase establishes frontend guardrails. CSP, security headers, dependency auditing, and broader browser hardening are handled in v0.5.2.
+The v0.5 block combines source guardrails, dependency auditing, Angular CSP hardening, and deployment-header guidance.
 
 ## HTML binding and sanitization
 
@@ -82,14 +82,19 @@ If a future feature needs durable non-sensitive preferences, introduce a small r
 
 Direct `document.cookie` access is blocked.
 
-For authenticated browser sessions, prefer server-managed cookies where applicable, with security attributes such as:
+For authenticated browser sessions, prefer server-managed cookies where applicable:
 
 - `HttpOnly` so application JavaScript cannot read the session token;
 - `Secure` so the cookie is sent only over HTTPS;
-- an appropriate `SameSite` policy;
-- the narrowest practical domain/path and lifetime.
+- `SameSite=Strict` when the product flow permits it, otherwise an explicitly justified `Lax`;
+- `SameSite=None` only together with `Secure`;
+- the narrowest practical lifetime and scope.
 
-The concrete BFF/session design is implemented later in the roadmap. This phase only prevents insecure client-side examples.
+For a host-only session cookie, prefer the `__Host-` prefix with `Secure`, `Path=/`, and no `Domain` attribute.
+
+`SameSite` is defense in depth and does not replace a CSRF strategy for cookie-authenticated state-changing requests.
+
+The concrete BFF/session implementation is introduced later in the roadmap.
 
 ## Logging and sensitive data
 
@@ -120,6 +125,85 @@ Do not place credentials or secrets in:
 
 URLs can appear in browser history, proxy/server logs, analytics systems, screenshots, and referrer data.
 
+## Dependency audit
+
+Run the lockfile-based dependency audit with:
+
+```bash
+npm run security:audit
+```
+
+The command uses `npm audit --audit-level=high` and includes both runtime and development dependencies. Development tooling remains part of the software supply chain and is not excluded from the default security gate.
+
+The command is reproducible as a process from the committed `package-lock.json`, but results can change over time as the npm advisory database is updated.
+
+### Vulnerability policy
+
+- **Critical / High:** fail the security gate and remediate before merge.
+- **Moderate:** triage for reachability, production impact, exploitability, and whether it affects build-only tooling. Fix promptly when reachable or production-facing.
+- **Low:** track and batch with normal dependency maintenance unless context raises the risk.
+
+A temporary exception for a High/Critical issue requires:
+
+1. the exact advisory/package/version;
+2. documented reachability and exploitability analysis;
+3. compensating controls;
+4. an owner;
+5. an expiration/review date;
+6. explicit security approval.
+
+Do not use `npm audit fix --force` automatically. Major-version or dependency-tree changes require normal compatibility review and test validation.
+
+## Content Security Policy
+
+Production builds enable Angular CLI `security.autoCsp`.
+
+Angular generates a CSP meta policy for scripts using hashes and `strict-dynamic`. This is useful for cacheable static hosting because it does not require a predictable or reused nonce.
+
+`autoCsp` does **not** fully replace deployment headers:
+
+- it protects scripts but not every resource type;
+- `frame-ancestors` is not effective from a meta-delivered CSP;
+- style handling still needs a hosting decision;
+- reporting and other host controls belong in HTTP response headers.
+
+The repository includes [security-headers.example.txt](security-headers.example.txt) as a provider-neutral complement.
+
+Because `autoCsp` already supplies the script policy, the complementary HTTP CSP intentionally omits both `script-src` and `default-src`. Adding either without matching the generated hashes can break the application because multiple CSP policies are enforced together.
+
+The template example allows `'unsafe-inline'` only in `style-src`, because Angular inserts component styles at runtime. A deployment capable of injecting a unique per-response style nonce can tighten this further.
+
+## Recommended browser response headers
+
+The provider-neutral example contains:
+
+- `Content-Security-Policy`;
+- `Referrer-Policy: strict-origin-when-cross-origin`;
+- `X-Content-Type-Options: nosniff`;
+- `X-Frame-Options: DENY` as legacy clickjacking defense in addition to CSP `frame-ancestors`;
+- a restrictive `Permissions-Policy`.
+
+HTTPS-only deployments should also consider HSTS at the actual hosting layer after confirming all affected domains/subdomains are HTTPS-ready.
+
+Security headers belong on the HTTP response emitted by the CDN, reverse proxy, BFF, ingress, or web server. Angular application code cannot reliably enforce them after the document has already loaded.
+
+## CORS is not a security-header substitute
+
+CORS controls whether browser JavaScript at one origin can read responses from another origin. It relaxes the browser's Same Origin Policy for selected origins.
+
+CORS does **not**:
+
+- authenticate a caller;
+- authorize access to an API;
+- prevent XSS;
+- replace CSP;
+- replace CSRF protection;
+- stop non-browser clients from making requests.
+
+For credentialed APIs, use an explicit allowlist of trusted origins rather than `*`, and validate authentication/authorization server-side on every request.
+
+A same-origin SPA/BFF deployment typically needs less CORS configuration, which is one reason the later BFF phase prefers same-origin `/api` access.
+
 ## Executable guardrails
 
 Run:
@@ -127,6 +211,13 @@ Run:
 ```bash
 npm run security:check
 npm run security:test
+npm run security:audit
+```
+
+Or all three together:
+
+```bash
+npm run security:all
 ```
 
 `security:check` scans application TypeScript/HTML and rejects:
@@ -148,11 +239,15 @@ These guardrails are intentionally strict defaults for a reusable template. Exce
 
 Before merging frontend code, verify:
 
+- dependency audit meets the vulnerability policy;
 - untrusted data uses normal Angular bindings;
 - sanitizer bypass APIs are absent or explicitly reviewed;
 - no secret is present in client configuration;
 - credentials are not persisted in Web Storage;
 - JavaScript does not read session cookies;
+- session cookies use appropriate `Secure`, `HttpOnly`, and `SameSite` attributes;
 - logs contain no credentials, sensitive payloads, or PII;
 - URL parameters do not carry secrets;
-- security exceptions include tests and rationale.
+- production hosting applies the reviewed CSP and browser headers;
+- CORS rules are not being used as authorization;
+- security exceptions include tests, rationale, owner, and expiry.
