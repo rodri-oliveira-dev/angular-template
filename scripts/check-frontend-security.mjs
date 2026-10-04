@@ -64,9 +64,9 @@ export function findFrontendSecurityViolations(source, filePath = '<memory>') {
       }
 
       if (
-        storageNames.has(objectName ?? '') ||
         ((objectName === 'window' || objectName === 'globalThis') &&
-          storageNames.has(propertyName ?? ''))
+          storageNames.has(propertyName ?? '')) ||
+        (ts.isIdentifier(node.expression) && storageNames.has(node.expression.text))
       ) {
         addViolation('Web Storage', node, messages.storage);
       }
@@ -133,7 +133,13 @@ function isStandaloneReference(node) {
     return true;
   }
 
-  if (ts.isPropertyAccessExpression(parent) && parent.name === node) {
+  if (ts.isPropertyAccessExpression(parent)) {
+    if (parent.name === node || parent.expression === node) {
+      return false;
+    }
+  }
+
+  if (ts.isElementAccessExpression(parent) && parent.expression === node) {
     return false;
   }
 
