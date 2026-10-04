@@ -4,7 +4,7 @@ export const CORRELATION_ID_HEADER = 'X-Correlation-ID';
 
 export const correlationIdInterceptor: HttpInterceptorFn = (request, next) => {
   const correlationId =
-    request.headers.get(CORRELATION_ID_HEADER) ?? globalThis.crypto.randomUUID();
+    request.headers.get(CORRELATION_ID_HEADER) ?? createCorrelationId();
 
   return next(
     request.clone({
@@ -14,3 +14,15 @@ export const correlationIdInterceptor: HttpInterceptorFn = (request, next) => {
     }),
   );
 };
+
+export function createCorrelationId(
+  randomUUID: (() => string) | undefined = globalThis.crypto?.randomUUID?.bind(
+    globalThis.crypto,
+  ),
+): string {
+  if (randomUUID) {
+    return randomUUID();
+  }
+
+  return `corr-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+}
