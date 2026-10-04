@@ -34,6 +34,10 @@ yarn-debug.log*
 yarn-error.log*
 coverage/
 
+# Playwright
+/playwright-report/
+/test-results/
+
 # OS files
 .DS_Store
 Thumbs.db
