@@ -116,7 +116,11 @@ When enabled and supported by the browser, the template observes:
 - **LCP** — Largest Contentful Paint;
 - **CLS** — Cumulative Layout Shift.
 
-The latest LCP value and cumulative CLS score are flushed on `pagehide` as `performance.web_vital` events.
+The latest LCP value and CLS score are flushed on `pagehide` as `performance.web_vital` events.
+
+CLS follows the standardized maximum session-window model: layout shifts belong to the same window only while consecutive shifts remain less than one second apart and the window remains under five seconds. The emitted CLS value is the maximum window score, not the lifetime sum.
+
+If the browser does not support `layout-shift` observation, the template omits CLS entirely rather than reporting an artificial zero. A supported observer with no qualifying shifts may still legitimately report zero.
 
 The baseline intentionally does not implement a custom INP approximation. If a production application needs the complete evolving Core Web Vitals algorithm, use a maintained Web Vitals/OpenTelemetry integration behind the adapter boundary instead of duplicating browser-vitals algorithms in feature code.
 
@@ -153,7 +157,7 @@ A production application can:
 4. pass `OpenTelemetryTelemetryExporter` to `provideTelemetry`;
 5. keep collector endpoints and environment-specific settings outside feature code.
 
-Collector availability must not be required for application bootstrap. Export failure handling, batching, retries, and sampling belong in the host application's OpenTelemetry SDK configuration, not in components.
+Collector availability must not be required for application bootstrap. Synchronous exporter failures are isolated at the `LocalTelemetryClient` boundary so telemetry can never turn a successful application operation into a failure. Batching, retries, sampling, and remote-delivery policy still belong in the host application's OpenTelemetry SDK configuration, not in components.
 
 ## Local telemetry
 
