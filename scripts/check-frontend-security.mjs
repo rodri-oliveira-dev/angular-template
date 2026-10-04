@@ -70,7 +70,11 @@ export function findFrontendSecurityViolations(source, filePath = '<memory>') {
       ) {
         addViolation('Web Storage', node, messages.storage);
       }
-    } else if (ts.isIdentifier(node) && storageNames.has(node.text) && isStandaloneReference(node)) {
+    } else if (
+      ts.isIdentifier(node) &&
+      storageNames.has(node.text) &&
+      isStandaloneReference(node)
+    ) {
       addViolation('Web Storage', node, messages.storage);
     }
 

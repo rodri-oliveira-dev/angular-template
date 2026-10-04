@@ -90,7 +90,7 @@ module.exports = tseslint.config(
           selector:
             "MemberExpression[object.name='document'][computed=true][property.value='cookie']",
           message:
-            'Computed document[\'cookie\'] access is blocked. Session cookies should be server-managed and HttpOnly when applicable.',
+            "Computed document['cookie'] access is blocked. Session cookies should be server-managed and HttpOnly when applicable.",
         },
       ],
     },
