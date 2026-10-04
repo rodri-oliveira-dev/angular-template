@@ -114,7 +114,9 @@ npm run e2e
 
 After dependencies and the browser are installed, use `npm run ci:verify` for the equivalent application gates locally. `npm run ci:base` remains available for the original v0.7 baseline.
 
-See [Continuous Integration](docs/ci/README.md) for triggers, permissions, concurrency, caching, and failure diagnosis.
+Dependabot monitors npm and GitHub Actions, and CodeQL analyzes JavaScript/TypeScript on PRs, main, and a weekly schedule. Executable Actions are pinned to immutable commit SHAs.
+
+See [Continuous Integration](docs/ci/README.md) for triggers, permissions, concurrency, dependency automation, CodeQL, Action pinning, branch protection, and failure diagnosis.
 
 ## Code quality
 
@@ -216,6 +218,7 @@ The template currently includes:
 - **v0.6.1 HTTP telemetry & correlation** — request duration/status/outcome events, correlation handling, and single-path HTTP failure reporting;
 - **v0.6.2 Performance telemetry & OpenTelemetry adapter** — safe route navigation telemetry, selected LCP/CLS metrics, configurable collection, and an optional collector-free exporter bridge;
 - **v0.7 CI foundation** — PR/main GitHub Actions gate for formatting, lint/guardrails, unit tests, and production build;
-- **v0.7.1 Coverage & E2E in CI** — enforced coverage thresholds, reproducible Chromium installation, headless Playwright smoke tests, and failure-only diagnostics.
+- **v0.7.1 Coverage & E2E in CI** — enforced coverage thresholds, reproducible Chromium installation, headless Playwright smoke tests, and failure-only diagnostics;
+- **v0.7.2 Dependency automation & CodeQL** — grouped Dependabot updates, JavaScript/TypeScript CodeQL scanning, immutable Action pins, and documented main-branch protection.
 
-The v0.7 CI/CD block is in progress. Dependency automation and CodeQL remain for v0.7.2.
+The v0.7 CI/CD block is complete. BFF integration remains the next functional roadmap block.
