@@ -7,6 +7,7 @@ import { correlationIdInterceptor } from './core/http/correlation-id.interceptor
 import { httpErrorInterceptor } from './core/http/http-error.interceptor';
 import { httpTelemetryInterceptor } from './core/http/http-telemetry.interceptor';
 import { TelemetryErrorHandler } from './core/telemetry/telemetry-error-handler';
+import { providePerformanceTelemetry } from './core/telemetry/performance-telemetry.provider';
 import { provideTelemetry } from './core/telemetry/telemetry.provider';
 import { exampleApiMockInterceptor } from './features/example/data-access/example-api-mock.interceptor';
 import { routes } from './app.routes';
@@ -23,7 +24,13 @@ export const appConfig: ApplicationConfig = {
       enabled: true,
       mode: 'local',
       localBufferSize: 100,
+      performance: {
+        enabled: true,
+        navigation: true,
+        webVitals: true,
+      },
     }),
+    providePerformanceTelemetry(),
     {
       provide: ErrorHandler,
       useClass: TelemetryErrorHandler,
