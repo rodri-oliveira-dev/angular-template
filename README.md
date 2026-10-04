@@ -13,6 +13,7 @@ A modern Angular foundation intended to evolve into a reusable GitHub template f
 - Node.js 24 LTS
 - Feature-first architecture with lazy-loaded feature entry points
 - Provider-based `HttpClient` with typed API configuration
+- Angular native unit-test builder with Vitest
 
 ## Prerequisites
 
@@ -69,6 +70,20 @@ Run the unit test suite once:
 npm test
 ```
 
+Run explicitly:
+
+```bash
+npm run test:unit
+```
+
+Watch mode:
+
+```bash
+npm run test:unit:watch
+```
+
+The test foundation includes standalone component, service/data-access, HTTP, interceptor, and routing examples. See [Testing](docs/testing/README.md).
+
 ## Architecture
 
 The application is organized around feature ownership:
@@ -116,6 +131,7 @@ The template currently includes:
 
 - **v0.1 Angular foundation** — strict standalone Angular baseline;
 - **v0.2 Architecture** — feature-first boundaries, lazy loading, conventions, and a small reference feature;
-- **v0.3 HTTP & API integration** — provider-based HTTP, Problem Details, correlation, feature data-access, and local GET/POST examples.
+- **v0.3 HTTP & API integration** — provider-based HTTP, Problem Details, correlation, feature data-access, and local GET/POST examples;
+- **v0.4 Unit testing foundation** — Vitest runner conventions and examples for components, services/data-access, HTTP, and routing.
 
-Advanced testing, security, observability, CI/CD, and BFF integration are intentionally introduced by later roadmap phases.
+Coverage conventions and Playwright are intentionally deferred to the next two v0.4 subissues. Security, observability, CI/CD, and BFF integration remain later roadmap phases.
