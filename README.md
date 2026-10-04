@@ -98,6 +98,22 @@ npm run e2e
 
 The test foundation includes standalone component, service/data-access, HTTP, interceptor, routing, and browser-level smoke examples. Coverage gates enforce 80% statements/lines/functions and 75% branches. See [Testing](docs/testing/README.md).
 
+## Continuous integration
+
+Pull requests to `main` and pushes to `main` run the baseline GitHub Actions CI gate:
+
+```bash
+npm ci
+npm run format:check
+npm run lint
+npm test
+npm run build
+```
+
+Use `npm run ci:base` after installing dependencies to run the same quality steps locally.
+
+See [Continuous Integration](docs/ci/README.md) for triggers, permissions, concurrency, caching, and failure diagnosis.
+
 ## Code quality
 
 Run static analysis and architecture guardrails:
@@ -196,6 +212,7 @@ The template currently includes:
 - **v0.5.2 Dependency & browser security hardening** — dependency audit policy, Angular autoCSP, browser response headers, CORS guidance, and secure-cookie hardening;
 - **v0.6 Telemetry foundation** — vendor-neutral structured telemetry, local/no-op providers, sanitization, and global error reporting;
 - **v0.6.1 HTTP telemetry & correlation** — request duration/status/outcome events, correlation handling, and single-path HTTP failure reporting;
-- **v0.6.2 Performance telemetry & OpenTelemetry adapter** — safe route navigation telemetry, selected LCP/CLS metrics, configurable collection, and an optional collector-free exporter bridge.
+- **v0.6.2 Performance telemetry & OpenTelemetry adapter** — safe route navigation telemetry, selected LCP/CLS metrics, configurable collection, and an optional collector-free exporter bridge;
+- **v0.7 CI foundation** — PR/main GitHub Actions gate for formatting, lint/guardrails, unit tests, and production build.
 
-The v0.6 observability block is complete. CI/CD and BFF integration remain later roadmap phases.
+The v0.7 CI/CD block has started. Coverage/E2E integration and dependency/code scanning continue in the next two v0.7 subissues.
