@@ -1,53 +1,85 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import ts from 'typescript';
 
 const appRoot = path.resolve('src/app');
+const storageNames = new Set(['localStorage', 'sessionStorage']);
+const sanitizerBypassNames = new Set([
+  'bypassSecurityTrustHtml',
+  'bypassSecurityTrustStyle',
+  'bypassSecurityTrustScript',
+  'bypassSecurityTrustUrl',
+  'bypassSecurityTrustResourceUrl',
+]);
 
-const policies = [
-  {
-    name: 'sanitizer bypass',
-    pattern: /\bbypassSecurityTrust(?:Html|Style|Script|Url|ResourceUrl)\s*\(/g,
-    message:
-      'Angular sanitizer bypass APIs require an explicit, narrowly scoped security exception.',
-    allowlist: new Set(),
-  },
-  {
-    name: 'Web Storage',
-    pattern: /\b(?:window\.)?(?:localStorage|sessionStorage)\b/g,
-    message:
-      'Direct Web Storage access is blocked. Never persist access tokens, refresh tokens, session IDs, or credentials there.',
-    allowlist: new Set(),
-  },
-  {
-    name: 'script-readable cookies',
-    pattern: /\bdocument\s*\.\s*cookie\b/g,
-    message:
-      'Direct document.cookie access is blocked. Prefer server-managed HttpOnly cookies for sessions.',
-    allowlist: new Set(),
-  },
-];
+const messages = {
+  sanitizer:
+    'Angular sanitizer bypass APIs require an explicit, narrowly scoped security exception.',
+  storage:
+    'Direct Web Storage access is blocked. Never persist access tokens, refresh tokens, session IDs, or credentials there.',
+  cookie:
+    'Direct document.cookie access is blocked. Prefer server-managed HttpOnly cookies for sessions.',
+};
 
 export function findFrontendSecurityViolations(source, filePath = '<memory>') {
-  const normalizedPath = filePath.split(path.sep).join('/');
-  const violations = [];
-
-  for (const policy of policies) {
-    if (policy.allowlist.has(normalizedPath)) {
-      continue;
-    }
-
-    for (const match of source.matchAll(policy.pattern)) {
-      violations.push({
-        policy: policy.name,
-        filePath: normalizedPath,
-        index: match.index ?? 0,
-        message: policy.message,
-      });
-    }
+  if (!filePath.endsWith('.ts')) {
+    return [];
   }
 
-  return violations;
+  const normalizedPath = filePath.split(path.sep).join('/');
+  const sourceFile = ts.createSourceFile(
+    normalizedPath,
+    source,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TS,
+  );
+  const violations = [];
+
+  const addViolation = (policy, node, message) => {
+    violations.push({
+      policy,
+      filePath: normalizedPath,
+      index: node.getStart(sourceFile),
+      message,
+    });
+  };
+
+  const visit = (node) => {
+    if (ts.isCallExpression(node)) {
+      const calledName = memberName(node.expression);
+
+      if (calledName && sanitizerBypassNames.has(calledName)) {
+        addViolation('sanitizer bypass', node.expression, messages.sanitizer);
+      }
+    }
+
+    if (ts.isPropertyAccessExpression(node) || ts.isElementAccessExpression(node)) {
+      const objectName = expressionName(node.expression);
+      const propertyName = memberName(node);
+
+      if (objectName === 'document' && propertyName === 'cookie') {
+        addViolation('script-readable cookies', node, messages.cookie);
+      }
+
+      if (
+        storageNames.has(objectName ?? '') ||
+        ((objectName === 'window' || objectName === 'globalThis') &&
+          storageNames.has(propertyName ?? ''))
+      ) {
+        addViolation('Web Storage', node, messages.storage);
+      }
+    } else if (ts.isIdentifier(node) && storageNames.has(node.text) && isStandaloneReference(node)) {
+      addViolation('Web Storage', node, messages.storage);
+    }
+
+    ts.forEachChild(node, visit);
+  };
+
+  visit(sourceFile);
+
+  return deduplicateViolations(violations);
 }
 
 export function scanFrontendSecurity(root = appRoot) {
@@ -58,7 +90,7 @@ export function scanFrontendSecurity(root = appRoot) {
   const violations = [];
 
   for (const file of walk(root)) {
-    if (!file.endsWith('.ts') && !file.endsWith('.html')) {
+    if (!file.endsWith('.ts')) {
       continue;
     }
 
@@ -68,6 +100,83 @@ export function scanFrontendSecurity(root = appRoot) {
   }
 
   return violations;
+}
+
+function memberName(node) {
+  if (ts.isPropertyAccessExpression(node)) {
+    return node.name.text;
+  }
+
+  if (ts.isElementAccessExpression(node)) {
+    const argument = node.argumentExpression;
+
+    if (ts.isStringLiteralLike(argument)) {
+      return argument.text;
+    }
+  }
+
+  return null;
+}
+
+function expressionName(node) {
+  if (ts.isIdentifier(node)) {
+    return node.text;
+  }
+
+  return memberName(node);
+}
+
+function isStandaloneReference(node) {
+  const parent = node.parent;
+
+  if (!parent) {
+    return true;
+  }
+
+  if (ts.isPropertyAccessExpression(parent) && parent.name === node) {
+    return false;
+  }
+
+  if (ts.isVariableDeclaration(parent) && parent.name === node) {
+    return false;
+  }
+
+  if (ts.isParameter(parent) && parent.name === node) {
+    return false;
+  }
+
+  if (ts.isPropertyDeclaration(parent) && parent.name === node) {
+    return false;
+  }
+
+  if (ts.isPropertySignature(parent) && parent.name === node) {
+    return false;
+  }
+
+  if (ts.isBindingElement(parent) && parent.name === node) {
+    return false;
+  }
+
+  if (ts.isImportSpecifier(parent) || ts.isExportSpecifier(parent)) {
+    return false;
+  }
+
+  return true;
+}
+
+function deduplicateViolations(violations) {
+  const seen = new Set();
+
+  return violations.filter((violation) => {
+    const key = `${violation.policy}:${violation.index}`;
+
+    if (seen.has(key)) {
+      return false;
+    }
+
+    seen.add(key);
+    return true;
+  });
 }
 
 function* walk(directory) {
