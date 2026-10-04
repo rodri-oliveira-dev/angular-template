@@ -15,6 +15,7 @@ A modern Angular foundation intended to evolve into a reusable GitHub template f
 - Provider-based `HttpClient` with typed API configuration
 - Angular native unit-test builder with Vitest
 - ESLint + Prettier quality baseline
+- Vendor-neutral telemetry foundation
 
 ## Prerequisites
 
@@ -131,6 +132,14 @@ Production builds also enable Angular `security.autoCsp`, and the repository inc
 
 See [Frontend security](docs/security/README.md) for sanitization, storage, cookies, dependency policy, CSP, CORS, and browser-header guidance.
 
+## Observability
+
+The template provides a vendor-neutral `TelemetryClient` with local and no-op implementations plus a global Angular `ErrorHandler` adapter.
+
+The local implementation keeps only sanitized, bounded in-memory records. It does not write telemetry to console, browser storage, or an external collector.
+
+See [Observability](docs/observability/README.md) for configuration, error handling, and sensitive-data rules.
+
 ## Architecture
 
 The application is organized around feature ownership:
@@ -184,6 +193,7 @@ The template currently includes:
 - **v0.4.2 Playwright E2E** — headless Chromium smoke tests for bootstrap, navigation, and the reference flow;
 - **v0.5 Code quality baseline** — ESLint, Prettier, bundle budgets, and feature import guardrails;
 - **v0.5.1 Frontend security baseline** — sanitization, browser storage, cookie, logging, and public client-config guardrails;
-- **v0.5.2 Dependency & browser security hardening** — dependency audit policy, Angular autoCSP, browser response headers, CORS guidance, and secure-cookie hardening.
+- **v0.5.2 Dependency & browser security hardening** — dependency audit policy, Angular autoCSP, browser response headers, CORS guidance, and secure-cookie hardening;
+- **v0.6 Telemetry foundation** — vendor-neutral structured telemetry, local/no-op providers, sanitization, and global error reporting.
 
-The v0.5 quality/security block is complete. Observability, CI/CD, and BFF integration remain later roadmap phases.
+The v0.6 observability block has started. HTTP/correlation telemetry and performance/OpenTelemetry integration continue in the next two v0.6 subissues.
