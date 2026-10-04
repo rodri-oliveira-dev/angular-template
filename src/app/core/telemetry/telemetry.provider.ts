@@ -1,8 +1,4 @@
-import {
-  EnvironmentProviders,
-  InjectionToken,
-  makeEnvironmentProviders,
-} from '@angular/core';
+import { EnvironmentProviders, InjectionToken, makeEnvironmentProviders } from '@angular/core';
 
 import { LocalTelemetryClient } from './local-telemetry.client';
 import { NoopTelemetryClient } from './noop-telemetry.client';

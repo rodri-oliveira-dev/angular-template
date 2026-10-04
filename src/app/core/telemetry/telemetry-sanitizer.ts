@@ -32,11 +32,7 @@ function sanitizeValue(value: TelemetryAttributeValue): TelemetryAttributeValue 
 
   const trimmed = value.slice(0, maxStringLength);
 
-  if (
-    bearerPattern.test(trimmed) ||
-    jwtPattern.test(trimmed) ||
-    emailPattern.test(trimmed)
-  ) {
+  if (bearerPattern.test(trimmed) || jwtPattern.test(trimmed) || emailPattern.test(trimmed)) {
     return '[redacted]';
   }
 
