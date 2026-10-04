@@ -1,6 +1,6 @@
 <section class="architecture-example" aria-labelledby="architecture-title">
   <div class="intro">
-    <p class="eyebrow">v0.2 architecture</p>
+    <p class="eyebrow">v0.3 HTTP & API integration</p>
     <h1 id="architecture-title">Feature-first by default</h1>
     <p>
       Keep business capabilities together and move code to core or shared only when the
@@ -13,4 +13,38 @@
       <app-boundary-card [boundary]="boundary" />
     }
   </div>
+
+  <section class="api-example" aria-labelledby="api-example-title">
+    <div>
+      <p class="eyebrow">Data access example</p>
+      <h2 id="api-example-title">HTTP stays outside components</h2>
+      <p class="api-description">
+        This page talks to a feature-owned data-access service. A local mock handles
+        <code>/api/examples</code> until a real backend is configured.
+      </p>
+    </div>
+
+    <div class="api-actions">
+      <button type="button" (click)="reloadExamples()" [disabled]="isLoading()">
+        Reload
+      </button>
+      <button type="button" (click)="addExample()" [disabled]="isLoading()">
+        Add example
+      </button>
+    </div>
+
+    @if (isLoading()) {
+      <p role="status">Loading API data…</p>
+    }
+
+    @if (errorMessage(); as error) {
+      <p class="api-error" role="alert">{{ error }}</p>
+    }
+
+    <ul class="api-items">
+      @for (item of items(); track item.id) {
+        <li>{{ item.label }}</li>
+      }
+    </ul>
+  </section>
 </section>

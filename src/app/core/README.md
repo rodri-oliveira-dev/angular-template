@@ -2,12 +2,18 @@
 
 `core/` contains application-wide infrastructure that should normally have a single shared instance or configuration point.
 
-Suitable examples:
+Current examples include:
 
-- application configuration;
+- typed API configuration;
+- correlation ID handling;
+- standardized HTTP error mapping;
+- Problem Details support.
+
+Other suitable responsibilities include:
+
 - global error handling;
-- guards and interceptors;
-- cross-cutting infrastructure services;
+- guards;
+- cross-cutting interceptors;
 - application-wide providers.
 
-Business logic and feature-specific services do not belong here.
+Business logic and feature-specific services do not belong here. API clients remain owned by the feature that consumes them.
