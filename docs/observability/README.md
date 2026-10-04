@@ -70,6 +70,47 @@ The baseline sanitizer:
 
 This sanitizer is defense in depth, not permission to send arbitrary objects. Callers remain responsible for selecting safe fields.
 
+## HTTP telemetry
+
+The HTTP pipeline emits exactly one `http.client.request` event per completed, failed, or cancelled request.
+
+The minimum schema is:
+
+| Attribute | Meaning |
+| --- | --- |
+| `method` | HTTP method such as GET or POST |
+| `outcome` | `success`, `error`, or `cancelled` |
+| `status` | HTTP status when available |
+| `durationMs` | client-observed request duration in milliseconds |
+| `correlationId` | response correlation ID when available, otherwise the outgoing request ID |
+
+The event intentionally does **not** contain:
+
+- full URLs or query strings;
+- request/response bodies;
+- headers;
+- cookies;
+- authentication values.
+
+This keeps cardinality and sensitive-data exposure low.
+
+### Error strategy
+
+The HTTP telemetry interceptor observes failures but does not call `telemetry.error()`.
+
+`httpErrorInterceptor` remains the single place that converts Angular `HttpErrorResponse` into `ApiError`. HTTP telemetry then records the normalized status/correlation as a structured request event.
+
+This avoids emitting both an HTTP event and a second error record for the same transport failure.
+
+Interceptor order is intentional:
+
+1. correlation ID;
+2. HTTP telemetry;
+3. HTTP error normalization;
+4. feature/local transport adapters.
+
+Because response processing unwinds in reverse, telemetry observes the already-normalized `ApiError`.
+
 ## Local telemetry
 
 `LocalTelemetryClient` keeps only a bounded in-memory buffer and never writes to console, browser storage, cookies, or network endpoints.
@@ -78,10 +119,10 @@ The local adapter is deliberately simple. It exists so the abstraction is observ
 
 ## Scope of v0.6
 
-This phase intentionally does not add:
+The v0.6 and v0.6.1 phases now include HTTP duration/status instrumentation and correlation-aware HTTP events.
 
-- HTTP duration/status instrumentation;
-- correlation propagation into telemetry;
+They intentionally do not yet add:
+
 - route or Web Vitals telemetry;
 - OpenTelemetry SDK/exporter configuration;
 - external collectors or monitoring vendors.
