@@ -20,7 +20,9 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "security:check": "node scripts/check-frontend-security.mjs",
-    "security:test": "node --test scripts/check-frontend-security.test.mjs"
+    "security:test": "node --test scripts/check-frontend-security.test.mjs",
+    "security:audit": "npm audit --audit-level=high",
+    "security:all": "npm run security:test && npm run security:check && npm run security:audit"
   },
   "engines": {
     "node": "^24.15.0"
