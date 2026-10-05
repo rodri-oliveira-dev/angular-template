@@ -231,6 +231,10 @@ Or all three together:
 npm run security:all
 ```
 
+`security:all` is a required CI gate. It runs the security-scanner tests, the executable source scan, and `npm audit --audit-level=high`.
+
+The production build is also scanned by OWASP ZAP Baseline in CI. See [OWASP Top 10:2025 coverage](owasp-top-10.md) for the control matrix, automated gates, and responsibility boundaries.
+
 `security:check` parses application TypeScript and rejects executable references while ignoring comments and string literals:
 
 - Angular sanitizer bypass calls;
