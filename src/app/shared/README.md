@@ -1,3 +1,5 @@
+> 🌐 Language: **English** | [Português (Brasil)](README.pt-BR.md)
+
 # Shared
 
 `shared/` contains presentation and utility building blocks that are genuinely reusable across multiple features.

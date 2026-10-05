@@ -13,11 +13,13 @@ All notable changes to the production-ready template are documented here.
 - local zero-infrastructure mock mode and optional same-origin BFF mode;
 - BFF session/XSRF browser contract and reference integration tests;
 - Vitest unit tests, Playwright E2E, typed test fixtures, and 85% coverage gates;
-- ESLint, Prettier, architecture boundaries, frontend security guardrails, npm audit, CodeQL, Dependabot, and OWASP ZAP;
+- ESLint, Prettier, architecture boundaries, frontend security guardrails, npm audit, CodeQL, Codecov with OIDC, CodeRabbit, Dependabot, and OWASP ZAP;
 - vendor-neutral telemetry, HTTP/navigation/performance telemetry, and OpenTelemetry adapter boundary;
 - GitHub Actions CI with PR status reporting and failure diagnostics;
 - VS Code workspace, tasks, debugging, testing, and coverage integration;
 - clean-template bootstrap validation;
+- bilingual English/pt-BR documentation with language selectors and an automated localization-pair guardrail;
+- CI, CodeQL, Codecov, toolchain, and license badges in the README;
 - contributing, security, issue/PR templates, ADR index, documentation index, and release documentation.
 
 ### Changed

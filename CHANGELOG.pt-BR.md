@@ -13,11 +13,13 @@ Todas as mudanças relevantes do template production-ready são documentadas aqu
 - modo mock local sem infraestrutura e modo BFF same-origin opcional;
 - contrato de sessão/XSRF do BFF e testes de integração de referência;
 - testes unitários Vitest, E2E Playwright, fixtures tipadas e gates de 85% de cobertura;
-- ESLint, Prettier, fronteiras arquiteturais, guardrails de segurança frontend, npm audit, CodeQL, Dependabot e OWASP ZAP;
+- ESLint, Prettier, fronteiras arquiteturais, guardrails de segurança frontend, npm audit, CodeQL, Codecov com OIDC, CodeRabbit, Dependabot e OWASP ZAP;
 - telemetria vendor-neutral, telemetria HTTP/navegação/performance e fronteira de adapter OpenTelemetry;
 - GitHub Actions CI com status no PR e diagnóstico de falhas;
 - workspace VS Code com tasks, debug, testes e cobertura;
 - validação de bootstrap limpo do template;
+- documentação bilíngue English/pt-BR com seletor de idioma e guardrail automatizado de paridade;
+- badges de CI, CodeQL, Codecov, toolchain e licença no README;
 - políticas de contribuição/segurança, templates de issue/PR, índice de ADRs, índice de documentação e documentação de release.
 
 ### Alterado

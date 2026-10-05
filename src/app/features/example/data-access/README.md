@@ -1,3 +1,5 @@
+> 🌐 Language: **English** | [Português (Brasil)](README.pt-BR.md)
+
 # Example data access
 
 This directory is the feature-owned boundary for API clients, transport DTOs, request/response mapping, and server-state concerns.

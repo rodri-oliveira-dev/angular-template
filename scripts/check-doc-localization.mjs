@@ -3,6 +3,13 @@ import path from 'node:path';
 
 const root = process.cwd();
 const rootDocs = ['README.md', 'CONTRIBUTING.md', 'SECURITY.md', 'CHANGELOG.md'];
+const additionalDocs = [
+  '.zap/README.md',
+  'src/app/core/README.md',
+  'src/app/features/README.md',
+  'src/app/features/example/data-access/README.md',
+  'src/app/shared/README.md',
+];
 
 async function walkMarkdown(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -67,6 +74,7 @@ async function validatePair(english) {
 const docs = await walkMarkdown(path.join(root, 'docs'));
 const canonical = [
   ...rootDocs,
+  ...additionalDocs,
   ...docs.map((file) => path.relative(root, file).split(path.sep).join('/')),
 ];
 

@@ -1,3 +1,5 @@
+> 🌐 Language: **English** | [Português (Brasil)](README.pt-BR.md)
+
 # Core
 
 `core/` contains application-wide infrastructure that should normally have a single shared instance or configuration point.

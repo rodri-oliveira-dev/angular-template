@@ -1,3 +1,5 @@
+> 🌐 Language: **English** | [Português (Brasil)](README.pt-BR.md)
+
 # Features
 
 `features/` is the primary application boundary. Each business capability owns its UI, models, and data-access concerns.
