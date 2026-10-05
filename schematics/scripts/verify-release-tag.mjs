@@ -7,7 +7,9 @@ const version = packageJson.version;
 const tag = process.env.RELEASE_TAG ?? process.env.GITHUB_REF_NAME;
 
 if (!version || !tag) {
-  console.error('Release validation requires a package version and RELEASE_TAG or GITHUB_REF_NAME.');
+  console.error(
+    'Release validation requires a package version and RELEASE_TAG or GITHUB_REF_NAME.',
+  );
   process.exit(1);
 }
 
