@@ -46,10 +46,7 @@ jobs:
         run: npm ci
 
       - name: Format check
-        run: |
-          npx prettier --write docs/security/owasp-top-10.md
-          git diff -- docs/security/owasp-top-10.md
-          exit 1
+        run: npm run format:check
 
       - name: Lint and guardrails
         run: npm run lint
