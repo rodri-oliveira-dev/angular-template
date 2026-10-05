@@ -19,6 +19,7 @@ const templateEntries = [
   '.prettierrc.json',
   '.zap',
   'angular.json',
+  'angular-template.code-workspace',
   'CHANGELOG.md',
   'CHANGELOG.pt-BR.md',
   'codecov.yml',

@@ -42,6 +42,22 @@ test('defaults reproduce the recommended mock, routing, observability, and E2E b
   assert.match(tree.readContent('/sample-app/src/app/app.config.ts'), /enabled: true/);
   assert.ok(tree.files.includes('/sample-app/playwright.config.ts'));
   assert.match(tree.readContent('/sample-app/playwright.config.ts'), /npm run start:mock/);
+  assert.ok(tree.files.includes('/sample-app/sample-app.code-workspace'));
+  assert.match(tree.readContent('/sample-app/src/index.html'), /<title>Sample App<\/title>/);
+
+  const identitySensitiveFiles = tree.files.filter((file) =>
+    [
+      '/.github/workflows/',
+      '/angular.json',
+      '/package.json',
+      '/scripts/',
+      '/src/',
+      '.code-workspace',
+    ].some((segment) => file.includes(segment)),
+  );
+  for (const file of identitySensitiveFiles) {
+    assert.doesNotMatch(tree.readContent(file), /angular-template/i, file);
+  }
 
   assert.equal(runner.tasks.length, 0);
 });
@@ -119,6 +135,33 @@ test('rejects unsafe BFF targets with an actionable error', async () => {
       skipInstall: true,
     }),
     /must not contain credentials/,
+  );
+});
+
+test('guards repeated generation without modifying the existing workspace', async () => {
+  const runner = new SchematicTestRunner('@rodri/angular-template', collectionPath);
+  const options = { name: 'repeat-safe', skipGit: true, skipInstall: true };
+  const tree = await runner.runSchematic('ng-new', options);
+  const originalPackage = tree.readContent('/repeat-safe/package.json');
+
+  await assert.rejects(
+    runner.runSchematic('ng-new', options, tree),
+    /an Angular workspace already exists there/,
+  );
+  assert.equal(tree.readContent('/repeat-safe/package.json'), originalPackage);
+});
+
+test('rejects output paths that escape the working directory', async () => {
+  const runner = new SchematicTestRunner('@rodri/angular-template', collectionPath);
+
+  await assert.rejects(
+    runner.runSchematic('ng-new', {
+      directory: '../outside',
+      name: 'unsafe-directory',
+      skipGit: true,
+      skipInstall: true,
+    }),
+    /directory must stay within the current working directory/,
   );
 });
 

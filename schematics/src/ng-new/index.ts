@@ -10,6 +10,7 @@ import {
   move,
   url,
 } from '@angular-devkit/schematics';
+import { applyEdits, modify } from 'jsonc-parser';
 
 import type { NgNewSchema } from './schema';
 
@@ -18,6 +19,7 @@ interface NormalizedOptions {
   bffProxyTarget: string;
   coverageThreshold: number;
   e2e: boolean;
+  displayName: string;
   observability: boolean;
   projectName: string;
   root: string;
@@ -44,6 +46,23 @@ function overwriteText(tree: Tree, path: string, content: string): void {
   tree.overwrite(path, content);
 }
 
+function updateJsonc(
+  tree: Tree,
+  path: string,
+  updates: ReadonlyArray<readonly [ReadonlyArray<string | number>, unknown]>,
+): void {
+  let content = readText(tree, path);
+  for (const [jsonPath, value] of updates) {
+    content = applyEdits(
+      content,
+      modify(content, [...jsonPath], value, {
+        formattingOptions: { eol: '\n', insertSpaces: true, tabSize: 2 },
+      }),
+    );
+  }
+  overwriteText(tree, path, content);
+}
+
 function updateJson(
   tree: Tree,
   path: string,
@@ -61,6 +80,18 @@ function updateJson(
 
 function deleteDirectory(tree: Tree, path: string): void {
   tree.getDir(path).visit((file) => tree.delete(file));
+}
+
+function guardAgainstReentry(root: string): Rule {
+  return (tree) => {
+    if (tree.exists(workspacePath(root, 'angular.json'))) {
+      const destination = root || '.';
+      throw new Error(
+        `Cannot generate into "${destination}": an Angular workspace already exists there. Choose an empty directory.`,
+      );
+    }
+    return tree;
+  };
 }
 
 function removeYamlSteps(content: string, stepNames: Set<string>): string {
@@ -167,10 +198,14 @@ function configureStyles(tree: Tree, options: NormalizedOptions): void {
   for (const file of styleFiles) {
     const source = workspacePath(options.root, file);
     const destination = source.replace(/\.scss$/, '.css');
-    if (tree.exists(destination)) {
-      tree.delete(destination);
+    if (tree.exists(source)) {
+      if (tree.exists(destination)) {
+        tree.delete(destination);
+      }
+      tree.rename(source, destination);
+    } else if (!tree.exists(destination)) {
+      throw new Error(`Expected the packaged style file ${source} or ${destination}.`);
     }
-    tree.rename(source, destination);
   }
 
   for (const file of [
@@ -180,6 +215,76 @@ function configureStyles(tree: Tree, options: NormalizedOptions): void {
   ]) {
     const path = workspacePath(options.root, file);
     overwriteText(tree, path, readText(tree, path).replace(/\.scss'/g, ".css'"));
+  }
+}
+
+function replaceKnownIdentity(
+  tree: Tree,
+  path: string,
+  replacements: ReadonlyArray<readonly [string, string]>,
+): void {
+  let content = readText(tree, path);
+  for (const [source, destination] of replacements) {
+    content = content.replaceAll(source, destination);
+  }
+  overwriteText(tree, path, content);
+}
+
+function configureIdentity(tree: Tree, options: NormalizedOptions): void {
+  const technicalReplacements = [
+    ['coverage/angular-template', `coverage/${options.projectName}`],
+    ['dist/angular-template', `dist/${options.projectName}`],
+    ['/tmp/angular-template-http', `/tmp/${options.projectName}-http`],
+    ["projects?.['angular-template']", `projects?.['${options.projectName}']`],
+    ["'angular-template-bootstrap-'", `'${options.projectName}-bootstrap-'`],
+    ['<!-- angular-template-ci-validation -->', `<!-- ${options.projectName}-ci-validation -->`],
+  ] as const;
+  for (const file of [
+    '.github/workflows/ci.yml',
+    'scripts/check-coverage-gate.mjs',
+    'scripts/report-ci-pr-status.mjs',
+    'scripts/serve-security-baseline.mjs',
+    'scripts/verify-clean-bootstrap.mjs',
+  ]) {
+    replaceKnownIdentity(tree, workspacePath(options.root, file), technicalReplacements);
+  }
+
+  for (const file of [
+    'README.md',
+    'README.pt-BR.md',
+    'docs/testing/README.md',
+    'docs/pt-BR/testing/README.md',
+    'docs/ci/README.md',
+    'docs/pt-BR/ci/README.md',
+  ]) {
+    replaceKnownIdentity(tree, workspacePath(options.root, file), [
+      ['angular-template.code-workspace', `${options.projectName}.code-workspace`],
+      ['coverage/angular-template', `coverage/${options.projectName}`],
+    ]);
+  }
+
+  for (const file of ['src/index.html', 'src/app/app.html', 'src/app/app.spec.ts']) {
+    replaceKnownIdentity(tree, workspacePath(options.root, file), [
+      ['Angular Template', options.displayName],
+    ]);
+  }
+
+  const workspaceSource = workspacePath(options.root, 'angular-template.code-workspace');
+  const workspaceDestination = workspacePath(options.root, `${options.projectName}.code-workspace`);
+  if (tree.exists(workspaceSource)) {
+    updateJsonc(tree, workspaceSource, [
+      [['folders', 0, 'name'], options.projectName],
+      [
+        ['settings', 'code-coverage-lcov.path.searchPath'],
+        `coverage/${options.projectName}/lcov.info`,
+      ],
+    ]);
+    if (tree.exists(workspaceDestination)) {
+      tree.delete(workspaceDestination);
+    }
+    tree.rename(workspaceSource, workspaceDestination);
+  } else if (!tree.exists(workspaceDestination)) {
+    throw new Error(`Expected the packaged VS Code workspace ${workspaceSource}.`);
   }
 }
 
@@ -294,7 +399,7 @@ function configureGeneratedWorkspace(options: NormalizedOptions): Rule {
 
     updateJson(tree, workspacePath(options.root, 'angular.json'), (angularJson) => {
       const projects = angularJson['projects'] as Record<string, Record<string, unknown>>;
-      const baseline = projects['angular-template'];
+      const baseline = projects['angular-template'] ?? projects[options.projectName];
       if (!baseline) {
         throw new Error('The packaged baseline does not define the angular-template project.');
       }
@@ -386,6 +491,7 @@ function configureGeneratedWorkspace(options: NormalizedOptions): Rule {
     configureStyles(tree, options);
     configureRouting(tree, options);
     configureE2e(tree, options);
+    configureIdentity(tree, options);
 
     const gitignorePath = workspacePath(options.root, '.gitignore');
     const gitignore = tree.read(gitignorePath)?.toString('utf-8');
@@ -406,7 +512,21 @@ function configureGeneratedWorkspace(options: NormalizedOptions): Rule {
 /** Compose Angular CLI workspace generation with the production-ready template baseline. */
 export function ngNew(options: NgNewSchema): Rule {
   const projectName = strings.dasherize(options.name);
-  const root = (options.directory ?? projectName).replace(/\\/g, '/').replace(/^\.\/?$/, '');
+  const requestedDirectory = options.directory ?? projectName;
+  const normalizedDirectory = requestedDirectory.replace(/\\/g, '/');
+  if (
+    normalizedDirectory.startsWith('/') ||
+    /^[A-Za-z]:\//.test(normalizedDirectory) ||
+    normalizedDirectory.split('/').includes('..')
+  ) {
+    throw new Error(
+      `directory must stay within the current working directory; received "${requestedDirectory}".`,
+    );
+  }
+  const root = normalizedDirectory
+    .replace(/^\.\/?$/, '')
+    .replace(/^\.\//, '')
+    .replace(/\/$/, '');
   const bffProxyTarget = options.bffProxyTarget ?? 'http://localhost:5000';
   let parsedTarget: URL;
   try {
@@ -428,6 +548,11 @@ export function ngNew(options: NgNewSchema): Rule {
     apiMode: options.apiMode ?? 'mock',
     bffProxyTarget,
     coverageThreshold: options.coverageThreshold ?? 85,
+    displayName: projectName
+      .split('-')
+      .filter(Boolean)
+      .map((word) => `${word[0]?.toUpperCase() ?? ''}${word.slice(1)}`)
+      .join(' '),
     e2e: options.e2e ?? true,
     observability: options.observability ?? true,
     projectName,
@@ -437,6 +562,7 @@ export function ngNew(options: NgNewSchema): Rule {
   };
 
   return chain([
+    guardAgainstReentry(root),
     externalSchematic('@schematics/angular', 'ng-new', {
       name: projectName,
       directory: options.directory,
