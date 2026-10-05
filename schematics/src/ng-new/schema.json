@@ -1,0 +1,89 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "RodriAngularTemplateNgNew",
+  "title": "Rodri Angular Template application options",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The name of the application.",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      },
+      "x-prompt": "What name would you like to use for the application?"
+    },
+    "directory": {
+      "type": "string",
+      "description": "Directory in which to create the workspace."
+    },
+    "style": {
+      "type": "string",
+      "description": "Stylesheet format for global and component styles.",
+      "enum": ["scss", "css"],
+      "default": "scss"
+    },
+    "routing": {
+      "type": "boolean",
+      "description": "Include the Angular Router and the reference lazy route.",
+      "default": true
+    },
+    "apiMode": {
+      "type": "string",
+      "description": "Default development API mode.",
+      "enum": ["mock", "bff"],
+      "default": "mock",
+      "x-prompt": {
+        "message": "Which API mode should development use by default?",
+        "type": "list",
+        "items": [
+          { "value": "mock", "label": "Local in-memory mock (recommended)" },
+          { "value": "bff", "label": "Backend for Frontend proxy" }
+        ]
+      }
+    },
+    "bffProxyTarget": {
+      "type": "string",
+      "description": "HTTP(S) target used by the BFF development proxy.",
+      "default": "http://localhost:5000"
+    },
+    "observability": {
+      "type": "boolean",
+      "description": "Enable the local observability baseline at runtime.",
+      "default": true
+    },
+    "e2e": {
+      "type": "boolean",
+      "description": "Include Playwright E2E tests and scripts.",
+      "default": true
+    },
+    "coverageThreshold": {
+      "type": "integer",
+      "description": "Minimum unit-test coverage percentage for every metric.",
+      "minimum": 0,
+      "maximum": 100,
+      "default": 85
+    },
+    "version": {
+      "type": "string",
+      "description": "Angular CLI version supplied by the invoking CLI.",
+      "visible": false,
+      "$default": {
+        "$source": "ng-cli-version"
+      }
+    },
+    "skipGit": {
+      "type": "boolean",
+      "description": "Do not initialize a Git repository.",
+      "default": false
+    },
+    "skipInstall": {
+      "type": "boolean",
+      "description": "Do not install dependency packages.",
+      "default": false
+    }
+  },
+  "required": ["name"],
+  "additionalProperties": false
+}

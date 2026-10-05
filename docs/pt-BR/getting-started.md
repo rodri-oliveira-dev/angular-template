@@ -2,9 +2,19 @@
 
 # Primeiros passos
 
-## 1. Criar ou clonar
+## 1. Criar com Schematics
 
-Quando o repositório upstream estiver habilitado como GitHub Template Repository, prefira **Use this template → Create a new repository**. Um clone normal também funciona para desenvolvimento do próprio template.
+O caminho recomendado cria e nomeia a aplicação pelo fluxo oficial do Angular CLI:
+
+```bash
+npm install --global @angular/cli@22.2.1 @rodri-oliveira-dev/angular-template@1.1.0
+ng new my-app --collection=@rodri-oliveira-dev/angular-template
+cd my-app
+```
+
+Consulte [Distribuição via Angular Schematics](schematics.md) para instalação local ao projeto e
+opções. O GitHub Template Repository continua como fallback quando a distribuição npm não puder ser
+usada. Um clone normal é voltado ao desenvolvimento do próprio template.
 
 ## 2. Selecionar o runtime
 
@@ -14,7 +24,7 @@ O repositório fixa a versão do Node.js em `.nvmrc`:
 nvm use
 ```
 
-O baseline v1.0 é validado com Node.js 24.15.0+, Angular 22.2.x e TypeScript 6.0.x.
+O baseline v1.1 é validado com Node.js 24.15.0+, Angular 22.2.x e TypeScript 6.0.x.
 
 ## 3. Instalar
 

@@ -4,6 +4,19 @@
 
 O repositório usa GitHub Actions como quality gate para pull requests e para a branch `main`.
 
+## Validação do pacote Schematics
+
+O CI de pull request tem um job separado `Packaged Schematics consumer`. Ele instala apenas a
+toolchain da coleção, executa testes em árvore virtual, inspeciona e instala de forma limpa o arquivo
+exato produzido por `npm pack`, depois gera uma aplicação temporária pelo pacote instalado e executa
+todos os gates de qualidade, cobertura, build, bootstrap e E2E mock/BFF. A saída temporária fica fora
+do checkout e é removida em `finally` tanto em sucesso quanto em falha.
+
+`.github/workflows/publish-schematics.yml` é independente do CI comum de branches. Ele aceita apenas
+uma tag de versão igual a `schematics/package.json`, executa somente no repositório canônico, repete
+a validação do pacote/consumidor e publica por trusted publishing do npm com OIDC. Consulte
+[Distribuição via Angular Schematics](../schematics.md#release-e-publish).
+
 ## Workflow
 
 O workflow permanente é `.github/workflows/ci.yml`.

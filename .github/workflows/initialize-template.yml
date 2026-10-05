@@ -1,0 +1,165 @@
+name: Initialize from Template
+
+on:
+  workflow_dispatch:
+    inputs:
+      project_name:
+        description: Application name (for example, customer-portal)
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: initialize-template
+  cancel-in-progress: false
+
+jobs:
+  initialize:
+    name: Generate and commit application
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    env:
+      CI: true
+      PROJECT_NAME: ${{ inputs.project_name }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Guard fresh template repository
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ "$GITHUB_REPOSITORY" == "rodri-oliveira-dev/angular-template" ]]; then
+            echo "::error::This workflow must run in a repository created from the template, not in the template repository itself."
+            exit 1
+          fi
+
+          node <<'NODE'
+          const fs = require('node:fs');
+
+          const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          const angularJson = JSON.parse(fs.readFileSync('angular.json', 'utf8'));
+
+          if (
+            packageJson.name !== 'angular-template' ||
+            !angularJson.projects?.['angular-template']
+          ) {
+            console.error(
+              'This repository no longer matches the untouched angular-template baseline. Initialization was stopped to avoid overwriting existing work.',
+            );
+            process.exit(1);
+          }
+          NODE
+
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24.15.0
+          cache: npm
+          cache-dependency-path: schematics/package-lock.json
+
+      - name: Build local Schematics package
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          npm ci --prefix schematics
+          npm run schematics:build
+
+          PACKAGE_DIR="$RUNNER_TEMP/schematics-package"
+          mkdir -p "$PACKAGE_DIR"
+          npm pack --prefix schematics --ignore-scripts --pack-destination "$PACKAGE_DIR"
+
+      - name: Generate application with the local collection
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          PACKAGE_NAME="$(node -p "require('./schematics/package.json').name")"
+          CLI_VERSION="$(node -p "require('./package.json').devDependencies['@angular/cli'].replace(/^[~^]/, '')")"
+          TARBALL="$(find "$RUNNER_TEMP/schematics-package" -maxdepth 1 -type f -name '*.tgz' -print -quit)"
+
+          if [[ -z "$TARBALL" ]]; then
+            echo "::error::Schematics package tarball was not produced."
+            exit 1
+          fi
+
+          BOOTSTRAP_DIR="$RUNNER_TEMP/template-bootstrap"
+          mkdir -p "$BOOTSTRAP_DIR"
+          cd "$BOOTSTRAP_DIR"
+
+          npm init -y >/dev/null
+          npm install --no-save "@angular/cli@$CLI_VERSION" "$TARBALL"
+
+          ./node_modules/.bin/ng new "$PROJECT_NAME" \
+            --collection="$PACKAGE_NAME" \
+            --directory=generated \
+            --style=scss \
+            --routing=true \
+            --api-mode=mock \
+            --bff-proxy-target=http://localhost:5000 \
+            --observability=true \
+            --e2e=true \
+            --coverage-threshold=85 \
+            --skip-git \
+            --skip-install
+
+      - name: Validate generated application
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          GENERATED_DIR="$RUNNER_TEMP/template-bootstrap/generated"
+          cd "$GENERATED_DIR"
+
+          npm ci
+          npm run format:check
+          npm run lint
+          npm run test:coverage
+          npm run coverage:check
+          npm run build
+
+      - name: Replace template contents
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          GENERATED_DIR="$RUNNER_TEMP/template-bootstrap/generated"
+
+          find "$GITHUB_WORKSPACE" \
+            -mindepth 1 \
+            -maxdepth 1 \
+            ! -name '.git' \
+            -exec rm -rf {} +
+
+          rsync -a \
+            --exclude node_modules \
+            "$GENERATED_DIR/" \
+            "$GITHUB_WORKSPACE/"
+
+      - name: Commit initialized application
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          cd "$GITHUB_WORKSPACE"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "::error::Initialization produced no repository changes."
+            exit 1
+          fi
+
+          git commit -m "chore: initialize project as $PROJECT_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"

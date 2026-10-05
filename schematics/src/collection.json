@@ -1,0 +1,10 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "schematics": {
+    "ng-new": {
+      "description": "Create a production-ready Angular application.",
+      "factory": "./ng-new/index#ngNew",
+      "schema": "./ng-new/schema.json"
+    }
+  }
+}

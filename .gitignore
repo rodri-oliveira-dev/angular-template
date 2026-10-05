@@ -6,6 +6,9 @@
 
 # Dependencies
 /node_modules
+/schematics/node_modules
+/schematics/dist
+/schematics/*.tgz
 
 # IDEs and editors
 .idea/
@@ -36,6 +39,7 @@ coverage/
 
 # Playwright
 /playwright-report/
+/playwright-report-bff/
 /test-results/
 
 # OWASP ZAP

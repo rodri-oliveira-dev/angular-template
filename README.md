@@ -33,7 +33,24 @@ The default development mode uses an in-memory mock, so a fresh checkout runs wi
 
 The checked-in versions are validated together by CI. Do not force unsupported dependency combinations with `--force` or `--legacy-peer-deps`.
 
-## Quick start
+## Create a project with Angular Schematics (recommended)
+
+Install the supported Angular CLI and the template collection, then use the standard Angular
+workspace command:
+
+```bash
+npm install --global @angular/cli@22.2.1 @rodri-oliveira-dev/angular-template@1.1.0
+ng new my-app --collection=@rodri-oliveira-dev/angular-template
+cd my-app
+npm start
+```
+
+Generation is deterministic, applies the complete baseline, and requires no manual file editing.
+The default project uses SCSS, routing, the local API mock, observability, Playwright, and an 85%
+coverage threshold. See [Angular Schematics distribution](docs/schematics.md) for a project-local
+installation, all options, BFF examples, development, packaging, and release details.
+
+## Run this repository
 
 Use the repository's Node.js version:
 
@@ -59,7 +76,7 @@ The default mode uses the local mock and requires no external services.
 
 For a complete first-use walkthrough, see [Getting Started](docs/getting-started.md).
 
-## Use as a GitHub template
+## GitHub Template fallback
 
 After this repository is marked as a **Template repository** in GitHub, create a new repository with **Use this template → Create a new repository**. The generated repository starts with the template files without inheriting this repository's Git history.
 
@@ -191,6 +208,8 @@ Pull requests to `main` and pushes to `main` validate:
 - CodeQL JavaScript/TypeScript analysis;
 - Codecov LCOV upload when configured;
 - CodeRabbit repository review policy through `.coderabbit.yaml`.
+- the Schematics unit suite, exact npm tarball, clean consumer installation, and generated-project
+  quality gates.
 
 Dependabot monitors npm and GitHub Actions. Executable Actions are pinned to immutable SHAs.
 
@@ -226,6 +245,7 @@ The workspace recommends Angular, ESLint, Prettier, Playwright, GitHub Actions, 
 
 Start with [Documentation](docs/README.md), which indexes:
 
+- Angular Schematics installation, options, package development, and release;
 - getting started;
 - architecture and ADRs;
 - HTTP/API;
@@ -246,4 +266,6 @@ For vulnerabilities, follow the private-reporting guidance in [SECURITY.md](SECU
 
 ## Release
 
-The production-ready baseline is **v1.0.0**. See [CHANGELOG.md](CHANGELOG.md) and [v1.0.0 release notes](docs/releases/v1.0.0.md).
+The npm/Schematics distribution is **v1.1.0**. See [CHANGELOG.md](CHANGELOG.md), the
+[v1.1.0 release notes](docs/releases/v1.1.0.md), and the
+[release workflow](docs/schematics.md#release-and-publish).

@@ -4,6 +4,29 @@
 
 Todas as mudanças relevantes do template production-ready são documentadas aqui.
 
+## [1.1.0] - 2026-10-05
+
+### Adicionado
+
+- coleção Angular Schematics isolada `@rodri-oliveira-dev/angular-template`;
+- geração `ng new <name> --collection=@rodri-oliveira-dev/angular-template` composta com os schematics oficiais
+  do Angular CLI;
+- opções determinísticas para mock/BFF, estilos, routing, observabilidade, E2E, proxy e cobertura;
+- testes unitários em árvore virtual e validação clean-room do projeto gerado a partir do pacote;
+- inspeção de tarball npm mínimo e workflow de trusted publishing com provenance, controlado por tag;
+- documentação bilíngue de instalação, opções, desenvolvimento, packaging e release.
+
+### Alterado
+
+- npm/Schematics passa a ser a rota recomendada; GitHub Template permanece como fallback;
+- identidade, caminhos, metadados do lockfile, workspace e paths de cobertura no CI são normalizados
+  para o nome solicitado.
+
+### Segurança
+
+- a automação de release usa GitHub OIDC/trusted publishing do npm sem token npm commitado;
+- a geração rejeita targets BFF com credenciais e paths de saída fora do diretório atual.
+
 ## [1.0.0] - 2026-10-05
 
 ### Adicionado
@@ -31,4 +54,4 @@ Todas as mudanças relevantes do template production-ready são documentadas aqu
 ### Adiado
 
 - migração para TypeScript 7 permanece bloqueada até suporte oficial da toolchain Angular/build/lint;
-- distribuição via npm/Angular Schematics está planejada como evolução pós-v1.0.
+- distribuição via npm/Angular Schematics foi entregue na v1.1.0.

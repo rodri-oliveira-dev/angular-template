@@ -1,0 +1,52 @@
+{
+  "name": "@rodri-oliveira-dev/angular-template",
+  "version": "1.1.0",
+  "description": "Angular Schematics collection for the Rodri production-ready Angular template.",
+  "license": "MIT",
+  "author": "Rodrigo Oliveira",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rodri-oliveira-dev/angular-template.git",
+    "directory": "schematics"
+  },
+  "homepage": "https://github.com/rodri-oliveira-dev/angular-template#readme",
+  "bugs": {
+    "url": "https://github.com/rodri-oliveira-dev/angular-template/issues"
+  },
+  "keywords": [
+    "angular",
+    "schematics",
+    "template"
+  ],
+  "type": "commonjs",
+  "schematics": "./dist/collection.json",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": "^24.15.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "clean": "node scripts/clean.mjs",
+    "build": "npm run clean && tsc -p tsconfig.json && node scripts/copy-assets.mjs",
+    "test": "npm run build && node --test test/**/*.test.cjs",
+    "package:validate": "npm test && node scripts/validate-package.mjs",
+    "integration": "node scripts/integration-test.mjs",
+    "prepack": "npm test"
+  },
+  "dependencies": {
+    "@angular-devkit/core": "22.2.1",
+    "@angular-devkit/schematics": "22.2.1",
+    "@schematics/angular": "22.2.1",
+    "jsonc-parser": "3.3.1",
+    "prettier": "3.9.9"
+  },
+  "devDependencies": {
+    "typescript": "~6.0.2"
+  }
+}
