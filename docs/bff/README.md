@@ -136,10 +136,10 @@ Cookie-authenticated write requests require CSRF protection in addition to `Same
 
 The Angular client explicitly uses the conventional Angular XSRF contract:
 
-| Purpose          | Name             |
-| ---------------- | ---------------- |
-| anti-CSRF cookie | `XSRF-TOKEN`     |
-| request header   | `X-XSRF-TOKEN`   |
+| Purpose          | Name           |
+| ---------------- | -------------- |
+| anti-CSRF cookie | `XSRF-TOKEN`   |
+| request header   | `X-XSRF-TOKEN` |
 
 The BFF should issue a random anti-CSRF cookie named `XSRF-TOKEN`. Unlike the authentication/session cookie, this anti-CSRF cookie must be readable by Angular, so it is intentionally **not** `HttpOnly`.
 
