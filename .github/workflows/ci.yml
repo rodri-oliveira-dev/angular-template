@@ -10,6 +10,8 @@ on:
 
 permissions:
   contents: read
+  issues: write
+  pull-requests: write
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -26,11 +28,13 @@ jobs:
 
     steps:
       - name: Checkout
+        id: checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
       - name: Setup Node.js
+        id: setup_node
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 24.15.0
@@ -38,34 +42,43 @@ jobs:
           cache-dependency-path: package-lock.json
 
       - name: Runtime versions
+        id: runtime_versions
         run: |
           node --version
           npm --version
 
       - name: Install dependencies
+        id: install_dependencies
         run: npm ci
 
       - name: Format check
+        id: format_check
         run: npm run format:check
 
       - name: Lint and guardrails
+        id: lint_guardrails
         run: npm run lint
 
       - name: Security guardrails and dependency audit
+        id: security_gate
         run: npm run security:all
 
       - name: Unit tests with coverage
+        id: unit_tests
         run: npm run test:coverage
 
       - name: Coverage gate (>= 85%)
+        id: coverage_gate
         env:
           COVERAGE_GATE: 85
         run: npm run coverage:check
 
       - name: Production build
+        id: production_build
         run: npm run build
 
       - name: Serve production build for DAST
+        id: dast_server
         run: |
           npm run security:dast:serve >/tmp/angular-template-http.log 2>&1 &
           echo $! > /tmp/angular-template-http.pid
@@ -79,6 +92,7 @@ jobs:
           exit 1
 
       - name: OWASP ZAP baseline
+        id: zap_baseline
         uses: zaproxy/action-baseline@de8ad967d3548d44ef623df22cf95c3b0baf8b25 # v0.15.0
         with:
           target: 'http://127.0.0.1:4173/'
@@ -88,9 +102,11 @@ jobs:
           artifact_name: zap-baseline-${{ github.run_id }}
 
       - name: Install Playwright Chromium
+        id: playwright_install
         run: npx playwright install --with-deps chromium
 
       - name: Playwright E2E (mock + BFF)
+        id: e2e
         run: npm run e2e
 
       - name: Upload Playwright diagnostics
@@ -104,3 +120,26 @@ jobs:
             test-results/
           if-no-files-found: ignore
           retention-days: 7
+
+      - name: Report CI result on pull request
+        if: always() && github.event_name == 'pull_request'
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          CHECKOUT_OUTCOME: ${{ steps.checkout.outcome }}
+          SETUP_NODE_OUTCOME: ${{ steps.setup_node.outcome }}
+          RUNTIME_VERSIONS_OUTCOME: ${{ steps.runtime_versions.outcome }}
+          INSTALL_DEPENDENCIES_OUTCOME: ${{ steps.install_dependencies.outcome }}
+          FORMAT_CHECK_OUTCOME: ${{ steps.format_check.outcome }}
+          LINT_GUARDRAILS_OUTCOME: ${{ steps.lint_guardrails.outcome }}
+          SECURITY_GATE_OUTCOME: ${{ steps.security_gate.outcome }}
+          UNIT_TESTS_OUTCOME: ${{ steps.unit_tests.outcome }}
+          COVERAGE_GATE_OUTCOME: ${{ steps.coverage_gate.outcome }}
+          PRODUCTION_BUILD_OUTCOME: ${{ steps.production_build.outcome }}
+          DAST_SERVER_OUTCOME: ${{ steps.dast_server.outcome }}
+          ZAP_BASELINE_OUTCOME: ${{ steps.zap_baseline.outcome }}
+          PLAYWRIGHT_INSTALL_OUTCOME: ${{ steps.playwright_install.outcome }}
+          E2E_OUTCOME: ${{ steps.e2e.outcome }}
+        run: node scripts/report-ci-pr-status.mjs
