@@ -81,6 +81,10 @@ jobs:
         id: production_build
         run: npm run build
 
+      - name: Clean template bootstrap
+        id: clean_bootstrap
+        run: npm run bootstrap:verify
+
       - name: Serve production build for DAST
         id: dast_server
         run: |
@@ -131,6 +135,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           CHECKOUT_OUTCOME: ${{ steps.checkout.outcome }}
           SETUP_NODE_OUTCOME: ${{ steps.setup_node.outcome }}
@@ -143,6 +148,7 @@ jobs:
           UNIT_TESTS_OUTCOME: ${{ steps.unit_tests.outcome }}
           COVERAGE_GATE_OUTCOME: ${{ steps.coverage_gate.outcome }}
           PRODUCTION_BUILD_OUTCOME: ${{ steps.production_build.outcome }}
+          CLEAN_BOOTSTRAP_OUTCOME: ${{ steps.clean_bootstrap.outcome }}
           DAST_SERVER_OUTCOME: ${{ steps.dast_server.outcome }}
           ZAP_BASELINE_OUTCOME: ${{ steps.zap_baseline.outcome }}
           PLAYWRIGHT_INSTALL_OUTCOME: ${{ steps.playwright_install.outcome }}

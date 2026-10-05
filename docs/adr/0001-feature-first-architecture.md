@@ -32,7 +32,7 @@ A feature may organize itself into `pages/`, `components/`, `models/`, and `data
 
 - some small features will not need every suggested subdirectory;
 - extracting shared code requires an explicit decision;
-- architectural boundaries rely on conventions until automated dependency checks are introduced in a later quality phase.
+- architectural boundaries are reinforced by the automated feature import check in the quality gate.
 
 ## Alternatives considered
 

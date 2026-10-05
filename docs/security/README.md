@@ -213,7 +213,7 @@ CORS does **not**:
 
 For credentialed APIs, use an explicit allowlist of trusted origins rather than `*`, and validate authentication/authorization server-side on every request.
 
-A same-origin SPA/BFF deployment typically needs less CORS configuration, which is one reason the later BFF phase prefers same-origin `/api` access.
+A same-origin SPA/BFF deployment typically needs less CORS configuration, which is why the template prefers same-origin `/api` access.
 
 ## Executable guardrails
 

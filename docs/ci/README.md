@@ -251,3 +251,16 @@ Also recommended:
 - do not require administrator bypass for ordinary maintenance unless repository governance demands it.
 
 The exact ruleset is a repository governance setting rather than application source, so the template documents it instead of attempting to mutate repository administration automatically.
+
+## Clean template bootstrap
+
+The CI gate includes `npm run bootstrap:verify`. This command copies the repository into a fresh temporary directory while excluding generated artifacts and repository metadata, then performs:
+
+```bash
+npm ci
+npm run build
+```
+
+This validates that a consumer can start from template files alone with the committed lockfile. Runtime independence from external infrastructure is validated separately by the mock-mode Playwright suite, which starts the application without a BFF or downstream service.
+
+The pull-request CI reporter includes **Clean template bootstrap** as an explicit gate, so bootstrap failures are visible directly in the PR status comment.

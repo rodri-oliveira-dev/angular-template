@@ -1,6 +1,6 @@
 {
   "name": "angular-template",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "ng": "ng",
@@ -30,11 +30,12 @@
     "architecture:test": "node --test scripts/check-feature-boundaries.test.mjs",
     "guardrails:test": "npm run architecture:test && npm run security:test",
     "ci:base": "npm run format:check && npm run lint && npm test && npm run build",
-    "ci:verify": "npm run ci:report:test && npm run format:check && npm run lint && npm run security:all && npm run test:coverage && npm run coverage:check && npm run build && npm run e2e",
+    "ci:verify": "npm run ci:report:test && npm run format:check && npm run lint && npm run security:all && npm run test:coverage && npm run coverage:check && npm run build && npm run bootstrap:verify && npm run e2e",
     "coverage:check": "node scripts/check-coverage-gate.mjs",
     "start:mock": "ng serve --configuration development",
     "start:bff": "ng serve --configuration bff",
-    "build:bff": "ng build --configuration bff"
+    "build:bff": "ng build --configuration bff",
+    "bootstrap:verify": "node scripts/verify-clean-bootstrap.mjs"
   },
   "engines": {
     "node": "^24.15.0"

@@ -52,7 +52,7 @@ export const exampleApiMockInterceptor: HttpInterceptorFn = (request, next) => {
             headers,
             url: request.urlWithParams,
             error: {
-              type: 'https://angular-template.local/problems/validation',
+              type: 'https://example.test/problems/validation',
               title: 'Validation failed',
               status: 400,
               detail: 'The example name is required.',

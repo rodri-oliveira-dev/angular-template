@@ -1,215 +1,138 @@
 # Angular Template
 
-A modern Angular foundation intended to evolve into a reusable GitHub template for production applications.
+Production-ready Angular starter focused on maintainable architecture, secure browser/BFF boundaries, automated quality gates, testing, and observability.
+
+The default development mode uses an in-memory mock, so a fresh checkout runs without a backend, cloud account, database, identity provider, or other external infrastructure.
 
 ## Baseline
 
 - Angular 22.2.x
-- TypeScript strict mode
-- Standalone components
-- Angular Router
+- TypeScript 6.0.x in strict mode
+- Node.js 24.15.0+ in the Node 24 line
+- standalone Angular APIs and lazy-loaded routes
+- feature-first architecture
 - SCSS
-- npm with a committed `package-lock.json`
-- Node.js 24 LTS
-- Feature-first architecture with lazy-loaded feature entry points
-- Provider-based `HttpClient` with typed API configuration
-- Angular native unit-test builder with Vitest
-- ESLint + Prettier quality baseline
-- Vendor-neutral telemetry foundation
+- npm with committed `package-lock.json`
+- Vitest through Angular's native unit-test builder
+- Playwright browser tests
+- ESLint + Prettier
+- coverage gate of 85% for statements, branches, functions, and lines
+- CodeQL, Dependabot, npm audit, and OWASP ZAP
+- same-origin optional BFF integration with XSRF support
+- vendor-neutral telemetry foundation
 
-## Prerequisites
+The checked-in versions are validated together by CI. Do not force unsupported dependency combinations with `--force` or `--legacy-peer-deps`.
 
-Use Node.js **24.15.0 or later in the Node 24 LTS line**. The repository includes an `.nvmrc` file:
+## Quick start
+
+Use the repository's Node.js version:
 
 ```bash
 nvm use
 ```
 
-Verify your environment:
-
-```bash
-node --version
-npm --version
-```
-
-## VS Code workspace
-
-The repository includes `angular-template.code-workspace` with the recommended development setup.
-
-Open it directly:
-
-```bash
-code angular-template.code-workspace
-```
-
-The workspace provides:
-
-- Angular, ESLint, Prettier, EditorConfig, Playwright, GitHub Actions, YAML, Angular Vitest Runner, and LCOV coverage extension recommendations;
-- format-on-save and ESLint fix-on-save aligned with the repository quality rules;
-- workspace TypeScript from `node_modules`;
-- tasks for install, serve, build, unit tests, coverage, lint, formatting, security, Playwright, and full CI verification;
-- Angular/Vitest tests integrated with VS Code's native **Testing** view through the Angular CLI;
-- LCOV line and branch coverage rendered directly in the editor from `coverage/lcov.info`;
-- **Angular: Debug in Chrome**, which starts the Angular dev server automatically;
-- **Angular: Attach to Chrome** for an existing remote-debugging session;
-- **Playwright: Debug E2E** for interactive browser-test debugging.
-
-Use **Terminal → Run Task** for predefined tasks, **Testing** to run/debug Angular/Vitest tests, and **Run and Debug** for launch configurations.
-
-For coverage, run the **test: coverage** task (or `npm run test:coverage`). The Angular builder generates both `coverage/lcov.info` and `coverage/coverage-summary.json`. Use **test: coverage gate** (or `npm run coverage:check`) to enforce the 85% gate locally; the LCOV extension renders line and branch coverage directly in the editor.
-
-## Install
-
-Install exactly the dependency graph recorded in the lockfile:
+Install exactly the lockfile dependency graph:
 
 ```bash
 npm ci
 ```
 
-## Run locally
+Start the application:
 
 ```bash
 npm start
 ```
 
-The Angular development server is available at `http://localhost:4200`.
+Open `http://localhost:4200`.
 
-The root route redirects to the lazy-loaded reference feature at `/example`. `npm start` uses a local in-memory mock, so no external backend is required. Use `npm run start:bff` to keep browser calls same-origin under `/api` while proxying them to a local BFF.
+The default mode uses the local mock and requires no external services.
 
-## BFF development
+For a complete first-use walkthrough, see [Getting Started](docs/getting-started.md).
 
-Run with the zero-dependency local mock:
+## Use as a GitHub template
+
+After this repository is marked as a **Template repository** in GitHub, create a new repository with **Use this template → Create a new repository**. The generated repository starts with the template files without inheriting this repository's Git history.
+
+The copied project is immediately runnable with `npm ci && npm start`. Project-specific renaming and replacement of the reference feature can be done incrementally without blocking the initial bootstrap.
+
+Repository administrators can follow [Template Repository Setup](docs/template-repository.md) to enable the GitHub setting.
+
+## Runtime modes
+
+### Local mock
 
 ```bash
 npm start
 ```
 
-Run against a local BFF (default target `http://localhost:5000`):
+The reference feature uses an in-memory HTTP mock. This is the zero-infrastructure development path and the default experience for a new project.
+
+### Local BFF
 
 ```bash
 npm run start:bff
 ```
 
-The browser always calls the configured same-origin API path (default `/api`). Angular does not contain internal/downstream API URLs. Authenticated browser sessions remain BFF-managed, while Angular applies the configured XSRF header to same-origin write requests without enabling cross-origin credentials globally.
+The browser calls the same-origin `/api` path and the Angular dev server proxies it to `http://localhost:5000` by default.
 
-See [BFF connectivity](docs/bff/README.md) for the proxy, session security, XSRF, and responsibility boundaries.
+Angular does not contain downstream/internal service URLs. The BFF owns browser session/authentication concerns, while Angular handles UI state, browser-facing DTO mapping, XSRF header behavior, correlation, and frontend telemetry.
 
-## Build
+See [BFF](docs/bff/README.md).
 
-Production build:
+## Validation
+
+Run the main checks independently:
 
 ```bash
+npm run format:check
+npm run lint
+npm run security:all
+npm run test:coverage
+npm run coverage:check
 npm run build
+npm run e2e
 ```
 
-Development watch mode:
+Run the clean-bootstrap simulation:
 
 ```bash
-npm run watch
+npm run bootstrap:verify
 ```
 
-## Test
+Run the complete local verification sequence:
 
-Run the unit test suite once:
+```bash
+npm run ci:verify
+```
+
+CI additionally serves the production build through the security-header harness and runs the OWASP ZAP baseline.
+
+## Testing
+
+Unit tests:
 
 ```bash
 npm test
 ```
 
-Run explicitly:
+Coverage:
 
 ```bash
-npm run test:unit
-```
-
-Generate coverage with enforced thresholds:
-
-```bash
-npm run test:coverage
-```
-
-Watch mode:
-
-```bash
-npm run test:unit:watch
-```
-
-Run both Playwright smoke modes:
-
-```bash
-npm run e2e
-```
-
-Use `npm run e2e:mock` or `npm run e2e:bff` when you need to run one browser contract independently.
-
-The test foundation includes standalone component, service/data-access, HTTP, interceptor, routing, local-mock browser flows, and BFF-mode browser contract flows. Coverage gates enforce 85% for statements, branches, functions, and lines. See [Testing](docs/testing/README.md).
-
-## Continuous integration
-
-Pull requests to `main` and pushes to `main` run the GitHub Actions CI gate:
-
-```bash
-npm ci
-npm run format:check
-npm run lint
 npm run test:coverage
 npm run coverage:check
-npm run build
-npx playwright install --with-deps chromium
+```
+
+Browser tests:
+
+```bash
 npm run e2e
 ```
 
-After dependencies and the browser are installed, use `npm run ci:verify` for the equivalent application gates locally. `npm run ci:base` remains available for the original v0.7 baseline.
+Run only one browser mode with `npm run e2e:mock` or `npm run e2e:bff`.
 
-Dependabot monitors npm and GitHub Actions, and CodeQL analyzes JavaScript/TypeScript on PRs, main, and a weekly schedule. Executable Actions are pinned to immutable commit SHAs.
-
-See [Continuous Integration](docs/ci/README.md) for triggers, permissions, concurrency, dependency automation, CodeQL, Action pinning, branch protection, and failure diagnosis.
-
-## Code quality
-
-Run static analysis and architecture guardrails:
-
-```bash
-npm run lint
-```
-
-Check repository formatting:
-
-```bash
-npm run format:check
-```
-
-Apply formatter output with `npm run format` and safe linter fixes with `npm run lint:fix`.
-
-See [Code quality](docs/quality/README.md) for lint rules, feature-boundary checks, and bundle budgets.
-
-## Frontend security
-
-Run the frontend security guardrails:
-
-```bash
-npm run security:check
-npm run security:test
-npm run security:audit
-```
-
-The baseline blocks sanitizer bypass APIs, direct Web Storage access, direct script-readable cookie access, and console logging in application TypeScript. Client-side configuration is treated as public and must never contain secrets.
-
-Production builds also enable Angular `security.autoCsp`, and the repository includes provider-neutral response-header guidance plus a High/Critical dependency-audit gate.
-
-See [Frontend security](docs/security/README.md) for sanitization, storage, cookies, dependency policy, CSP, CORS, and browser-header guidance.
-
-## Observability
-
-The template provides a vendor-neutral `TelemetryClient` with local and no-op implementations plus a global Angular `ErrorHandler` adapter.
-
-The local implementation keeps only sanitized, bounded in-memory records. It does not write telemetry to console, browser storage, or an external collector. HTTP, Angular navigation, LCP, and CLS telemetry are configurable and use low-cardinality/sanitized attributes. An optional exporter boundary can be bridged to OpenTelemetry without making an SDK or collector mandatory.
-
-See [Observability](docs/observability/README.md) for configuration, error handling, and sensitive-data rules.
+See [Testing](docs/testing/README.md).
 
 ## Architecture
-
-The application is organized around feature ownership:
 
 ```text
 src/app/
@@ -220,55 +143,95 @@ src/app/
 └── app.routes.ts
 ```
 
-A feature may use:
+Feature internals stay inside their capability. Cross-feature imports are rejected by an automated architecture check. Reusable cross-cutting responsibilities belong deliberately in `shared/` or `core/`.
 
-```text
-features/<feature>/
-├── pages/
-├── components/
-├── data-access/
-└── models/
+See [Architecture](docs/architecture/README.md) and the [ADR index](docs/adr/README.md).
+
+## HTTP and API
+
+The template includes typed same-origin API configuration, correlation, Problem Details mapping, feature-owned data access, explicit DTO mapping, and a deterministic local mock.
+
+See [HTTP & API](docs/http/README.md).
+
+## Security
+
+The frontend baseline blocks sanitizer bypass APIs, direct Web Storage access, direct script-readable cookie access, and application console logging. Production builds enable Angular `security.autoCsp`. CI runs dependency auditing and OWASP ZAP against the production build.
+
+See [Security](docs/security/README.md) and [SECURITY.md](SECURITY.md).
+
+## Observability
+
+The template provides a vendor-neutral telemetry boundary with local/no-op implementations, sanitized low-cardinality events, global error handling, HTTP telemetry, navigation telemetry, and selected web-performance signals. An OpenTelemetry adapter boundary is available without requiring a collector for local development.
+
+See [Observability](docs/observability/README.md).
+
+## CI/CD and quality
+
+Pull requests to `main` and pushes to `main` validate:
+
+- clean dependency installation;
+- formatting;
+- lint, architecture, and security guardrails;
+- dependency audit;
+- unit coverage >= 85%;
+- production build;
+- clean template bootstrap;
+- OWASP ZAP baseline;
+- Playwright mock and BFF browser flows;
+- CodeQL JavaScript/TypeScript analysis.
+
+Dependabot monitors npm and GitHub Actions. Executable Actions are pinned to immutable SHAs.
+
+See [CI/CD](docs/ci/README.md) and [Code Quality](docs/quality/README.md).
+
+## Reference feature
+
+`src/app/features/example` is intentionally small and replaceable. It demonstrates:
+
+- feature-first ownership;
+- route lazy loading;
+- GET/POST data access;
+- DTO mapping;
+- local mock mode;
+- BFF-compatible same-origin requests;
+- Problem Details;
+- correlation and XSRF behavior;
+- component, HTTP, unit, and browser testing.
+
+A real application can replace the feature after bootstrap while keeping the surrounding architecture and guardrails.
+
+## VS Code
+
+Open:
+
+```bash
+code angular-template.code-workspace
 ```
 
-Top-level features should prefer lazy loading. Do not import another feature's internals directly; promote genuinely cross-cutting code to `shared/` or `core/` deliberately.
+The workspace recommends Angular, ESLint, Prettier, Playwright, GitHub Actions, YAML, Vitest, and LCOV tooling and provides tasks for the repository commands.
 
-See [Architecture](docs/architecture/README.md) and [ADR 0001](docs/adr/0001-feature-first-architecture.md) for the detailed rationale and dependency rules.
+## Documentation
 
-## HTTP and API integration
+Start with [Documentation](docs/README.md), which indexes:
 
-The template provides:
+- getting started;
+- architecture and ADRs;
+- HTTP/API;
+- testing;
+- quality;
+- security;
+- observability;
+- CI/CD;
+- optional BFF integration;
+- template repository administration;
+- release notes.
 
-- typed API base-path configuration;
-- functional correlation and error interceptors;
-- Problem Details mapping to a standardized `ApiError`;
-- feature-owned data-access services;
-- explicit DTO mapping;
-- loading/error state and lifecycle-aware request subscriptions;
-- a local mock demonstrating GET and POST without external infrastructure.
+## Contributing and security
 
-See [HTTP and API integration](docs/http/README.md) for endpoint conventions and integration guidance.
+See [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
 
-## Current scope
+For vulnerabilities, follow the private-reporting guidance in [SECURITY.md](SECURITY.md) instead of opening a public issue with exploit details.
 
-The template currently includes:
+## Release
 
-- **v0.1 Angular foundation** — strict standalone Angular baseline;
-- **v0.2 Architecture** — feature-first boundaries, lazy loading, conventions, and a small reference feature;
-- **v0.3 HTTP & API integration** — provider-based HTTP, Problem Details, correlation, feature data-access, and local GET/POST examples;
-- **v0.4 Unit testing foundation** — Vitest runner conventions and examples for components, services/data-access, HTTP, and routing;
-- **v0.4.1 Coverage & test conventions** — reproducible coverage gates plus typed fixtures and mock factories;
-- **v0.4.2 Playwright E2E** — headless Chromium smoke tests for bootstrap, navigation, and the reference flow;
-- **v0.5 Code quality baseline** — ESLint, Prettier, bundle budgets, and feature import guardrails;
-- **v0.5.1 Frontend security baseline** — sanitization, browser storage, cookie, logging, and public client-config guardrails;
-- **v0.5.2 Dependency & browser security hardening** — dependency audit policy, Angular autoCSP, browser response headers, CORS guidance, and secure-cookie hardening;
-- **v0.6 Telemetry foundation** — vendor-neutral structured telemetry, local/no-op providers, sanitization, and global error reporting;
-- **v0.6.1 HTTP telemetry & correlation** — request duration/status/outcome events, correlation handling, and single-path HTTP failure reporting;
-- **v0.6.2 Performance telemetry & OpenTelemetry adapter** — safe route navigation telemetry, selected LCP/CLS metrics, configurable collection, and an optional collector-free exporter bridge;
-- **v0.7 CI foundation** — PR/main GitHub Actions gate for formatting, lint/guardrails, unit tests, and production build;
-- **v0.7.1 Coverage & E2E in CI** — enforced coverage thresholds, reproducible Chromium installation, headless Playwright smoke tests, and failure-only diagnostics;
-- **v0.7.2 Dependency automation & CodeQL** — grouped Dependabot updates, JavaScript/TypeScript CodeQL scanning, immutable Action pins, and documented main-branch protection;
-- **v0.8 BFF connectivity foundation** — same-origin `/api`, mock/BFF runtime modes, local Angular proxy, and topology-safe API configuration;
-- **v0.8.1 BFF session security & XSRF** — server-managed session-cookie boundary, Angular XSRF configuration, no sensitive Web Storage credentials, and no global cross-origin credential opt-in;
-- **v0.8.2 BFF reference integration & contracts** — reference data-access contract, Problem Details/correlation preservation, Angular/BFF/domain responsibility boundaries, and mock + BFF browser verification.
-
-The v0.8 BFF integration block is complete. The BFF remains optional: normal development can run entirely against the local mock.
+The production-ready baseline is **v1.0.0**. See [CHANGELOG.md](CHANGELOG.md) and [v1.0.0 release notes](docs/releases/v1.0.0.md).
