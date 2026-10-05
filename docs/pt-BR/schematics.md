@@ -128,9 +128,12 @@ carrega a coleção `ng-new`. O pacote contém apenas `package.json`, README, Ja
 ## Release e publish
 
 As versões do template e do pacote avançam juntas. A tag `v1.1.0` só pode publicar o pacote
-`1.1.0`. `.github/workflows/publish-schematics.yml` executa apenas para tags de versão no repositório
-canônico, revalida o tarball e o consumidor gerado e publica em runner hospedado pelo GitHub via
-trusted publishing do npm (OIDC). Nenhum token npm ou segredo é commitado; o npm adiciona provenance.
+`1.1.0`. Execute `.github/workflows/release.yml` manualmente a partir da `main` para obter a
+versão de `schematics/package.json`, criar e enviar a tag anotada correspondente e disparar
+explicitamente `.github/workflows/publish-schematics.yml` nessa tag. O workflow de publicação
+também mantém pushes diretos de tags de versão como fallback, revalida o tarball e o consumidor
+gerado e publica em runner hospedado pelo GitHub via trusted publishing do npm (OIDC). Nenhum token
+npm ou segredo é commitado; o npm adiciona provenance.
 
 Antes do primeiro release real, o publisher deve:
 
@@ -138,8 +141,9 @@ Antes do primeiro release real, o publisher deve:
 2. configurar o trusted publisher no npm para usuário GitHub `rodri-oliveira-dev`, repositório
    `angular-template`, workflow `publish-schematics.yml` e permissão de publish direto;
 3. configurar o environment `npm` do GitHub com aprovação obrigatória de maintainer;
-4. enviar uma tag anotada exatamente igual à versão de `schematics/package.json` somente depois de
-   a `main` ficar verde.
+4. depois que a `main` estiver verde, executar o workflow **Release** a partir da `main`; ele cria
+   a tag anotada correspondente a `schematics/package.json` e dispara explicitamente
+   **Publish Schematics**.
 
 Nenhuma implementação ou smoke test publica uma versão npm real. Até o primeiro release no
 registry, use `npm run schematics:package:validate` e `npm run schematics:integration` com o `.tgz`

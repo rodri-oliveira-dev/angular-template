@@ -128,9 +128,12 @@ collection. The package contains only `package.json`, its README, compiled JavaS
 ## Release and publish
 
 Template and package versions move together. Tag `v1.1.0` can publish only package version `1.1.0`.
-`.github/workflows/publish-schematics.yml` runs only for version tags in the canonical repository,
-revalidates the tarball and generated consumer, and publishes from a GitHub-hosted runner through
-npm trusted publishing (OIDC). No npm token or other secret is committed; npm adds provenance.
+Run `.github/workflows/release.yml` manually from `main` to resolve the version from
+`schematics/package.json`, create and push the matching annotated tag, and explicitly dispatch
+`.github/workflows/publish-schematics.yml` on that tag. The publish workflow also keeps direct
+version-tag pushes as a supported fallback, revalidates the tarball and generated consumer, and
+publishes from a GitHub-hosted runner through npm trusted publishing (OIDC). No npm token or other
+secret is committed; npm adds provenance.
 
 Before the first real release, the publisher must:
 
@@ -138,7 +141,8 @@ Before the first real release, the publisher must:
 2. configure its npm trusted publisher for GitHub user `rodri-oliveira-dev`, repository
    `angular-template`, workflow `publish-schematics.yml`, and direct publish permission;
 3. configure the GitHub `npm` environment with required maintainer approval;
-4. push an annotated tag that exactly matches `schematics/package.json` only after `main` is green.
+4. after `main` is green, run the **Release** workflow from `main`; it creates the annotated tag
+   matching `schematics/package.json` and dispatches **Publish Schematics** explicitly.
 
 No implementation or smoke test publishes a real npm version. Until the first registry release,
 use `npm run schematics:package:validate` and `npm run schematics:integration` with the local `.tgz`.

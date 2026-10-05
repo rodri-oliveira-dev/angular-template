@@ -1,0 +1,91 @@
+name: Release
+
+run-name: Release schematics package from ${{ github.ref_name }}
+
+on:
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: write
+
+concurrency:
+  group: schematics-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Tag and trigger package publication
+    if: github.repository == 'rodri-oliveira-dev/angular-template' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24.15.0
+
+      - name: Resolve release metadata
+        id: release
+        shell: bash
+        run: |
+          VERSION="$(node -p "require('./schematics/package.json').version")"
+
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z.-]+)?$ ]]; then
+            echo "Invalid schematics package version: $VERSION" >&2
+            exit 1
+          fi
+
+          TAG="v$VERSION"
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Ensure release tag does not already exist
+        env:
+          TAG: ${{ steps.release.outputs.tag }}
+        shell: bash
+        run: |
+          if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists. Refusing to recreate a published release." >&2
+            exit 1
+          fi
+
+      - name: Create and push annotated release tag
+        env:
+          TAG: ${{ steps.release.outputs.tag }}
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$TAG" -m "Release $TAG"
+          git push origin "$TAG"
+
+      - name: Trigger Publish Schematics
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.release.outputs.tag }}
+        shell: bash
+        run: gh workflow run publish-schematics.yml --ref "$TAG"
+
+      - name: Write release summary
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+          TAG: ${{ steps.release.outputs.tag }}
+        shell: bash
+        run: |
+          {
+            echo "## Release dispatched"
+            echo
+            printf -- '- Version: `%s`\n' "$VERSION"
+            printf -- '- Tag: `%s`\n' "$TAG"
+            echo '- Publish workflow: `publish-schematics.yml`'
+            echo
+            echo 'The npm publication remains protected by the `npm` environment approval gate.'
+          } >> "$GITHUB_STEP_SUMMARY"
