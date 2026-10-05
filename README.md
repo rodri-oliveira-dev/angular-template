@@ -56,7 +56,7 @@ The workspace provides:
 
 Use **Terminal → Run Task** for predefined tasks, **Testing** to run/debug Angular/Vitest tests, and **Run and Debug** for launch configurations.
 
-For coverage, run the **test: coverage** task (or `npm run test:coverage`). The Angular builder already generates `coverage/lcov.info`; the workspace points the LCOV extension at that file so line and branch coverage can be inspected directly in the editor.
+For coverage, run the **test: coverage** task (or `npm run test:coverage`). The Angular builder generates both `coverage/lcov.info` and `coverage/coverage-summary.json`. Use **test: coverage gate** (or `npm run coverage:check`) to enforce the 85% gate locally; the LCOV extension renders line and branch coverage directly in the editor.
 
 ## Install
 
@@ -122,7 +122,7 @@ Run the Playwright smoke suite:
 npm run e2e
 ```
 
-The test foundation includes standalone component, service/data-access, HTTP, interceptor, routing, and browser-level smoke examples. Coverage gates enforce 80% statements/lines/functions and 75% branches. See [Testing](docs/testing/README.md).
+The test foundation includes standalone component, service/data-access, HTTP, interceptor, routing, and browser-level smoke examples. Coverage gates enforce 85% for statements, branches, functions, and lines. See [Testing](docs/testing/README.md).
 
 ## Continuous integration
 
@@ -133,6 +133,7 @@ npm ci
 npm run format:check
 npm run lint
 npm run test:coverage
+npm run coverage:check
 npm run build
 npx playwright install --with-deps chromium
 npm run e2e
