@@ -74,7 +74,25 @@ npm start
 
 The Angular development server is available at `http://localhost:4200`.
 
-The root route redirects to the lazy-loaded reference feature at `/example`. Its HTTP example uses a local in-memory mock by default, so no external backend is required.
+The root route redirects to the lazy-loaded reference feature at `/example`. `npm start` uses a local in-memory mock, so no external backend is required. Use `npm run start:bff` to keep browser calls same-origin under `/api` while proxying them to a local BFF.
+
+## BFF development
+
+Run with the zero-dependency local mock:
+
+```bash
+npm start
+```
+
+Run against a local BFF (default target `http://localhost:5000`):
+
+```bash
+npm run start:bff
+```
+
+The browser always calls the configured same-origin API path (default `/api`). Angular does not contain internal/downstream API URLs.
+
+See [BFF connectivity](docs/bff/README.md) for the proxy and responsibility boundaries.
 
 ## Build
 
@@ -246,6 +264,7 @@ The template currently includes:
 - **v0.6.2 Performance telemetry & OpenTelemetry adapter** — safe route navigation telemetry, selected LCP/CLS metrics, configurable collection, and an optional collector-free exporter bridge;
 - **v0.7 CI foundation** — PR/main GitHub Actions gate for formatting, lint/guardrails, unit tests, and production build;
 - **v0.7.1 Coverage & E2E in CI** — enforced coverage thresholds, reproducible Chromium installation, headless Playwright smoke tests, and failure-only diagnostics;
-- **v0.7.2 Dependency automation & CodeQL** — grouped Dependabot updates, JavaScript/TypeScript CodeQL scanning, immutable Action pins, and documented main-branch protection.
+- **v0.7.2 Dependency automation & CodeQL** — grouped Dependabot updates, JavaScript/TypeScript CodeQL scanning, immutable Action pins, and documented main-branch protection;
+- **v0.8 BFF connectivity foundation** — same-origin `/api`, mock/BFF runtime modes, local Angular proxy, and topology-safe API configuration.
 
-The v0.7 CI/CD block is complete. BFF integration remains the next functional roadmap block.
+The v0.8 BFF integration block has started. Session cookies and XSRF remain for v0.8.1.
