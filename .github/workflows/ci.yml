@@ -54,6 +54,11 @@ jobs:
       - name: Unit tests with coverage
         run: npm run test:coverage
 
+      - name: Coverage gate (>= 85%)
+        env:
+          COVERAGE_GATE: 85
+        run: npm run coverage:check
+
       - name: Production build
         run: npm run build
 
