@@ -1,10 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import {
-  buildComment,
-  collectGateResults,
-} from './report-ci-pr-status.mjs';
+import { buildComment, collectGateResults } from './report-ci-pr-status.mjs';
 
 test('reports success only when every required gate succeeds', () => {
   const gates = collectGateResults(
