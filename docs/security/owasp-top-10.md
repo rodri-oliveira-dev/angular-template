@@ -56,11 +56,18 @@ The custom AST scanner and ESLint prohibit or flag:
 
 ### DAST
 
-After a production build, CI serves the generated SPA locally and executes an OWASP ZAP Baseline scan.
+After a production build, CI serves the generated SPA through `scripts/serve-security-baseline.mjs`. The harness reuses `docs/security/security-headers.example.txt`, so ZAP evaluates the documented deployment-header baseline instead of the insecure defaults of a generic development web server.
 
 The ZAP action is pinned to an immutable commit SHA, does not open repository issues automatically, and fails the CI gate when non-accepted alerts are found.
 
-If an alert is genuinely caused by the temporary CI web server or another known non-production condition, suppress it only through a reviewed repository rule that includes a documented rationale. Do not globally disable ZAP alert classes merely to make CI green.
+Reviewed exceptions live in `.zap/rules.tsv`. The baseline currently ignores only:
+
+- cacheability of fingerprinted static assets;
+- the deliberate split between Angular `autoCsp` script policy and complementary HTTP CSP;
+- ZAP's informational "Modern Web Application" classification;
+- optional `Cross-Origin-Embedder-Policy`, which is application-specific unless cross-origin isolation is required.
+
+Each ignored alert carries its rationale in the rules file. Do not globally disable ZAP alert classes merely to make CI green.
 
 ## Responsibility boundary
 
