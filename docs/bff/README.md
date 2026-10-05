@@ -175,13 +175,72 @@ CORS is only a controlled relaxation of the Same Origin Policy. It is not authen
 
 The local Angular proxy preserves this model from the browser's perspective: the browser calls the Angular development origin and the dev server proxies `/api/**` to the local BFF.
 
-## Deliberately not included yet
+## Reference integration contract
 
-This phase still does not add:
+The reference feature proves that the same Angular data-access client works with either the local mock or the BFF mode.
 
-- the .NET BFF implementation itself;
+Its browser-facing contract is intentionally small:
+
+| Operation | Browser route    | Request                       | Success response             |
+| --------- | ---------------- | ----------------------------- | ---------------------------- |
+| List      | `GET /api/examples`  | no body                       | `200` + `ExampleItemDto[]` |
+| Create    | `POST /api/examples` | `{ "name": string }`        | `201` + `ExampleItemDto`   |
+
+`ExampleItemDto` contains the transport fields `id` and `name`. The feature data-access layer maps that DTO to the UI-facing `ExampleItem` model, so components and pages do not depend directly on the transport representation.
+
+Errors use Problem Details. A BFF error can therefore expose fields such as:
+
+- `type`;
+- `title`;
+- `status`;
+- `detail`;
+- `correlationId` or `traceId` extensions when appropriate.
+
+Angular maps compatible error responses to `ApiError`. The page consumes the normalized error rather than `HttpErrorResponse`.
+
+State-changing calls also participate in the XSRF contract described above.
+
+## Correlation and tracing boundary
+
+Angular generates or preserves `X-Correlation-ID` on outgoing BFF requests.
+
+The BFF should:
+
+1. accept the incoming correlation value when valid, or establish its own request correlation according to server policy;
+2. associate that correlation with its server-side trace/span context;
+3. propagate suitable correlation/trace context to downstream services;
+4. return `X-Correlation-ID` on the browser-facing response;
+5. include a safe `correlationId` or `traceId` Problem Details extension when useful for support.
+
+Frontend HTTP telemetry records only low-cardinality metadata: method, status, outcome, duration, and correlation ID. It deliberately excludes URLs/query strings, bodies, cookies, and authentication values.
+
+## Responsibility split
+
+| Layer | Responsibilities |
+| ----- | ---------------- |
+| Angular | UI state, feature-owned data access, browser-facing DTO mapping, XSRF header handling, correlation/telemetry consumption |
+| BFF | browser session, CSRF validation, authorization boundary, `/api` contract, downstream orchestration, Problem Details, correlation/trace propagation |
+| Domain services | domain/business capabilities, service-level authorization and invariants, persistence/integration concerns; no browser-session responsibilities |
+
+Components and pages remain unaware of whether data comes from the local mock or the BFF. Only the composition/configuration and data-access layers know the browser-facing API boundary.
+
+## Automated verification
+
+The template verifies both runtime modes:
+
+- `npm run e2e:mock` starts the normal development mode and uses the local interceptor;
+- `npm run e2e:bff` starts Angular in BFF mode and uses Playwright network interception as a deterministic stand-in for the browser-facing BFF contract;
+- `npm run e2e` runs both suites.
+
+The BFF E2E suite checks same-origin reads/writes, correlation headers, XSRF on writes, DTO mapping, and Problem Details rendering without requiring a real external backend.
+
+## Deliberately not included
+
+The Angular template does not implement:
+
+- the .NET BFF itself;
 - identity-provider/OIDC login orchestration;
-- session refresh/logout endpoint contracts;
-- final reference feature contracts.
+- application-specific session refresh/logout endpoint contracts;
+- downstream/domain service implementations.
 
-Those application-specific contracts can be layered on top of the session and XSRF baseline without exposing upstream credentials to Angular.
+Those server-side concerns can be layered behind the documented browser contract without exposing upstream credentials or topology to Angular.
