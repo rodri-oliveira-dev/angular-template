@@ -51,6 +51,10 @@ jobs:
         id: install_dependencies
         run: npm ci
 
+      - name: CI reporter tests
+        id: reporter_tests
+        run: npm run ci:report:test
+
       - name: Format check
         id: format_check
         run: npm run format:check
@@ -132,6 +136,7 @@ jobs:
           SETUP_NODE_OUTCOME: ${{ steps.setup_node.outcome }}
           RUNTIME_VERSIONS_OUTCOME: ${{ steps.runtime_versions.outcome }}
           INSTALL_DEPENDENCIES_OUTCOME: ${{ steps.install_dependencies.outcome }}
+          REPORTER_TESTS_OUTCOME: ${{ steps.reporter_tests.outcome }}
           FORMAT_CHECK_OUTCOME: ${{ steps.format_check.outcome }}
           LINT_GUARDRAILS_OUTCOME: ${{ steps.lint_guardrails.outcome }}
           SECURITY_GATE_OUTCOME: ${{ steps.security_gate.outcome }}
