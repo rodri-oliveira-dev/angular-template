@@ -6,18 +6,18 @@ The mapping is a security baseline, not a compliance certification. Some OWASP r
 
 ## Coverage matrix
 
-| OWASP category | Angular template coverage | Primary controls |
-| --- | --- | --- |
-| A01 — Broken Access Control | Partial / server-dependent | same-origin BFF boundary, no downstream topology in Angular, server-side authorization responsibility documented |
-| A02 — Security Misconfiguration | Strong frontend baseline | Angular autoCSP, same-origin API configuration, provider-neutral response-header baseline, restrictive browser policy guidance |
-| A03 — Software Supply Chain Failures | Enforced | lockfile + `npm ci`, Dependabot, SHA-pinned GitHub Actions, `npm audit --audit-level=high` as a mandatory CI gate |
-| A04 — Cryptographic Failures | Partial / deployment-dependent | HTTPS, Secure cookie and HSTS guidance; cryptography and TLS termination stay outside Angular |
-| A05 — Injection | Strong frontend baseline | Angular contextual sanitization, blocked sanitizer bypass APIs, CSP, ESLint/security AST guardrails, CodeQL |
-| A06 — Insecure Design | Partial | feature boundaries, BFF trust boundary, server-managed session model, CSRF design, explicit responsibility split |
-| A07 — Authentication Failures | Partial / BFF-dependent | HttpOnly/Secure/SameSite session guidance, no access/refresh tokens in Web Storage, BFF-owned authentication session |
-| A08 — Software or Data Integrity Failures | Strong build baseline | immutable Action SHAs, lockfile, deterministic install, CodeQL, dependency automation |
-| A09 — Security Logging & Alerting Failures | Partial | sanitized telemetry, correlation IDs, no sensitive console logging; operational alerting remains deployment-specific |
-| A10 — Mishandling of Exceptional Conditions | Strong frontend baseline | standardized Problem Details / `ApiError`, deterministic error paths, unit/integration/E2E coverage |
+| OWASP category                              | Angular template coverage      | Primary controls                                                                                                               |
+| ------------------------------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| A01 — Broken Access Control                 | Partial / server-dependent     | same-origin BFF boundary, no downstream topology in Angular, server-side authorization responsibility documented               |
+| A02 — Security Misconfiguration             | Strong frontend baseline       | Angular autoCSP, same-origin API configuration, provider-neutral response-header baseline, restrictive browser policy guidance |
+| A03 — Software Supply Chain Failures        | Enforced                       | lockfile + `npm ci`, Dependabot, SHA-pinned GitHub Actions, `npm audit --audit-level=high` as a mandatory CI gate              |
+| A04 — Cryptographic Failures                | Partial / deployment-dependent | HTTPS, Secure cookie and HSTS guidance; cryptography and TLS termination stay outside Angular                                  |
+| A05 — Injection                             | Strong frontend baseline       | Angular contextual sanitization, blocked sanitizer bypass APIs, CSP, ESLint/security AST guardrails, CodeQL                    |
+| A06 — Insecure Design                       | Partial                        | feature boundaries, BFF trust boundary, server-managed session model, CSRF design, explicit responsibility split               |
+| A07 — Authentication Failures               | Partial / BFF-dependent        | HttpOnly/Secure/SameSite session guidance, no access/refresh tokens in Web Storage, BFF-owned authentication session           |
+| A08 — Software or Data Integrity Failures   | Strong build baseline          | immutable Action SHAs, lockfile, deterministic install, CodeQL, dependency automation                                          |
+| A09 — Security Logging & Alerting Failures  | Partial                        | sanitized telemetry, correlation IDs, no sensitive console logging; operational alerting remains deployment-specific           |
+| A10 — Mishandling of Exceptional Conditions | Strong frontend baseline       | standardized Problem Details / `ApiError`, deterministic error paths, unit/integration/E2E coverage                            |
 
 ## Automated security gates
 
