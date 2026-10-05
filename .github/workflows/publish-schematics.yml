@@ -5,6 +5,11 @@ on:
     tags:
       - 'v*.*.*'
   workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing release tag to publish, for example v1.1.0
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -23,6 +28,7 @@ jobs:
       - name: Checkout release tag
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ inputs.tag || github.ref }}
           persist-credentials: false
 
       - name: Setup Node.js and npm registry
@@ -39,6 +45,8 @@ jobs:
 
       - name: Verify tag matches package version
         working-directory: schematics
+        env:
+          GITHUB_REF_NAME: ${{ inputs.tag || github.ref_name }}
         run: node scripts/verify-release-tag.mjs
 
       - name: Validate package contents and clean installation
