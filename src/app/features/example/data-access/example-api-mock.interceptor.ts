@@ -84,4 +84,3 @@ function isCreateRequest(value: unknown): value is CreateExampleItemDto {
 
   return typeof name === 'string' && name.trim().length > 0;
 }
-
