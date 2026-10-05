@@ -54,6 +54,7 @@ try {
     'dist/ng-new/index.js',
     'dist/ng-new/schema.json',
     'dist/ng-new/files/angular.json',
+    'dist/ng-new/files/gitignore.template',
     'dist/ng-new/files/package.json',
     'dist/ng-new/files/src/main.ts',
     'package.json',
@@ -62,6 +63,9 @@ try {
     if (!paths.includes(requiredPath)) {
       throw new Error(`Packed artifact is missing ${requiredPath}.`);
     }
+  }
+  if (paths.includes('dist/ng-new/files/.gitignore')) {
+    throw new Error('Packed artifact must use the npm-safe gitignore.template placeholder.');
   }
   const unexpected = paths.filter(
     (file) => file !== 'README.md' && file !== 'package.json' && !file.startsWith('dist/'),

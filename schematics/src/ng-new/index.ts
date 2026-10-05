@@ -440,12 +440,7 @@ function configureGeneratedWorkspace(options: NormalizedOptions): Rule {
       buildOptions['inlineStyleLanguage'] = options.style;
       buildOptions['styles'] = [`src/styles.${options.style}`];
 
-      const buildConfigurations = build['configurations'] as Record<
-        string,
-        Record<string, unknown>
-      >;
       if (options.apiMode === 'bff') {
-        delete buildConfigurations['development']?.['fileReplacements'];
         serveTarget['defaultConfiguration'] = 'bff';
       }
 
@@ -497,17 +492,22 @@ function configureGeneratedWorkspace(options: NormalizedOptions): Rule {
     configureE2e(tree, options);
     configureIdentity(tree, options);
 
+    const gitignoreTemplatePath = workspacePath(options.root, 'gitignore.template');
     const gitignorePath = workspacePath(options.root, '.gitignore');
-    const gitignore = tree.read(gitignorePath)?.toString('utf-8');
-    if (gitignore) {
-      tree.overwrite(
-        gitignorePath,
-        gitignore
-          .split(/\r?\n/)
-          .filter((line: string) => !line.startsWith('/schematics/'))
-          .join('\n'),
-      );
+    if (!tree.exists(gitignoreTemplatePath)) {
+      throw new Error(`Expected packaged template file ${gitignoreTemplatePath}.`);
     }
+    if (tree.exists(gitignorePath)) {
+      tree.delete(gitignorePath);
+    }
+    tree.rename(gitignoreTemplatePath, gitignorePath);
+    tree.overwrite(
+      gitignorePath,
+      readText(tree, gitignorePath)
+        .split(/\r?\n/)
+        .filter((line: string) => !line.startsWith('/schematics/'))
+        .join('\n'),
+    );
 
     return tree;
   };

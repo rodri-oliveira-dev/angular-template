@@ -49,6 +49,7 @@ const temporaryRoot = await mkdtemp(path.join(os.tmpdir(), 'rodri-schematics-int
 const artifactRoot = path.join(temporaryRoot, 'artifacts');
 const consumerRoot = path.join(temporaryRoot, 'consumer');
 const generatedRoot = path.join(consumerRoot, 'schematics-consumer');
+const generatedBffRoot = path.join(consumerRoot, 'schematics-bff-consumer');
 
 try {
   await mkdir(artifactRoot, { recursive: true });
@@ -96,6 +97,14 @@ try {
   if (generatedPackage.name !== 'schematics-consumer') {
     throw new Error(`Unexpected generated package name: ${generatedPackage.name}.`);
   }
+  const generatedGitignore = await readFile(path.join(generatedRoot, '.gitignore'), 'utf-8');
+  if (
+    !generatedGitignore.includes('/playwright-report-bff/') ||
+    !generatedGitignore.includes('/report_html.html') ||
+    generatedGitignore.includes('/schematics/')
+  ) {
+    throw new Error('Generated .gitignore does not match the packaged application template.');
+  }
 
   const npmStages = [
     ['clean dependency install', ['ci']],
@@ -126,6 +135,30 @@ try {
   );
   await stage('Playwright mock and BFF modes', () =>
     run(npmCommand, ['run', 'e2e'], generatedRoot),
+  );
+
+  await stage('generate a BFF-first application through the installed collection', () =>
+    run(
+      npxCommand,
+      [
+        '--no-install',
+        'ng',
+        'new',
+        'schematics-bff-consumer',
+        '--collection=@rodri/angular-template',
+        '--api-mode=bff',
+        '--defaults',
+        '--skip-git',
+        '--skip-install',
+      ],
+      consumerRoot,
+    ),
+  );
+  await stage('install BFF-first application dependencies', () =>
+    run(npmCommand, ['ci'], generatedBffRoot),
+  );
+  await stage('Playwright mock and BFF modes for a BFF-first application', () =>
+    run(npmCommand, ['run', 'e2e'], generatedBffRoot),
   );
 
   console.log('\nGenerated-project integration passed.');

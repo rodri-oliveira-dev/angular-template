@@ -44,6 +44,11 @@ test('defaults reproduce the recommended mock, routing, observability, and E2E b
   assert.match(tree.readContent('/sample-app/playwright.config.ts'), /npm run start:mock/);
   assert.ok(tree.files.includes('/sample-app/sample-app.code-workspace'));
   assert.match(tree.readContent('/sample-app/src/index.html'), /<title>Sample App<\/title>/);
+  assert.ok(tree.files.includes('/sample-app/.gitignore'));
+  assert.ok(!tree.files.includes('/sample-app/gitignore.template'));
+  assert.match(tree.readContent('/sample-app/.gitignore'), /^\/playwright-report-bff\/$/m);
+  assert.match(tree.readContent('/sample-app/.gitignore'), /^\/report_html\.html$/m);
+  assert.doesNotMatch(tree.readContent('/sample-app/.gitignore'), /^\/schematics\//m);
 
   const identitySensitiveFiles = tree.files.filter((file) =>
     [
@@ -103,7 +108,12 @@ test('maps the maintained non-default option combination deterministically', asy
   const project = angularJson.projects['bff-portal'];
   assert.equal(project.architect.serve.defaultConfiguration, 'bff');
   assert.equal(project.architect.build.options.inlineStyleLanguage, 'css');
-  assert.equal(project.architect.build.configurations.development.fileReplacements, undefined);
+  assert.deepEqual(project.architect.build.configurations.development.fileReplacements, [
+    {
+      replace: 'src/app/core/config/api.runtime-config.ts',
+      with: 'src/app/core/config/api.runtime-config.mock.ts',
+    },
+  ]);
   assert.deepEqual(project.architect.test.options.coverageThresholds, {
     statements: 90,
     branches: 90,
@@ -122,6 +132,23 @@ test('maps the maintained non-default option combination deterministically', asy
   assert.match(tree.readContent('/bff-portal/src/app/app.config.ts'), /enabled: false/);
   assert.match(tree.readContent('/bff-portal/scripts/check-coverage-gate.mjs'), /\?\? '90'/);
   assert.doesNotMatch(tree.readContent('/bff-portal/.github/workflows/ci.yml'), /Playwright/);
+});
+
+test('keeps the mock E2E server available for BFF-first projects', async () => {
+  const runner = new SchematicTestRunner('@rodri/angular-template', collectionPath);
+  const tree = await runner.runSchematic('ng-new', {
+    apiMode: 'bff',
+    name: 'bff-e2e',
+    skipGit: true,
+    skipInstall: true,
+  });
+
+  const angularJson = JSON.parse(tree.readContent('/bff-e2e/angular.json'));
+  const project = angularJson.projects['bff-e2e'];
+  assert.equal(project.architect.serve.defaultConfiguration, 'bff');
+  assert.ok(project.architect.build.configurations.development.fileReplacements);
+  assert.match(tree.readContent('/bff-e2e/playwright.config.ts'), /npm run start:mock/);
+  assert.match(tree.readContent('/bff-e2e/package.json'), /"start:mock"/);
 });
 
 test('rejects unsafe BFF targets with an actionable error', async () => {

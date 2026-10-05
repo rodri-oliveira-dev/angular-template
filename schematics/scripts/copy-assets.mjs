@@ -13,7 +13,6 @@ const templateEntries = [
   '.coderabbit.yaml',
   '.editorconfig',
   '.github',
-  '.gitignore',
   '.nvmrc',
   '.prettierignore',
   '.prettierrc.json',
@@ -50,6 +49,7 @@ await mkdir(templateRoot, { recursive: true });
 for (const entry of templateEntries) {
   await cp(new URL(entry, repositoryRoot), new URL(entry, templateRoot), { recursive: true });
 }
+await cp(new URL('.gitignore', repositoryRoot), new URL('gitignore.template', templateRoot));
 
 await rm(new URL('.github/workflows/publish-schematics.yml', templateRoot), { force: true });
 const applicationCiUrl = new URL('.github/workflows/ci.yml', templateRoot);
