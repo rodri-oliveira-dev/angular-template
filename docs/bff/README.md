@@ -18,10 +18,10 @@ Angular owns only the browser-facing BFF contract. It must not contain hostnames
 
 The template has two frontend API modes:
 
-| Mode | Purpose | API base path |
-| --- | --- | --- |
-| `mock` | zero-dependency local development | `/api` |
-| `bff` | real BFF connectivity | `/api` by default |
+| Mode   | Purpose                           | API base path     |
+| ------ | --------------------------------- | ----------------- |
+| `mock` | zero-dependency local development | `/api`            |
+| `bff`  | real BFF connectivity             | `/api` by default |
 
 Production builds use the BFF configuration by default.
 
