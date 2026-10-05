@@ -3,7 +3,11 @@ import path from 'node:path';
 
 const configuredGate = Number(process.env.COVERAGE_GATE ?? '85');
 
-if (!Number.isFinite(configuredGate) || configuredGate < 0 || configuredGate > 100) {
+if (
+  !Number.isFinite(configuredGate) ||
+  configuredGate < 0 ||
+  configuredGate > 100
+) {
   console.error(`Invalid COVERAGE_GATE value: ${process.env.COVERAGE_GATE}`);
   process.exit(1);
 }
@@ -17,19 +21,28 @@ if (!thresholds) {
   process.exit(1);
 }
 
-const summaryPath = path.resolve('coverage/coverage-summary.json');
+const summaryPaths = findFiles(path.resolve('coverage'), 'coverage-summary.json');
 
-if (!fs.existsSync(summaryPath)) {
+if (summaryPaths.length === 0) {
   console.error(
-    'coverage/coverage-summary.json was not found. Run npm run test:coverage before the coverage gate.',
+    'No coverage-summary.json was found under coverage/. Run npm run test:coverage before the coverage gate.',
   );
   process.exit(1);
 }
 
+if (summaryPaths.length > 1) {
+  console.error(
+    `Expected one coverage summary, but found ${summaryPaths.length}: ${summaryPaths.join(', ')}`,
+  );
+  process.exit(1);
+}
+
+const summaryPath = summaryPaths[0];
 const summary = JSON.parse(fs.readFileSync(summaryPath, 'utf8'));
 const metrics = ['statements', 'branches', 'functions', 'lines'];
 const failures = [];
 
+console.log(`Coverage summary: ${path.relative(process.cwd(), summaryPath)}`);
 console.log(`Coverage gate: ${configuredGate}% minimum per metric`);
 
 for (const metric of metrics) {
@@ -61,7 +74,9 @@ for (const metric of metrics) {
   );
 
   if (percentage < required) {
-    failures.push(`${metric}: ${percentage.toFixed(2)}% is below required ${required.toFixed(2)}%`);
+    failures.push(
+      `${metric}: ${percentage.toFixed(2)}% is below required ${required.toFixed(2)}%`,
+    );
   }
 }
 
@@ -76,3 +91,26 @@ if (failures.length > 0) {
 }
 
 console.log('\nCoverage gate passed.');
+
+function findFiles(directory, fileName) {
+  if (!fs.existsSync(directory)) {
+    return [];
+  }
+
+  const matches = [];
+
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    const fullPath = path.join(directory, entry.name);
+
+    if (entry.isDirectory()) {
+      matches.push(...findFiles(fullPath, fileName));
+      continue;
+    }
+
+    if (entry.name === fileName) {
+      matches.push(fullPath);
+    }
+  }
+
+  return matches;
+}
