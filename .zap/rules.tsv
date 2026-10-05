@@ -1,0 +1,9 @@
+# ZAP Baseline exceptions for the Angular template CI harness.
+# Every ignored rule must have an explicit architecture/deployment rationale.
+#
+# Format: <alert-id>\tIGNORE\t(<rationale>)
+
+10049\tIGNORE\t(Fingerprinted static JS/CSS assets are intentionally cacheable; index.html is served with Cache-Control: no-store.)
+10055\tIGNORE\t(Angular autoCsp owns the script policy in a generated meta CSP; the complementary HTTP CSP intentionally omits default-src/script-src to avoid conflicting policies.)
+10109\tIGNORE\t(Informational classification: the target is intentionally a modern JavaScript web application.)
+90004\tIGNORE\t(Cross-Origin-Embedder-Policy is application-specific and is not required by the baseline unless the application adopts cross-origin isolation.)
