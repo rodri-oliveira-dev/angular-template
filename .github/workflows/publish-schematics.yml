@@ -46,7 +46,7 @@ jobs:
       - name: Verify tag matches package version
         working-directory: schematics
         env:
-          GITHUB_REF_NAME: ${{ inputs.tag || github.ref_name }}
+          RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
         run: node scripts/verify-release-tag.mjs
 
       - name: Validate package contents and clean installation
