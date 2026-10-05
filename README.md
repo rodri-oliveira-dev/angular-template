@@ -32,6 +32,28 @@ node --version
 npm --version
 ```
 
+## VS Code workspace
+
+The repository includes `angular-template.code-workspace` with the recommended development setup.
+
+Open it directly:
+
+```bash
+code angular-template.code-workspace
+```
+
+The workspace provides:
+
+- Angular, ESLint, Prettier, EditorConfig, Playwright, GitHub Actions, and YAML extension recommendations;
+- format-on-save and ESLint fix-on-save aligned with the repository quality rules;
+- workspace TypeScript from `node_modules`;
+- tasks for install, serve, build, unit tests, coverage, lint, formatting, security, Playwright, and full CI verification;
+- **Angular: Debug in Chrome**, which starts the Angular dev server automatically;
+- **Angular: Attach to Chrome** for an existing remote-debugging session;
+- **Playwright: Debug E2E** for interactive browser-test debugging.
+
+Use **Terminal → Run Task** for the predefined tasks and **Run and Debug** for the launch configurations.
+
 ## Install
 
 Install exactly the dependency graph recorded in the lockfile:
