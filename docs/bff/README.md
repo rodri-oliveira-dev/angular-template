@@ -181,10 +181,10 @@ The reference feature proves that the same Angular data-access client works with
 
 Its browser-facing contract is intentionally small:
 
-| Operation | Browser route    | Request                       | Success response             |
-| --------- | ---------------- | ----------------------------- | ---------------------------- |
-| List      | `GET /api/examples`  | no body                       | `200` + `ExampleItemDto[]` |
-| Create    | `POST /api/examples` | `{ "name": string }`        | `201` + `ExampleItemDto`   |
+| Operation | Browser route        | Request              | Success response           |
+| --------- | -------------------- | -------------------- | -------------------------- |
+| List      | `GET /api/examples`  | no body              | `200` + `ExampleItemDto[]` |
+| Create    | `POST /api/examples` | `{ "name": string }` | `201` + `ExampleItemDto`   |
 
 `ExampleItemDto` contains the transport fields `id` and `name`. The feature data-access layer maps that DTO to the UI-facing `ExampleItem` model, so components and pages do not depend directly on the transport representation.
 
@@ -216,11 +216,11 @@ Frontend HTTP telemetry records only low-cardinality metadata: method, status, o
 
 ## Responsibility split
 
-| Layer | Responsibilities |
-| ----- | ---------------- |
-| Angular | UI state, feature-owned data access, browser-facing DTO mapping, XSRF header handling, correlation/telemetry consumption |
-| BFF | browser session, CSRF validation, authorization boundary, `/api` contract, downstream orchestration, Problem Details, correlation/trace propagation |
-| Domain services | domain/business capabilities, service-level authorization and invariants, persistence/integration concerns; no browser-session responsibilities |
+| Layer           | Responsibilities                                                                                                                                    |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Angular         | UI state, feature-owned data access, browser-facing DTO mapping, XSRF header handling, correlation/telemetry consumption                            |
+| BFF             | browser session, CSRF validation, authorization boundary, `/api` contract, downstream orchestration, Problem Details, correlation/trace propagation |
+| Domain services | domain/business capabilities, service-level authorization and invariants, persistence/integration concerns; no browser-session responsibilities     |
 
 Components and pages remain unaware of whether data comes from the local mock or the BFF. Only the composition/configuration and data-access layers know the browser-facing API boundary.
 
