@@ -44,15 +44,19 @@ code angular-template.code-workspace
 
 The workspace provides:
 
-- Angular, ESLint, Prettier, EditorConfig, Playwright, GitHub Actions, and YAML extension recommendations;
+- Angular, ESLint, Prettier, EditorConfig, Playwright, GitHub Actions, YAML, Angular Vitest Runner, and LCOV coverage extension recommendations;
 - format-on-save and ESLint fix-on-save aligned with the repository quality rules;
 - workspace TypeScript from `node_modules`;
 - tasks for install, serve, build, unit tests, coverage, lint, formatting, security, Playwright, and full CI verification;
+- Angular/Vitest tests integrated with VS Code's native **Testing** view through the Angular CLI;
+- LCOV line and branch coverage rendered directly in the editor from `coverage/lcov.info`;
 - **Angular: Debug in Chrome**, which starts the Angular dev server automatically;
 - **Angular: Attach to Chrome** for an existing remote-debugging session;
 - **Playwright: Debug E2E** for interactive browser-test debugging.
 
-Use **Terminal → Run Task** for the predefined tasks and **Run and Debug** for the launch configurations.
+Use **Terminal → Run Task** for predefined tasks, **Testing** to run/debug Angular/Vitest tests, and **Run and Debug** for launch configurations.
+
+For coverage, run the **test: coverage** task (or `npm run test:coverage`). The Angular builder already generates `coverage/lcov.info`; the workspace points the LCOV extension at that file so line and branch coverage can be inspected directly in the editor.
 
 ## Install
 
