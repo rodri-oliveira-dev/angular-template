@@ -1,6 +1,6 @@
 name: Feature request
 description: Propose a reusable capability or improvement for the Angular template
-title: "[Feature] "
+title: '[Feature] '
 labels: []
 body:
   - type: textarea

@@ -57,10 +57,7 @@ jobs:
 
       - name: Format check
         id: format_check
-        run: |
-          npx prettier --write .github/ISSUE_TEMPLATE/bug_report.yml .github/ISSUE_TEMPLATE/feature_request.yml docs/adr/README.md SECURITY.md
-          git diff -- .github/ISSUE_TEMPLATE/bug_report.yml .github/ISSUE_TEMPLATE/feature_request.yml docs/adr/README.md SECURITY.md
-          exit 1
+        run: npm run format:check
 
       - name: Lint and guardrails
         id: lint_guardrails
