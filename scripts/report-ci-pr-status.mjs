@@ -5,6 +5,7 @@ const gateDefinitions = [
   ['Setup Node.js', 'SETUP_NODE_OUTCOME'],
   ['Runtime versions', 'RUNTIME_VERSIONS_OUTCOME'],
   ['Install dependencies', 'INSTALL_DEPENDENCIES_OUTCOME'],
+  ['CI reporter tests', 'REPORTER_TESTS_OUTCOME'],
   ['Format check', 'FORMAT_CHECK_OUTCOME'],
   ['Lint and guardrails', 'LINT_GUARDRAILS_OUTCOME'],
   ['Security guardrails and dependency audit', 'SECURITY_GATE_OUTCOME'],
