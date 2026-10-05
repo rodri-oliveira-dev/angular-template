@@ -1,0 +1,233 @@
+{
+  "folders": [
+    {
+      "name": "angular-template",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    },
+    "files.eol": "\n",
+    "files.insertFinalNewline": true,
+    "npm.packageManager": "npm",
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "typescript.enablePromptUseWorkspaceTsdk": true,
+    "eslint.validate": [
+      "typescript",
+      "html"
+    ],
+    "eslint.workingDirectories": [
+      {
+        "mode": "auto"
+      }
+    ],
+    "prettier.requireConfig": true,
+    "files.watcherExclude": {
+      "**/.angular/**": true,
+      "**/coverage/**": true,
+      "**/dist/**": true,
+      "**/node_modules/**": true,
+      "**/playwright-report/**": true,
+      "**/test-results/**": true
+    },
+    "search.exclude": {
+      "**/.angular/**": true,
+      "**/coverage/**": true,
+      "**/dist/**": true,
+      "**/node_modules/**": true,
+      "**/playwright-report/**": true,
+      "**/test-results/**": true
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[html]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[scss]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[jsonc]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[yaml]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[markdown]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      "Angular.ng-template",
+      "dbaeumer.vscode-eslint",
+      "esbenp.prettier-vscode",
+      "EditorConfig.EditorConfig",
+      "ms-playwright.playwright",
+      "github.vscode-github-actions",
+      "redhat.vscode-yaml"
+    ]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "deps: npm ci",
+        "type": "shell",
+        "command": "npm ci",
+        "problemMatcher": []
+      },
+      {
+        "label": "dev: serve",
+        "type": "shell",
+        "command": "npm start",
+        "isBackground": true,
+        "problemMatcher": [
+          {
+            "owner": "angular-dev-server",
+            "pattern": {
+              "regexp": "^$"
+            },
+            "background": {
+              "activeOnStart": true,
+              "beginsPattern": ".*",
+              "endsPattern": ".*Local:\\s+http://localhost:4200/?"
+            }
+          }
+        ],
+        "presentation": {
+          "reveal": "always",
+          "panel": "dedicated",
+          "clear": true
+        }
+      },
+      {
+        "label": "build: production",
+        "type": "npm",
+        "script": "build",
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "test: unit",
+        "type": "npm",
+        "script": "test:unit",
+        "group": {
+          "kind": "test",
+          "isDefault": true
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "test: unit watch",
+        "type": "npm",
+        "script": "test:unit:watch",
+        "isBackground": true,
+        "problemMatcher": []
+      },
+      {
+        "label": "test: coverage",
+        "type": "npm",
+        "script": "test:coverage",
+        "problemMatcher": []
+      },
+      {
+        "label": "quality: lint",
+        "type": "npm",
+        "script": "lint",
+        "problemMatcher": []
+      },
+      {
+        "label": "quality: lint fix",
+        "type": "npm",
+        "script": "lint:fix",
+        "problemMatcher": []
+      },
+      {
+        "label": "quality: format check",
+        "type": "npm",
+        "script": "format:check",
+        "problemMatcher": []
+      },
+      {
+        "label": "quality: format",
+        "type": "npm",
+        "script": "format",
+        "problemMatcher": []
+      },
+      {
+        "label": "security: all",
+        "type": "npm",
+        "script": "security:all",
+        "problemMatcher": []
+      },
+      {
+        "label": "playwright: install chromium",
+        "type": "shell",
+        "command": "npx playwright install chromium",
+        "problemMatcher": []
+      },
+      {
+        "label": "e2e: run",
+        "type": "npm",
+        "script": "e2e",
+        "problemMatcher": []
+      },
+      {
+        "label": "e2e: UI",
+        "type": "npm",
+        "script": "e2e:ui",
+        "problemMatcher": []
+      },
+      {
+        "label": "ci: verify",
+        "type": "npm",
+        "script": "ci:verify",
+        "problemMatcher": []
+      }
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Angular: Debug in Chrome",
+        "type": "pwa-chrome",
+        "request": "launch",
+        "url": "http://localhost:4200",
+        "webRoot": "${workspaceFolder}/src",
+        "preLaunchTask": "dev: serve",
+        "sourceMaps": true,
+        "resolveSourceMapLocations": [
+          "${workspaceFolder}/**",
+          "!${workspaceFolder}/node_modules/**"
+        ]
+      },
+      {
+        "name": "Angular: Attach to Chrome",
+        "type": "pwa-chrome",
+        "request": "attach",
+        "port": 9222,
+        "webRoot": "${workspaceFolder}/src",
+        "sourceMaps": true
+      },
+      {
+        "name": "Playwright: Debug E2E",
+        "type": "node-terminal",
+        "request": "launch",
+        "command": "npm run e2e -- --debug",
+        "cwd": "${workspaceFolder}"
+      }
+    ]
+  }
+}
