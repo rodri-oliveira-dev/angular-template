@@ -154,6 +154,6 @@ Do not store sensitive access or refresh tokens in browser storage as part of th
 
 Client-side configuration is public and must not contain secrets.
 
-Session cookies, XSRF, and credential behavior are intentionally deferred to v0.8.1.
+The BFF baseline uses a server-managed session cookie, Angular's explicit XSRF contract, and no global `withCredentials` opt-in. Upstream access/refresh tokens remain server-side and are never persisted by the Angular application.
 
-See [Frontend security baseline](../security/README.md) for sanitization, storage, cookies, logging, and client-configuration rules.
+See [BFF connectivity](../bff/README.md) for the browser-facing contract, session/XSRF model, correlation boundary, and Angular/BFF/domain-service responsibilities. See [Frontend security baseline](../security/README.md) for sanitization, storage, cookies, logging, and client-configuration rules.
