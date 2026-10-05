@@ -17,7 +17,7 @@ The v0.7.1 CI gate executes:
 2. verify formatting;
 3. run ESLint plus architecture/security source guardrails;
 4. run the unit suite with coverage enabled;
-5. enforce the coverage thresholds from `angular.json`;
+5. run the explicit 85% coverage gate against `coverage/coverage-summary.json`;
 6. produce a production build;
 7. install the Chromium browser and Linux dependencies required by the lockfile-pinned Playwright version;
 8. run the Playwright smoke suite headless.
@@ -76,12 +76,14 @@ This runs the unit suite and applies the thresholds already configured in `angul
 
 | Metric     | Minimum |
 | ---------- | ------: |
-| Statements |     80% |
-| Branches   |     75% |
-| Functions  |     80% |
-| Lines      |     80% |
+| Statements |     85% |
+| Branches   |     85% |
+| Functions  |     85% |
+| Lines      |     85% |
 
-A threshold violation exits non-zero and fails CI. The workflow does not maintain a second set of threshold values.
+After `npm run test:coverage`, CI runs a separate **Coverage gate (>= 85%)** step via `npm run coverage:check`.
+
+The gate reads `coverage/coverage-summary.json` and validates statements, branches, functions, and lines independently. It also verifies that the thresholds configured in `angular.json` have not been lowered below the workflow policy. Any metric below 85% exits non-zero and fails CI.
 
 ## Playwright in CI
 
@@ -118,7 +120,8 @@ Each gate is a separate named workflow step so the failing responsibility is imm
 - **Install dependencies** — lockfile/dependency/runtime problem.
 - **Format check** — repository contains files not normalized by Prettier.
 - **Lint and guardrails** — ESLint, feature-boundary, or frontend-security source policy failure.
-- **Unit tests with coverage** — unit behavior, Angular test compilation, or coverage threshold failure.
+- **Unit tests with coverage** — unit behavior or Angular test compilation failure.
+- **Coverage gate (>= 85%)** — any coverage metric below the required gate or a lowered Angular threshold.
 - **Production build** — Angular compilation, bundle budget, or production build failure.
 - **Install Playwright Chromium** — browser/system dependency installation failure.
 - **Playwright E2E** — browser-level smoke regression or flakiness.
@@ -153,6 +156,7 @@ Run the CI-equivalent application gates:
 npm run format:check
 npm run lint
 npm run test:coverage
+npm run coverage:check
 npm run build
 npm run e2e
 ```
