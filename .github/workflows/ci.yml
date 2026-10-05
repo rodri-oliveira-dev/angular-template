@@ -57,10 +57,7 @@ jobs:
 
       - name: Format check
         id: format_check
-        run: |
-          npx prettier --write scripts/report-ci-pr-status.mjs scripts/report-ci-pr-status.test.mjs
-          git diff -- scripts/report-ci-pr-status.mjs scripts/report-ci-pr-status.test.mjs
-          exit 1
+        run: npm run format:check
 
       - name: Lint and guardrails
         id: lint_guardrails
