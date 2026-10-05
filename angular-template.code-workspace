@@ -113,6 +113,30 @@
         },
       },
       {
+        "label": "dev: serve BFF",
+        "type": "npm",
+        "script": "start:bff",
+        "isBackground": true,
+        "problemMatcher": [
+          {
+            "owner": "angular-dev-server",
+            "pattern": {
+              "regexp": "^$",
+            },
+            "background": {
+              "activeOnStart": true,
+              "beginsPattern": ".*",
+              "endsPattern": ".*Local:\\s+http://localhost:4200/?",
+            },
+          },
+        ],
+        "presentation": {
+          "reveal": "always",
+          "panel": "dedicated",
+          "clear": true,
+        },
+      },
+      {
         "label": "build: production",
         "type": "npm",
         "script": "build",
@@ -222,6 +246,19 @@
         "url": "http://localhost:4200",
         "webRoot": "${workspaceFolder}/src",
         "preLaunchTask": "dev: serve",
+        "sourceMaps": true,
+        "resolveSourceMapLocations": [
+          "${workspaceFolder}/**",
+          "!${workspaceFolder}/node_modules/**",
+        ],
+      },
+      {
+        "name": "Angular: Debug BFF in Chrome",
+        "type": "pwa-chrome",
+        "request": "launch",
+        "url": "http://localhost:4200",
+        "webRoot": "${workspaceFolder}/src",
+        "preLaunchTask": "dev: serve BFF",
         "sourceMaps": true,
         "resolveSourceMapLocations": [
           "${workspaceFolder}/**",
