@@ -66,10 +66,10 @@ The initial global thresholds are intentionally demanding enough to catch regres
 
 | Metric     | Minimum |
 | ---------- | ------: |
-| Statements |     80% |
-| Branches   |     75% |
-| Functions  |     80% |
-| Lines      |     80% |
+| Statements |     85% |
+| Branches   |     85% |
+| Functions  |     85% |
+| Lines      |     85% |
 
 The bootstrap entry point, test files, and the application composition root are excluded from coverage. Application and feature behavior remain included.
 
@@ -225,7 +225,7 @@ The workspace passes `--watch=false` to Test Explorer runs so one-shot execution
 The Angular test target already emits LCOV:
 
 ```json
-"coverageReporters": ["html", "lcov", "text-summary"]
+"coverageReporters": ["html", "lcov", "text-summary", "json-summary"]
 ```
 
 Generate it with:
@@ -248,4 +248,4 @@ The workspace enables:
 - gutter coverage markers;
 - branch coverage visualization.
 
-Coverage thresholds remain enforced by Angular itself (80% statements/lines/functions and 75% branches); the VS Code extension is only a visualization layer and does not replace the CI gate.
+Coverage thresholds are 85% for statements, branches, functions, and lines. Angular enforces the configured thresholds during test execution, and the separate `coverage:check` command validates `coverage-summary.json` against the explicit 85% workflow gate. The VS Code extension remains a visualization layer and does not replace either gate.
