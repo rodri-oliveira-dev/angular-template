@@ -83,9 +83,9 @@ jobs:
           {
             echo "## Release dispatched"
             echo
-            echo "- Version: `$VERSION`"
-            echo "- Tag: `$TAG`"
-            echo "- Publish workflow: `publish-schematics.yml`"
+            printf -- '- Version: `%s`\n' "$VERSION"
+            printf -- '- Tag: `%s`\n' "$TAG"
+            echo '- Publish workflow: `publish-schematics.yml`'
             echo
-            echo "The npm publication remains protected by the `npm` environment approval gate."
+            echo 'The npm publication remains protected by the `npm` environment approval gate.'
           } >> "$GITHUB_STEP_SUMMARY"
