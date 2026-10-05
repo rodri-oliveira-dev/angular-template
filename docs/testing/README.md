@@ -205,7 +205,6 @@ The template now has three deliberate layers:
 
 The unit coverage gate and Chromium E2E smoke suite run in CI as of v0.7.1. Broader browser matrices and visual regression remain opt-in concerns.
 
-
 ## VS Code Testing and coverage
 
 Open the repository through `angular-template.code-workspace`.
