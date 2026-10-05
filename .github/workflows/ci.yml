@@ -65,7 +65,7 @@ jobs:
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
-      - name: Playwright E2E
+      - name: Playwright E2E (mock + BFF)
         run: npm run e2e
 
       - name: Upload Playwright diagnostics
@@ -75,6 +75,7 @@ jobs:
           name: playwright-diagnostics-${{ github.run_id }}
           path: |
             playwright-report/
+            playwright-report-bff/
             test-results/
           if-no-files-found: ignore
           retention-days: 7
