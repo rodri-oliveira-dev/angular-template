@@ -1,15 +1,8 @@
-import {
-  HttpClient,
-  HttpXsrfTokenExtractor,
-  provideHttpClient,
-} from '@angular/common/http';
+import { HttpClient, HttpXsrfTokenExtractor, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
-import {
-  BFF_XSRF_HEADER_NAME,
-  bffXsrfFeature,
-} from './bff-session-security';
+import { BFF_XSRF_HEADER_NAME, bffXsrfFeature } from './bff-session-security';
 
 describe('BFF session security', () => {
   let client: HttpClient;
