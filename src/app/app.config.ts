@@ -3,6 +3,7 @@ import { ApplicationConfig, ErrorHandler, provideBrowserGlobalErrorListeners } f
 import { provideRouter } from '@angular/router';
 
 import { provideApiConfig } from './core/config/api.config';
+import { apiRuntimeConfig } from './core/config/api.runtime-config';
 import { correlationIdInterceptor } from './core/http/correlation-id.interceptor';
 import { httpErrorInterceptor } from './core/http/http-error.interceptor';
 import { httpTelemetryInterceptor } from './core/http/http-telemetry.interceptor';
@@ -16,10 +17,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideApiConfig({
-      basePath: '/api',
-      useLocalMock: true,
-    }),
+    provideApiConfig(apiRuntimeConfig),
     provideTelemetry({
       enabled: true,
       mode: 'local',
