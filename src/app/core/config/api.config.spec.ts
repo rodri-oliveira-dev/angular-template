@@ -1,10 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import {
-  API_CONFIG,
-  normalizeSameOriginBasePath,
-  provideApiConfig,
-} from './api.config';
+import { API_CONFIG, normalizeSameOriginBasePath, provideApiConfig } from './api.config';
 
 describe('API configuration', () => {
   afterEach(() => {
