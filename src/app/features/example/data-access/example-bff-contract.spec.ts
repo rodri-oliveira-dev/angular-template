@@ -1,8 +1,4 @@
-import {
-  HttpXsrfTokenExtractor,
-  provideHttpClient,
-  withInterceptors,
-} from '@angular/common/http';
+import { HttpXsrfTokenExtractor, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
@@ -19,10 +15,7 @@ import {
   HTTP_TELEMETRY_EVENT,
   httpTelemetryInterceptor,
 } from '../../../core/http/http-telemetry.interceptor';
-import {
-  BFF_XSRF_HEADER_NAME,
-  bffXsrfFeature,
-} from '../../../core/security/bff-session-security';
+import { BFF_XSRF_HEADER_NAME, bffXsrfFeature } from '../../../core/security/bff-session-security';
 import { TelemetryClient } from '../../../core/telemetry/telemetry.client';
 import { ExampleApiClient } from './example-api-client';
 import { exampleApiMockInterceptor } from './example-api-mock.interceptor';
