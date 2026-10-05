@@ -51,7 +51,9 @@ for (const entry of templateEntries) {
 }
 await cp(new URL('.gitignore', repositoryRoot), new URL('gitignore.template', templateRoot));
 
-await rm(new URL('.github/workflows/publish-schematics.yml', templateRoot), { force: true });
+for (const workflow of ['publish-schematics.yml', 'initialize-template.yml']) {
+  await rm(new URL(`.github/workflows/${workflow}`, templateRoot), { force: true });
+}
 const applicationCiUrl = new URL('.github/workflows/ci.yml', templateRoot);
 const applicationCi = await readFile(applicationCiUrl, 'utf-8');
 await writeFile(applicationCiUrl, applicationCi.replace(/\r?\n  schematics:\r?\n[\s\S]*$/, '\n'));
