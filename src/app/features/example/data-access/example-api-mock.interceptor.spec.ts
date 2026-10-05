@@ -4,7 +4,6 @@ import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 
 import { provideApiConfig } from '../../../core/config/api.config';
-import { ApiError } from '../../../core/http/api-error';
 import { correlationIdInterceptor } from '../../../core/http/correlation-id.interceptor';
 import { httpErrorInterceptor } from '../../../core/http/http-error.interceptor';
 import { ExampleApiClient } from './example-api-client';
