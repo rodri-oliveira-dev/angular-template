@@ -3,11 +3,7 @@ import path from 'node:path';
 
 const configuredGate = Number(process.env.COVERAGE_GATE ?? '85');
 
-if (
-  !Number.isFinite(configuredGate) ||
-  configuredGate < 0 ||
-  configuredGate > 100
-) {
+if (!Number.isFinite(configuredGate) || configuredGate < 0 || configuredGate > 100) {
   console.error(`Invalid COVERAGE_GATE value: ${process.env.COVERAGE_GATE}`);
   process.exit(1);
 }
