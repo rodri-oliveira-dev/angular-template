@@ -7,8 +7,8 @@
 The recommended path creates and names the application through the official Angular CLI flow:
 
 ```bash
-npm install --global @angular/cli@22.2.1 @rodri/angular-template@1.1.0
-ng new my-app --collection=@rodri/angular-template
+npm install --global @angular/cli@22.2.1 @rodri-oliveira-dev/angular-template@1.1.0
+ng new my-app --collection=@rodri-oliveira-dev/angular-template
 cd my-app
 ```
 

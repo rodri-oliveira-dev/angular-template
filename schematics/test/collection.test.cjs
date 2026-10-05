@@ -7,7 +7,7 @@ const { SchematicTestRunner } = require('@angular-devkit/schematics/testing');
 const collectionPath = path.join(__dirname, '..', 'dist', 'collection.json');
 
 test('defaults reproduce the recommended mock, routing, observability, and E2E baseline', async () => {
-  const runner = new SchematicTestRunner('@rodri/angular-template', collectionPath);
+  const runner = new SchematicTestRunner('@rodri-oliveira-dev/angular-template', collectionPath);
   const tree = await runner.runSchematic('ng-new', {
     name: 'Sample App',
     skipGit: true,
@@ -69,7 +69,7 @@ test('defaults reproduce the recommended mock, routing, observability, and E2E b
 });
 
 test('keeps E2E valid when routing is disabled', async () => {
-  const runner = new SchematicTestRunner('@rodri/angular-template', collectionPath);
+  const runner = new SchematicTestRunner('@rodri-oliveira-dev/angular-template', collectionPath);
   const tree = await runner.runSchematic('ng-new', {
     name: 'no-router',
     routing: false,
@@ -85,7 +85,7 @@ test('keeps E2E valid when routing is disabled', async () => {
 });
 
 test('maps the maintained non-default option combination deterministically', async () => {
-  const runner = new SchematicTestRunner('@rodri/angular-template', collectionPath);
+  const runner = new SchematicTestRunner('@rodri-oliveira-dev/angular-template', collectionPath);
   const tree = await runner.runSchematic('ng-new', {
     apiMode: 'bff',
     bffProxyTarget: 'https://localhost:7443',
@@ -136,7 +136,7 @@ test('maps the maintained non-default option combination deterministically', asy
 });
 
 test('keeps the mock E2E server available for BFF-first projects', async () => {
-  const runner = new SchematicTestRunner('@rodri/angular-template', collectionPath);
+  const runner = new SchematicTestRunner('@rodri-oliveira-dev/angular-template', collectionPath);
   const tree = await runner.runSchematic('ng-new', {
     apiMode: 'bff',
     name: 'bff-e2e',
@@ -153,7 +153,7 @@ test('keeps the mock E2E server available for BFF-first projects', async () => {
 });
 
 test('rejects unsafe BFF targets with an actionable error', async () => {
-  const runner = new SchematicTestRunner('@rodri/angular-template', collectionPath);
+  const runner = new SchematicTestRunner('@rodri-oliveira-dev/angular-template', collectionPath);
 
   await assert.rejects(
     runner.runSchematic('ng-new', {
@@ -167,7 +167,7 @@ test('rejects unsafe BFF targets with an actionable error', async () => {
 });
 
 test('guards repeated generation without modifying the existing workspace', async () => {
-  const runner = new SchematicTestRunner('@rodri/angular-template', collectionPath);
+  const runner = new SchematicTestRunner('@rodri-oliveira-dev/angular-template', collectionPath);
   const options = { name: 'repeat-safe', skipGit: true, skipInstall: true };
   const tree = await runner.runSchematic('ng-new', options);
   const originalPackage = tree.readContent('/repeat-safe/package.json');
@@ -180,7 +180,7 @@ test('guards repeated generation without modifying the existing workspace', asyn
 });
 
 test('rejects output paths that escape the working directory', async () => {
-  const runner = new SchematicTestRunner('@rodri/angular-template', collectionPath);
+  const runner = new SchematicTestRunner('@rodri-oliveira-dev/angular-template', collectionPath);
 
   await assert.rejects(
     runner.runSchematic('ng-new', {
@@ -194,7 +194,7 @@ test('rejects output paths that escape the working directory', async () => {
 });
 
 test('schema rejects unsupported style formats', async () => {
-  const runner = new SchematicTestRunner('@rodri/angular-template', collectionPath);
+  const runner = new SchematicTestRunner('@rodri-oliveira-dev/angular-template', collectionPath);
 
   await assert.rejects(
     runner.runSchematic('ng-new', {

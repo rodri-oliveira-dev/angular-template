@@ -2,7 +2,7 @@
 
 # Distribuição via Angular Schematics
 
-`@rodri/angular-template` é uma coleção Angular Schematics usada durante a geração. Ela compõe o
+`@rodri-oliveira-dev/angular-template` é uma coleção Angular Schematics usada durante a geração. Ela compõe o
 schematic oficial `ng-new` do Angular CLI e depois aplica os baselines de arquitetura, API,
 segurança, testes, observabilidade, CI, workspace e BFF deste repositório. Não é uma library Angular
 de runtime e não entra nas dependências da aplicação gerada.
@@ -22,8 +22,8 @@ A v1.1 suporta apenas esta major do Angular. Não use `--force` ou `--legacy-pee
 Para a experiência concisa com ferramentas globais:
 
 ```bash
-npm install --global @angular/cli@22.2.1 @rodri/angular-template@1.1.0
-ng new my-app --collection=@rodri/angular-template
+npm install --global @angular/cli@22.2.1 @rodri-oliveira-dev/angular-template@1.1.0
+ng new my-app --collection=@rodri-oliveira-dev/angular-template
 cd my-app
 npm start
 ```
@@ -33,8 +33,8 @@ Para ferramentas locais ao projeto, sem instalação global:
 ```bash
 mkdir angular-starter && cd angular-starter
 npm init -y
-npm install --save-dev @angular/cli@22.2.1 @rodri/angular-template@1.1.0
-npx ng new my-app --collection=@rodri/angular-template
+npm install --save-dev @angular/cli@22.2.1 @rodri-oliveira-dev/angular-template@1.1.0
+npx ng new my-app --collection=@rodri-oliveira-dev/angular-template
 cd my-app
 npm start
 ```
@@ -62,16 +62,16 @@ Os defaults reproduzem o baseline runtime recomendado da v1.0. Exemplos:
 
 ```bash
 # Projeto padrão com mock local
-ng new customer-portal --collection=@rodri/angular-template
+ng new customer-portal --collection=@rodri-oliveira-dev/angular-template
 
 # Desenvolvimento BFF-first com proxy customizado e cobertura maior
-ng new customer-portal --collection=@rodri/angular-template \
+ng new customer-portal --collection=@rodri-oliveira-dev/angular-template \
   --api-mode=bff \
   --bff-proxy-target=https://localhost:7443 \
   --coverage-threshold=90
 
 # CSS, sem router, telemetria desabilitada em runtime e sem baseline E2E
-ng new small-app --collection=@rodri/angular-template \
+ng new small-app --collection=@rodri-oliveira-dev/angular-template \
   --style=css \
   --routing=false \
   --observability=false \
@@ -134,7 +134,7 @@ trusted publishing do npm (OIDC). Nenhum token npm ou segredo é commitado; o np
 
 Antes do primeiro release real, o publisher deve:
 
-1. possuir ou criar o scope npm `@rodri` e registrar o primeiro `@rodri/angular-template`;
+1. possuir ou criar o scope npm `@rodri-oliveira-dev` e registrar o primeiro `@rodri-oliveira-dev/angular-template`;
 2. configurar o trusted publisher no npm para usuário GitHub `rodri-oliveira-dev`, repositório
    `angular-template`, workflow `publish-schematics.yml` e permissão de publish direto;
 3. configurar o environment `npm` do GitHub com aprovação obrigatória de maintainer;

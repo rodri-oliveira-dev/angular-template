@@ -92,7 +92,12 @@ try {
     consumerRoot,
   );
 
-  const installedRoot = path.join(consumerRoot, 'node_modules', '@rodri', 'angular-template');
+  const installedRoot = path.join(
+    consumerRoot,
+    'node_modules',
+    '@rodri-oliveira-dev',
+    'angular-template',
+  );
   const installedPackage = JSON.parse(
     await readFile(path.join(installedRoot, 'package.json'), 'utf-8'),
   );

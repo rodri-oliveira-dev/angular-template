@@ -8,8 +8,8 @@ Todas as mudanças relevantes do template production-ready são documentadas aqu
 
 ### Adicionado
 
-- coleção Angular Schematics isolada `@rodri/angular-template`;
-- geração `ng new <name> --collection=@rodri/angular-template` composta com os schematics oficiais
+- coleção Angular Schematics isolada `@rodri-oliveira-dev/angular-template`;
+- geração `ng new <name> --collection=@rodri-oliveira-dev/angular-template` composta com os schematics oficiais
   do Angular CLI;
 - opções determinísticas para mock/BFF, estilos, routing, observabilidade, E2E, proxy e cobertura;
 - testes unitários em árvore virtual e validação clean-room do projeto gerado a partir do pacote;

@@ -18,4 +18,4 @@ if (tag !== `v${version}`) {
   process.exit(1);
 }
 
-console.log(`Release tag ${tag} matches @rodri/angular-template ${version}.`);
+console.log(`Release tag ${tag} matches @rodri-oliveira-dev/angular-template ${version}.`);

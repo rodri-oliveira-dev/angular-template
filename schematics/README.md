@@ -1,4 +1,4 @@
-# `@rodri/angular-template` Schematics
+# `@rodri-oliveira-dev/angular-template` Schematics
 
 This directory owns the standalone npm distribution for the Angular template. It compiles to
 `schematics/dist` and contains only generation-time code and assets. The application in the
