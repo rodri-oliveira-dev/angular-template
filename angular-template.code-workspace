@@ -151,6 +151,12 @@
         },
       },
       {
+        "label": "test: coverage gate",
+        "type": "npm",
+        "script": "coverage:check",
+        "problemMatcher": [],
+      },
+      {
         "label": "quality: lint",
         "type": "npm",
         "script": "lint",
