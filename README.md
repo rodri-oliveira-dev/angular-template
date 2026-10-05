@@ -90,9 +90,9 @@ Run against a local BFF (default target `http://localhost:5000`):
 npm run start:bff
 ```
 
-The browser always calls the configured same-origin API path (default `/api`). Angular does not contain internal/downstream API URLs.
+The browser always calls the configured same-origin API path (default `/api`). Angular does not contain internal/downstream API URLs. Authenticated browser sessions remain BFF-managed, while Angular applies the configured XSRF header to same-origin write requests without enabling cross-origin credentials globally.
 
-See [BFF connectivity](docs/bff/README.md) for the proxy and responsibility boundaries.
+See [BFF connectivity](docs/bff/README.md) for the proxy, session security, XSRF, and responsibility boundaries.
 
 ## Build
 
@@ -265,6 +265,7 @@ The template currently includes:
 - **v0.7 CI foundation** — PR/main GitHub Actions gate for formatting, lint/guardrails, unit tests, and production build;
 - **v0.7.1 Coverage & E2E in CI** — enforced coverage thresholds, reproducible Chromium installation, headless Playwright smoke tests, and failure-only diagnostics;
 - **v0.7.2 Dependency automation & CodeQL** — grouped Dependabot updates, JavaScript/TypeScript CodeQL scanning, immutable Action pins, and documented main-branch protection;
-- **v0.8 BFF connectivity foundation** — same-origin `/api`, mock/BFF runtime modes, local Angular proxy, and topology-safe API configuration.
+- **v0.8 BFF connectivity foundation** — same-origin `/api`, mock/BFF runtime modes, local Angular proxy, and topology-safe API configuration;
+- **v0.8.1 BFF session security & XSRF** — server-managed session-cookie boundary, Angular XSRF configuration, no sensitive Web Storage credentials, and no global cross-origin credential opt-in.
 
-The v0.8 BFF integration block has started. Session cookies and XSRF remain for v0.8.1.
+The v0.8 BFF integration block continues with v0.8.2 reference integration and contracts.
