@@ -1,6 +1,6 @@
 <section class="architecture-example" aria-labelledby="architecture-title">
   <div class="intro">
-    <p class="eyebrow">v0.3 HTTP & API integration</p>
+    <p class="eyebrow">v0.8.2 BFF reference integration</p>
     <h1 id="architecture-title">Feature-first by default</h1>
     <p>
       Keep business capabilities together and move code to core or shared only when the
@@ -19,8 +19,9 @@
       <p class="eyebrow">Data access example</p>
       <h2 id="api-example-title">HTTP stays outside components</h2>
       <p class="api-description">
-        This page talks to a feature-owned data-access service. A local mock handles
-        <code>/api/examples</code> until a real backend is configured.
+        This page talks only to a feature-owned data-access service. The same
+        <code>/api/examples</code> contract works with the local mock or a same-origin BFF
+        without changing the page.
       </p>
     </div>
 
