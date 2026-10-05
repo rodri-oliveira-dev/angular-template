@@ -1,3 +1,5 @@
+> 🌐 Language: **English** | [Português (Brasil)](README.pt-BR.md)
+
 # ZAP Baseline exceptions
 
 The CI uses OWASP ZAP Baseline with `fail_action: true`. This file documents every alert intentionally suppressed by `.zap/rules.tsv`.

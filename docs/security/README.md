@@ -1,8 +1,10 @@
+> 🌐 Language: **English** | [Português (Brasil)](../pt-BR/security/README.md)
+
 # Frontend security baseline
 
 This template treats browser code, bundled configuration, and browser storage as **untrusted client-side territory**. Anything shipped to the browser can be inspected or modified by a user or by JavaScript running in the same origin.
 
-The v0.5 block combines source guardrails, dependency auditing, Angular CSP hardening, and deployment-header guidance.
+The baseline combines source guardrails, dependency auditing, Angular CSP hardening, and deployment-header guidance.
 
 ## HTML binding and sanitization
 
@@ -213,7 +215,7 @@ CORS does **not**:
 
 For credentialed APIs, use an explicit allowlist of trusted origins rather than `*`, and validate authentication/authorization server-side on every request.
 
-A same-origin SPA/BFF deployment typically needs less CORS configuration, which is one reason the later BFF phase prefers same-origin `/api` access.
+A same-origin SPA/BFF deployment typically needs less CORS configuration, which is why the template prefers same-origin `/api` access.
 
 ## Executable guardrails
 

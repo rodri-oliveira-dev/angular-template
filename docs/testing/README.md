@@ -1,3 +1,5 @@
+> 🌐 Language: **English** | [Português (Brasil)](../pt-BR/testing/README.md)
+
 # Testing
 
 The template uses Angular's native unit-test builder with **Vitest** for unit/integration tests and **Playwright** for browser-level end-to-end smoke tests.
@@ -254,7 +256,7 @@ or run the workspace task **test: coverage**.
 The recommended **Code Coverage LCOV** extension (`rherrmannr.code-coverage-lcov`) is preconfigured to read:
 
 ```text
-coverage/lcov.info
+coverage/angular-template/lcov.info
 ```
 
 The workspace enables:

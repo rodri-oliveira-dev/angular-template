@@ -1,3 +1,5 @@
+> 🌐 Language: **English** | [Português (Brasil)](../pt-BR/architecture/README.md)
+
 # Architecture
 
 The template uses a lightweight **feature-first Angular architecture**.

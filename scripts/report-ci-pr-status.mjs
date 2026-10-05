@@ -12,6 +12,7 @@ const gateDefinitions = [
   ['Unit tests with coverage', 'UNIT_TESTS_OUTCOME'],
   ['Coverage gate (>= 85%)', 'COVERAGE_GATE_OUTCOME'],
   ['Production build', 'PRODUCTION_BUILD_OUTCOME'],
+  ['Clean template bootstrap', 'CLEAN_BOOTSTRAP_OUTCOME'],
   ['Serve production build for DAST', 'DAST_SERVER_OUTCOME'],
   ['OWASP ZAP baseline', 'ZAP_BASELINE_OUTCOME'],
   ['Install Playwright Chromium', 'PLAYWRIGHT_INSTALL_OUTCOME'],
@@ -137,7 +138,7 @@ async function main() {
   const body = buildComment({
     gates: collectGateResults(),
     runUrl,
-    sha: process.env['GITHUB_SHA'] ?? '',
+    sha: process.env['PR_HEAD_SHA'] ?? process.env['GITHUB_SHA'] ?? '',
   });
 
   const result = await upsertPullRequestComment({

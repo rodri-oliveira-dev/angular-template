@@ -1,0 +1,122 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+
+language: 'pt-BR'
+early_access: false
+
+tone_instructions: >-
+  Seja direto, técnico e orientado a risco. Priorize bugs, segurança, arquitetura,
+  compatibilidade e testes. Não repita apontamentos de formatação cobertos por Prettier.
+
+reviews:
+  profile: 'assertive'
+  request_changes_workflow: false
+  high_level_summary: true
+  high_level_summary_in_walkthrough: true
+  review_status: true
+  commit_status: true
+  fail_commit_status: false
+  collapse_walkthrough: true
+  sequence_diagrams: false
+  estimate_code_review_effort: true
+  assess_linked_issues: true
+  poem: false
+
+  auto_review:
+    enabled: true
+    auto_incremental_review: true
+    drafts: false
+    base_branches:
+      - '^main$'
+
+  path_filters:
+    - '!package-lock.json'
+    - '!coverage/**'
+    - '!dist/**'
+    - '!playwright-report/**'
+    - '!playwright-report-bff/**'
+    - '!test-results/**'
+
+  path_instructions:
+    - path: 'src/**/*.ts'
+      instructions: |
+        Revise como Angular 22 standalone + TypeScript estrito.
+        Preserve arquitetura feature-first: uma feature não importa internals de outra.
+        Priorize lifecycle correto, subscriptions seguras, tipagem, HttpClient funcional,
+        signals quando adequados e ausência de estado global acidental.
+        Não sugira localStorage/sessionStorage, document.cookie, bypassSecurityTrust*
+        ou console.*: estes padrões são proibidos pelo baseline de segurança.
+        APIs browser-facing devem permanecer same-origin; não aceite URLs internas/downstream
+        embutidas no Angular.
+        Exija testes para novos comportamentos ou regressões.
+
+    - path: 'src/**/*.html'
+      instructions: |
+        Priorize acessibilidade, semântica HTML, estados de loading/error e bindings Angular seguros.
+        Sinalize HTML dinâmico inseguro, perda de labels/aria, navegação não acessível
+        e lógica excessiva no template. Não faça comentários puramente de formatação.
+
+    - path: 'src/app/core/security/**'
+      instructions: |
+        Trate mudanças como security-sensitive. Preserve sessão gerenciada pelo BFF,
+        XSRF same-origin, ausência de tokens no Web Storage e ausência de withCredentials global.
+
+    - path: 'src/app/core/http/**'
+      instructions: |
+        Preserve Problem Details, correlation ID, baixo acoplamento e a fronteira browser/BFF.
+        Não permita vazamento de body, cookies, tokens, query strings sensíveis ou URLs internas
+        em telemetria/logs.
+
+    - path: '.github/workflows/**'
+      instructions: |
+        Trate workflows como supply-chain sensitive. Exija Actions de terceiros pinadas por SHA,
+        least privilege, persist-credentials:false quando aplicável, ausência de pull_request_target
+        executando código não confiável e nenhum secret interpolado em shell.
+        Preserve os gates de coverage >=85%, bootstrap limpo, ZAP, E2E e CodeQL.
+
+    - path: 'scripts/**'
+      instructions: |
+        Scripts Node devem ser determinísticos, cross-platform e seguros contra path traversal,
+        command injection e escrita fora do workspace/tmp esperado. Exija testes para lógica nova.
+
+    - path: '{package.json,angular.json,eslint.config.js,codecov.yml}'
+      instructions: |
+        Verifique compatibilidade entre Angular, TypeScript, angular-eslint/typescript-eslint e Node.
+        Não aceite --force, --legacy-peer-deps ou relaxamento silencioso de coverage/budgets.
+        O gate mínimo de coverage é 85% para statements, branches, functions e lines.
+
+    - path: '{README.md,CONTRIBUTING.md,SECURITY.md,CHANGELOG.md,docs/**/*.md}'
+      instructions: |
+        A documentação pública é bilíngue (English e pt-BR).
+        Mudanças de comportamento, comandos, versões ou políticas devem manter os dois idiomas coerentes.
+        Preserve o seletor de idioma no início dos documentos e links relativos válidos.
+
+  tools:
+    eslint:
+      enabled: false
+    actionlint:
+      enabled: true
+    zizmor:
+      enabled: true
+    shellcheck:
+      enabled: true
+    gitleaks:
+      enabled: true
+    markdownlint:
+      enabled: false
+    languagetool:
+      enabled: false
+    osvScanner:
+      enabled: false
+
+chat:
+  art: false
+  auto_reply: true
+
+knowledge_base:
+  code_guidelines:
+    enabled: true
+    filePatterns:
+      - 'CONTRIBUTING.md'
+      - 'docs/architecture/README.md'
+      - 'docs/security/README.md'
+      - 'docs/bff/README.md'
