@@ -6,6 +6,9 @@
 
 # Dependencies
 /node_modules
+/schematics/node_modules
+/schematics/dist
+/schematics/*.tgz
 
 # IDEs and editors
 .idea/

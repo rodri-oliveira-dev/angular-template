@@ -36,7 +36,10 @@
     "start:bff": "ng serve --configuration bff",
     "build:bff": "ng build --configuration bff",
     "bootstrap:verify": "node scripts/verify-clean-bootstrap.mjs",
-    "docs:localization:check": "node scripts/check-doc-localization.mjs"
+    "docs:localization:check": "node scripts/check-doc-localization.mjs",
+    "schematics:install": "npm ci --prefix schematics",
+    "schematics:build": "npm run build --prefix schematics",
+    "schematics:test": "npm test --prefix schematics"
   },
   "engines": {
     "node": "^24.15.0"
