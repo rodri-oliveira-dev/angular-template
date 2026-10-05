@@ -223,6 +223,18 @@
         "problemMatcher": [],
       },
       {
+        "label": "e2e: mock",
+        "type": "npm",
+        "script": "e2e:mock",
+        "problemMatcher": [],
+      },
+      {
+        "label": "e2e: BFF",
+        "type": "npm",
+        "script": "e2e:bff",
+        "problemMatcher": [],
+      },
+      {
         "label": "e2e: UI",
         "type": "npm",
         "script": "e2e:ui",
