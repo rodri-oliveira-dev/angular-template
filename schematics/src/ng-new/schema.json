@@ -12,8 +12,22 @@
         "index": 0
       },
       "x-prompt": "What name would you like to use for the application?"
+    },
+    "directory": {
+      "type": "string",
+      "description": "Directory in which to create the workspace."
+    },
+    "skipGit": {
+      "type": "boolean",
+      "description": "Do not initialize a Git repository.",
+      "default": false
+    },
+    "skipInstall": {
+      "type": "boolean",
+      "description": "Do not install dependency packages.",
+      "default": false
     }
   },
   "required": ["name"],
-  "additionalProperties": true
+  "additionalProperties": false
 }
