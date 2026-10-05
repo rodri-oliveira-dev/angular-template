@@ -1,11 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import {
-  cacheControlFor,
-  contentTypeFor,
-  loadSecurityHeaders,
-} from './serve-security-baseline.mjs';
+import { cacheControlFor, contentTypeFor, loadSecurityHeaders } from './serve-security-baseline.mjs';
 
 test('loads the documented production security headers', () => {
   const headers = loadSecurityHeaders();
