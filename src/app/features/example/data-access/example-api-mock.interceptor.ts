@@ -15,11 +15,11 @@ import { ExampleApiMockStore } from './example-api-mock.store';
 export const exampleApiMockInterceptor: HttpInterceptorFn = (request, next) => {
   const apiConfig = inject(API_CONFIG);
 
-  if (!apiConfig.useLocalMock) {
+  if (apiConfig.mode !== 'mock') {
     return next(request);
   }
 
-  const collectionUrl = `${normalizeBasePath(apiConfig.basePath)}/examples`;
+  const collectionUrl = `${apiConfig.basePath}/examples`;
 
   if (request.url !== collectionUrl) {
     return next(request);
@@ -85,6 +85,3 @@ function isCreateRequest(value: unknown): value is CreateExampleItemDto {
   return typeof name === 'string' && name.trim().length > 0;
 }
 
-function normalizeBasePath(basePath: string): string {
-  return basePath.endsWith('/') ? basePath.slice(0, -1) : basePath;
-}
