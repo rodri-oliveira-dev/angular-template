@@ -23,6 +23,11 @@
       },
     ],
     "prettier.requireConfig": true,
+    "angularVitestRunner.defaultArgs": ["--watch=false"],
+    "code-coverage-lcov.path.searchPath": "coverage/lcov.info",
+    "code-coverage-lcov.config.displayInEditor": true,
+    "code-coverage-lcov.config.displayInGutter": true,
+    "code-coverage-lcov.config.branchCoverage": true,
     "files.watcherExclude": {
       "**/.angular/**": true,
       "**/coverage/**": true,
@@ -70,6 +75,8 @@
       "ms-playwright.playwright",
       "github.vscode-github-actions",
       "redhat.vscode-yaml",
+      "kuradev.angular-vitest-runner",
+      "rherrmannr.code-coverage-lcov",
     ],
   },
   "tasks": {
@@ -137,6 +144,11 @@
         "type": "npm",
         "script": "test:coverage",
         "problemMatcher": [],
+        "presentation": {
+          "reveal": "always",
+          "panel": "dedicated",
+          "clear": true,
+        },
       },
       {
         "label": "quality: lint",
