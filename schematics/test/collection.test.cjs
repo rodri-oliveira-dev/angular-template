@@ -46,6 +46,7 @@ test('defaults reproduce the recommended mock, routing, observability, and E2E b
   assert.match(tree.readContent('/sample-app/src/index.html'), /<title>Sample App<\/title>/);
   assert.ok(tree.files.includes('/sample-app/.gitignore'));
   assert.ok(!tree.files.includes('/sample-app/gitignore.template'));
+  assert.ok(!tree.files.includes('/sample-app/.github/workflows/initialize-template.yml'));
   assert.match(tree.readContent('/sample-app/.gitignore'), /^\/playwright-report-bff\/$/m);
   assert.match(tree.readContent('/sample-app/.gitignore'), /^\/report_html\.html$/m);
   assert.doesNotMatch(tree.readContent('/sample-app/.gitignore'), /^\/schematics\//m);
