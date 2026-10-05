@@ -204,3 +204,49 @@ The template now has three deliberate layers:
 3. **E2E smoke tests** — a small set of high-value browser journeys with Playwright.
 
 The unit coverage gate and Chromium E2E smoke suite run in CI as of v0.7.1. Broader browser matrices and visual regression remain opt-in concerns.
+
+
+## VS Code Testing and coverage
+
+Open the repository through `angular-template.code-workspace`.
+
+The workspace recommends **Angular Vitest Runner** (`kuradev.angular-vitest-runner`) because the project uses Angular CLI's `@angular/build:unit-test` builder. The extension discovers `*.spec.ts` files and executes them through `ng test`, preserving Angular's own test pipeline.
+
+Use the VS Code **Testing** view to:
+
+- run the full suite;
+- run a single spec;
+- run an individual test/suite where supported;
+- debug tests from the editor/Test Explorer.
+
+The workspace passes `--watch=false` to Test Explorer runs so one-shot executions terminate cleanly.
+
+### Coverage inside VS Code
+
+The Angular test target already emits LCOV:
+
+```json
+"coverageReporters": ["html", "lcov", "text-summary"]
+```
+
+Generate it with:
+
+```bash
+npm run test:coverage
+```
+
+or run the workspace task **test: coverage**.
+
+The recommended **Code Coverage LCOV** extension (`rherrmannr.code-coverage-lcov`) is preconfigured to read:
+
+```text
+coverage/lcov.info
+```
+
+The workspace enables:
+
+- inline coverage highlighting;
+- gutter coverage markers;
+- branch coverage visualization.
+
+Coverage thresholds remain enforced by Angular itself (80% statements/lines/functions and 75% branches); the VS Code extension is only a visualization layer and does not replace the CI gate.
