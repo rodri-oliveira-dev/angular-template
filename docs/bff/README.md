@@ -136,16 +136,16 @@ Cookie-authenticated write requests require CSRF protection in addition to `Same
 
 The Angular client explicitly uses the conventional Angular XSRF contract:
 
-| Purpose | Name |
-| --- | --- |
-| anti-CSRF cookie | `XSRF-TOKEN` |
-| request header | `X-XSRF-TOKEN` |
+| Purpose          | Name             |
+| ---------------- | ---------------- |
+| anti-CSRF cookie | `XSRF-TOKEN`     |
+| request header   | `X-XSRF-TOKEN`   |
 
 The BFF should issue a random anti-CSRF cookie named `XSRF-TOKEN`. Unlike the authentication/session cookie, this anti-CSRF cookie must be readable by Angular, so it is intentionally **not** `HttpOnly`.
 
 For same-origin mutating requests, Angular reads `XSRF-TOKEN` and sends the value in `X-XSRF-TOKEN`. The BFF must validate that header before accepting state-changing requests.
 
-Angular does not attach the XSRF header to safe requests such as `GET`/ `HEAD`, or to absolute cross-origin URLs.
+Angular does not attach the XSRF header to safe requests such as `GET`/`HEAD`, or to absolute cross-origin URLs.
 
 The anti-CSRF token is not an authentication credential and must not be reused as a session identifier.
 
