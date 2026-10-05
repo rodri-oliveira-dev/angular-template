@@ -38,6 +38,11 @@ coverage/
 /playwright-report/
 /test-results/
 
+# OWASP ZAP
+/report_html.html
+/report_json.json
+/report_md.md
+
 # OS files
 .DS_Store
 Thumbs.db

@@ -10,12 +10,12 @@ import { ExampleApiClient } from './example-api-client';
 import { exampleApiMockInterceptor } from './example-api-mock.interceptor';
 
 describe('exampleApiMockInterceptor', () => {
-  function configure(useLocalMock = true, basePath = '/api'): void {
+  function configure(mode: 'mock' | 'bff' = 'mock', basePath = '/api'): void {
     TestBed.configureTestingModule({
       providers: [
         provideApiConfig({
           basePath,
-          useLocalMock,
+          mode,
         }),
         provideHttpClient(
           withInterceptors([
@@ -87,7 +87,7 @@ describe('exampleApiMockInterceptor', () => {
 
   it('can be disabled so requests reach the real backend adapter', () => {
     TestBed.resetTestingModule();
-    configure(false);
+    configure('bff');
 
     const httpClient = TestBed.inject(HttpClient);
     const httpTestingController = TestBed.inject(HttpTestingController);
@@ -100,7 +100,7 @@ describe('exampleApiMockInterceptor', () => {
 
   it('normalizes a trailing slash in the configured base path', async () => {
     TestBed.resetTestingModule();
-    configure(true, '/api/');
+    configure('mock', '/api/');
 
     const client = TestBed.inject(ExampleApiClient);
     const items = await firstValueFrom(client.list());

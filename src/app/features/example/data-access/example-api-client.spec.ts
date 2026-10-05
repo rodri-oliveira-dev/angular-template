@@ -20,7 +20,7 @@ describe('ExampleApiClient', () => {
       providers: [
         provideApiConfig({
           basePath: '/api',
-          useLocalMock: false,
+          mode: 'bff',
         }),
         provideHttpClient(withInterceptors([correlationIdInterceptor, httpErrorInterceptor])),
         provideHttpClientTesting(),

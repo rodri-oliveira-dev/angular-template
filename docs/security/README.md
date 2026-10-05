@@ -94,7 +94,18 @@ For a host-only session cookie, prefer the `__Host-` prefix with `Secure`, `Path
 
 `SameSite` is defense in depth and does not replace a CSRF strategy for cookie-authenticated state-changing requests.
 
-The concrete BFF/session implementation is introduced later in the roadmap.
+For the BFF baseline:
+
+- Angular never reads the authentication/session cookie;
+- upstream access and refresh tokens remain server-side and are never persisted in Web Storage;
+- `XSRF-TOKEN` is a separate, non-secret anti-CSRF cookie that Angular may read;
+- Angular sends that value as `X-XSRF-TOKEN` on same-origin state-changing requests;
+- the BFF must validate the anti-CSRF header before performing the state change;
+- `withCredentials` is not enabled globally because the default architecture is same-origin.
+
+Do not mark `XSRF-TOKEN` as `HttpOnly`: Angular must be able to read the anti-CSRF token. This exception applies only to the anti-CSRF token, not to the authentication/session cookie.
+
+See [BFF connectivity and session security](../bff/README.md) for the complete boundary.
 
 ## Logging and sensitive data
 
@@ -220,6 +231,12 @@ Or all three together:
 npm run security:all
 ```
 
+`security:all` is a required CI gate. It runs the security-scanner tests, the executable source scan, and `npm audit --audit-level=high`.
+
+The production build is also scanned by OWASP ZAP Baseline in CI. The DAST target is served by a CI-only Node harness that applies the provider-neutral headers from `security-headers.example.txt`; it is not a production web server. Reviewed ZAP exceptions are versioned in `.zap/rules.tsv`.
+
+See [OWASP Top 10:2025 coverage](owasp-top-10.md) for the control matrix, automated gates, exception policy, and responsibility boundaries.
+
 `security:check` parses application TypeScript and rejects executable references while ignoring comments and string literals:
 
 - Angular sanitizer bypass calls;
@@ -246,6 +263,8 @@ Before merging frontend code, verify:
 - credentials are not persisted in Web Storage;
 - JavaScript does not read session cookies;
 - session cookies use appropriate `Secure`, `HttpOnly`, and `SameSite` attributes;
+- cookie-authenticated writes use the reviewed XSRF/CSRF mechanism;
+- cross-origin credentials are not enabled indiscriminately;
 - logs contain no credentials, sensitive payloads, or PII;
 - URL parameters do not carry secrets;
 - production hosting applies the reviewed CSP and browser headers;

@@ -30,10 +30,22 @@ Generate and enforce code coverage:
 npm run test:coverage
 ```
 
-Run Playwright E2E tests headless:
+Run both Playwright E2E modes headless:
 
 ```bash
 npm run e2e
+```
+
+Run only the zero-dependency local-mock flow:
+
+```bash
+npm run e2e:mock
+```
+
+Run only the BFF-mode contract flow:
+
+```bash
+npm run e2e:bff
 ```
 
 Open Playwright UI mode for local diagnosis:
@@ -148,18 +160,21 @@ Keep mocks scoped to the behavior under test.
 
 ## End-to-end smoke tests
 
-Playwright is configured in `playwright.config.ts` and tests live under `e2e/`.
+The local-mock suite is configured in `playwright.config.ts` and lives under `e2e/`. The BFF-mode suite is configured in `playwright.bff.config.ts` and lives under `e2e-bff/`.
 
-The default project runs **Chromium headless**. The configuration starts the Angular development server automatically at `http://127.0.0.1:4200`.
+Both projects run **Chromium headless**. The mock suite starts Angular at `http://127.0.0.1:4200`; the BFF suite starts the explicit BFF Angular configuration at `http://127.0.0.1:4201`.
 
-The smoke suite covers:
+Together they cover:
 
 - application bootstrap and root redirect;
 - primary navigation availability;
-- the reference GET flow;
-- the reference POST/write flow.
+- local-mock GET and POST flows;
+- BFF-mode GET and POST flows through the same feature data-access contract;
+- outgoing correlation IDs;
+- XSRF on same-origin BFF writes;
+- Problem Details rendered through the normalized `ApiError` path.
 
-The reference feature uses the local API mock, so the default E2E suite does not depend on a real backend, cloud service, or network API.
+Neither suite calls a real external backend. The mock suite uses the Angular local interceptor; the BFF suite uses Playwright network interception as a deterministic stand-in for the browser-facing BFF contract.
 
 ### E2E diagnostics
 
@@ -167,7 +182,7 @@ On failure:
 
 1. rerun the failing test locally with `npm run e2e`;
 2. use `npm run e2e:ui` for interactive inspection;
-3. inspect `playwright-report/`;
+3. inspect `playwright-report/` for the mock suite or `playwright-report-bff/` for BFF mode;
 4. inspect traces, screenshots, and videos retained by Playwright when applicable.
 
 Generated Playwright reports and test artifacts are ignored by Git.
@@ -203,7 +218,7 @@ The template now has three deliberate layers:
 2. **Coverage gate** — global regression guard over application code.
 3. **E2E smoke tests** — a small set of high-value browser journeys with Playwright.
 
-The unit coverage gate and Chromium E2E smoke suite run in CI as of v0.7.1. Broader browser matrices and visual regression remain opt-in concerns.
+The unit coverage gate and both Chromium E2E modes run in CI. Broader browser matrices and visual regression remain opt-in concerns.
 
 ## VS Code Testing and coverage
 

@@ -54,6 +54,17 @@
             "development": {
               "optimization": false,
               "extractLicenses": false,
+              "sourceMap": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/app/core/config/api.runtime-config.ts",
+                  "with": "src/app/core/config/api.runtime-config.mock.ts"
+                }
+              ]
+            },
+            "bff": {
+              "optimization": false,
+              "extractLicenses": false,
               "sourceMap": true
             }
           },
@@ -67,6 +78,10 @@
             },
             "development": {
               "buildTarget": "angular-template:build:development"
+            },
+            "bff": {
+              "buildTarget": "angular-template:build:bff",
+              "proxyConfig": "src/proxy.bff.conf.json"
             }
           },
           "defaultConfiguration": "development"

@@ -3,9 +3,11 @@ import { ApplicationConfig, ErrorHandler, provideBrowserGlobalErrorListeners } f
 import { provideRouter } from '@angular/router';
 
 import { provideApiConfig } from './core/config/api.config';
+import { apiRuntimeConfig } from './core/config/api.runtime-config';
 import { correlationIdInterceptor } from './core/http/correlation-id.interceptor';
 import { httpErrorInterceptor } from './core/http/http-error.interceptor';
 import { httpTelemetryInterceptor } from './core/http/http-telemetry.interceptor';
+import { bffXsrfFeature } from './core/security/bff-session-security';
 import { TelemetryErrorHandler } from './core/telemetry/telemetry-error-handler';
 import { providePerformanceTelemetry } from './core/telemetry/performance-telemetry.provider';
 import { provideTelemetry } from './core/telemetry/telemetry.provider';
@@ -16,10 +18,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideApiConfig({
-      basePath: '/api',
-      useLocalMock: true,
-    }),
+    provideApiConfig(apiRuntimeConfig),
     provideTelemetry({
       enabled: true,
       mode: 'local',
@@ -36,6 +35,7 @@ export const appConfig: ApplicationConfig = {
       useClass: TelemetryErrorHandler,
     },
     provideHttpClient(
+      bffXsrfFeature,
       withInterceptors([
         correlationIdInterceptor,
         httpTelemetryInterceptor,
