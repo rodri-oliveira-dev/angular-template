@@ -1,7 +1,11 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { cacheControlFor, contentTypeFor, loadSecurityHeaders } from './serve-security-baseline.mjs';
+import {
+  cacheControlFor,
+  contentTypeFor,
+  loadSecurityHeaders,
+} from './serve-security-baseline.mjs';
 
 test('loads the documented production security headers', () => {
   const headers = loadSecurityHeaders();
@@ -21,9 +25,6 @@ test('uses explicit content types for executable browser assets', () => {
 
 test('keeps the entry document non-storable while allowing fingerprinted assets', () => {
   assert.equal(cacheControlFor('index.html'), 'no-store');
-  assert.equal(
-    cacheControlFor('main-ABC12345.js'),
-    'public, max-age=31536000, immutable',
-  );
+  assert.equal(cacheControlFor('main-ABC12345.js'), 'public, max-age=31536000, immutable');
   assert.equal(cacheControlFor('favicon.ico'), 'no-cache');
 });
