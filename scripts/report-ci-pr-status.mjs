@@ -25,14 +25,8 @@ export function collectGateResults(env = process.env) {
   }));
 }
 
-export function buildComment({
-  gates,
-  runUrl,
-  sha = '',
-}) {
-  const failed = gates.filter((gate) =>
-    ['failure', 'cancelled'].includes(gate.outcome),
-  );
+export function buildComment({ gates, runUrl, sha = '' }) {
+  const failed = gates.filter((gate) => ['failure', 'cancelled'].includes(gate.outcome));
   const skipped = gates.filter((gate) => gate.outcome === 'skipped');
   const successful = failed.length === 0 && skipped.length === 0;
 
@@ -55,21 +49,11 @@ export function buildComment({
   }
 
   if (skipped.length > 0) {
-    lines.push(
-      '### Skipped after failure',
-      '',
-      ...skipped.map((gate) => `- ⏭️ ${gate.name}`),
-      '',
-    );
+    lines.push('### Skipped after failure', '', ...skipped.map((gate) => `- ⏭️ ${gate.name}`), '');
   }
 
   if (successful) {
-    lines.push(
-      '### Passed gates',
-      '',
-      ...gates.map((gate) => `- ✅ ${gate.name}`),
-      '',
-    );
+    lines.push('### Passed gates', '', ...gates.map((gate) => `- ✅ ${gate.name}`), '');
   }
 
   if (sha) {
@@ -101,9 +85,7 @@ async function githubRequest(url, options = {}) {
 
   if (!response.ok) {
     const body = await response.text();
-    throw new Error(
-      `GitHub API request failed (${response.status}): ${body}`,
-    );
+    throw new Error(`GitHub API request failed (${response.status}): ${body}`);
   }
 
   if (response.status === 204) {
@@ -113,11 +95,7 @@ async function githubRequest(url, options = {}) {
   return response.json();
 }
 
-export async function upsertPullRequestComment({
-  repository,
-  pullRequestNumber,
-  body,
-}) {
+export async function upsertPullRequestComment({ repository, pullRequestNumber, body }) {
   const [owner, repo] = repository.split('/');
 
   if (!owner || !repo) {
@@ -139,13 +117,10 @@ export async function upsertPullRequestComment({
     return { action: 'updated', commentId: existing.id };
   }
 
-  const created = await githubRequest(
-    `${baseUrl}/issues/${pullRequestNumber}/comments`,
-    {
-      method: 'POST',
-      body: JSON.stringify({ body }),
-    },
-  );
+  const created = await githubRequest(`${baseUrl}/issues/${pullRequestNumber}/comments`, {
+    method: 'POST',
+    body: JSON.stringify({ body }),
+  });
 
   return { action: 'created', commentId: created.id };
 }
@@ -156,9 +131,7 @@ async function main() {
   const runUrl = process.env['RUN_URL'];
 
   if (!repository || !Number.isInteger(pullRequestNumber) || !runUrl) {
-    throw new Error(
-      'GITHUB_REPOSITORY, PR_NUMBER and RUN_URL are required to report CI status.',
-    );
+    throw new Error('GITHUB_REPOSITORY, PR_NUMBER and RUN_URL are required to report CI status.');
   }
 
   const body = buildComment({
@@ -173,9 +146,7 @@ async function main() {
     body,
   });
 
-  console.log(
-    `CI pull-request comment ${result.action} (id: ${result.commentId}).`,
-  );
+  console.log(`CI pull-request comment ${result.action} (id: ${result.commentId}).`);
 }
 
 if (process.argv[1]?.endsWith('report-ci-pr-status.mjs')) {
