@@ -50,10 +50,15 @@ export class LocalTelemetryClient extends TelemetryClient {
 
   private append(record: TelemetryRecord): void {
     this.records.push(record);
-    this.exporter.export(record);
 
     if (this.records.length > this.bufferSize) {
       this.records.splice(0, this.records.length - this.bufferSize);
+    }
+
+    try {
+      this.exporter.export(record);
+    } catch {
+      // Telemetry export is best effort and must never change application behavior.
     }
   }
 }

@@ -66,10 +66,10 @@ The initial global thresholds are intentionally demanding enough to catch regres
 
 | Metric     | Minimum |
 | ---------- | ------: |
-| Statements |     80% |
-| Branches   |     75% |
-| Functions  |     80% |
-| Lines      |     80% |
+| Statements |     85% |
+| Branches   |     85% |
+| Functions  |     85% |
+| Lines      |     85% |
 
 The bootstrap entry point, test files, and the application composition root are excluded from coverage. Application and feature behavior remain included.
 
@@ -172,6 +172,8 @@ On failure:
 
 Generated Playwright reports and test artifacts are ignored by Git.
 
+In CI, Playwright uses one worker, one retry, a 30-second per-test timeout, and a 5-second assertion timeout. When the CI job fails, the HTML report and test-result artifacts are uploaded for diagnosis and retained for 7 days. Successful runs do not upload these diagnostics.
+
 ## What should be tested
 
 Prioritize:
@@ -201,4 +203,49 @@ The template now has three deliberate layers:
 2. **Coverage gate** — global regression guard over application code.
 3. **E2E smoke tests** — a small set of high-value browser journeys with Playwright.
 
-Broader E2E matrices, visual regression, and CI execution remain opt-in/later concerns. CI integration is introduced in the v0.7 roadmap block.
+The unit coverage gate and Chromium E2E smoke suite run in CI as of v0.7.1. Broader browser matrices and visual regression remain opt-in concerns.
+
+## VS Code Testing and coverage
+
+Open the repository through `angular-template.code-workspace`.
+
+The workspace recommends **Angular Vitest Runner** (`kuradev.angular-vitest-runner`) because the project uses Angular CLI's `@angular/build:unit-test` builder. The extension discovers `*.spec.ts` files and executes them through `ng test`, preserving Angular's own test pipeline.
+
+Use the VS Code **Testing** view to:
+
+- run the full suite;
+- run a single spec;
+- run an individual test/suite where supported;
+- debug tests from the editor/Test Explorer.
+
+The workspace passes `--watch=false` to Test Explorer runs so one-shot executions terminate cleanly.
+
+### Coverage inside VS Code
+
+The Angular test target already emits LCOV:
+
+```json
+"coverageReporters": ["html", "lcov", "text-summary", "json-summary"]
+```
+
+Generate it with:
+
+```bash
+npm run test:coverage
+```
+
+or run the workspace task **test: coverage**.
+
+The recommended **Code Coverage LCOV** extension (`rherrmannr.code-coverage-lcov`) is preconfigured to read:
+
+```text
+coverage/lcov.info
+```
+
+The workspace enables:
+
+- inline coverage highlighting;
+- gutter coverage markers;
+- branch coverage visualization.
+
+Coverage thresholds are 85% for statements, branches, functions, and lines. Angular enforces the configured thresholds during test execution, and the separate `coverage:check` command validates `coverage-summary.json` against the explicit 85% workflow gate. The VS Code extension remains a visualization layer and does not replace either gate.

@@ -137,10 +137,12 @@ describe('PerformanceTelemetryService', () => {
     ]);
     callbacks.get('layout-shift')?.([
       {
+        startTime: 100,
         value: 0.12,
         hadRecentInput: false,
       } as PerformanceEntry & { value: number; hadRecentInput: boolean },
       {
+        startTime: 200,
         value: 0.5,
         hadRecentInput: true,
       } as PerformanceEntry & { value: number; hadRecentInput: boolean },
@@ -156,6 +158,117 @@ describe('PerformanceTelemetryService', () => {
     expect(telemetry.event).toHaveBeenCalledWith(WEB_VITAL_TELEMETRY_EVENT, {
       metric: 'CLS',
       value: 0.12,
+      unit: 'score',
+    });
+  });
+
+  it('omits CLS when layout-shift observation is unsupported', () => {
+    const callbacks = new Map<string, (entries: readonly PerformanceEntry[]) => void>();
+    let onPageHide: (() => void) | undefined;
+    const telemetry = {
+      event: vi.fn(),
+      error: vi.fn(),
+    };
+    const runtime: PerformanceRuntime = {
+      now: vi.fn(() => 1),
+      observe: vi.fn((type, callback) => {
+        if (type === 'layout-shift') {
+          return null;
+        }
+
+        callbacks.set(type, callback);
+        return () => undefined;
+      }),
+      onPageHide: vi.fn((callback) => {
+        onPageHide = callback;
+        return () => undefined;
+      }),
+    };
+
+    configure(true, runtime, telemetry);
+    TestBed.inject(PerformanceTelemetryService).start();
+
+    callbacks.get('largest-contentful-paint')?.([
+      {
+        startTime: 800,
+      } as PerformanceEntry,
+    ]);
+
+    onPageHide?.();
+
+    expect(telemetry.event).toHaveBeenCalledWith(WEB_VITAL_TELEMETRY_EVENT, {
+      metric: 'LCP',
+      value: 800,
+      unit: 'ms',
+    });
+    expect(telemetry.event).not.toHaveBeenCalledWith(
+      WEB_VITAL_TELEMETRY_EVENT,
+      expect.objectContaining({
+        metric: 'CLS',
+      }),
+    );
+  });
+
+  it('reports CLS as the maximum 5-second session window with sub-1-second gaps', () => {
+    const callbacks = new Map<string, (entries: readonly PerformanceEntry[]) => void>();
+    let onPageHide: (() => void) | undefined;
+    const telemetry = {
+      event: vi.fn(),
+      error: vi.fn(),
+    };
+    const runtime: PerformanceRuntime = {
+      now: vi.fn(() => 1),
+      observe: vi.fn((type, callback) => {
+        callbacks.set(type, callback);
+        return () => undefined;
+      }),
+      onPageHide: vi.fn((callback) => {
+        onPageHide = callback;
+        return () => undefined;
+      }),
+    };
+
+    configure(true, runtime, telemetry);
+    TestBed.inject(PerformanceTelemetryService).start();
+
+    callbacks.get('layout-shift')?.([
+      {
+        startTime: 100,
+        value: 0.1,
+        hadRecentInput: false,
+      } as PerformanceEntry & { value: number; hadRecentInput: boolean },
+      {
+        startTime: 700,
+        value: 0.15,
+        hadRecentInput: false,
+      } as PerformanceEntry & { value: number; hadRecentInput: boolean },
+      {
+        startTime: 2_000,
+        value: 0.05,
+        hadRecentInput: false,
+      } as PerformanceEntry & { value: number; hadRecentInput: boolean },
+      {
+        startTime: 2_500,
+        value: 0.08,
+        hadRecentInput: false,
+      } as PerformanceEntry & { value: number; hadRecentInput: boolean },
+      {
+        startTime: 3_100,
+        value: 0.09,
+        hadRecentInput: false,
+      } as PerformanceEntry & { value: number; hadRecentInput: boolean },
+      {
+        startTime: 7_100,
+        value: 0.4,
+        hadRecentInput: false,
+      } as PerformanceEntry & { value: number; hadRecentInput: boolean },
+    ]);
+
+    onPageHide?.();
+
+    expect(telemetry.event).toHaveBeenCalledWith(WEB_VITAL_TELEMETRY_EVENT, {
+      metric: 'CLS',
+      value: 0.4,
       unit: 'score',
     });
   });

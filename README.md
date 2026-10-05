@@ -32,6 +32,32 @@ node --version
 npm --version
 ```
 
+## VS Code workspace
+
+The repository includes `angular-template.code-workspace` with the recommended development setup.
+
+Open it directly:
+
+```bash
+code angular-template.code-workspace
+```
+
+The workspace provides:
+
+- Angular, ESLint, Prettier, EditorConfig, Playwright, GitHub Actions, YAML, Angular Vitest Runner, and LCOV coverage extension recommendations;
+- format-on-save and ESLint fix-on-save aligned with the repository quality rules;
+- workspace TypeScript from `node_modules`;
+- tasks for install, serve, build, unit tests, coverage, lint, formatting, security, Playwright, and full CI verification;
+- Angular/Vitest tests integrated with VS Code's native **Testing** view through the Angular CLI;
+- LCOV line and branch coverage rendered directly in the editor from `coverage/lcov.info`;
+- **Angular: Debug in Chrome**, which starts the Angular dev server automatically;
+- **Angular: Attach to Chrome** for an existing remote-debugging session;
+- **Playwright: Debug E2E** for interactive browser-test debugging.
+
+Use **Terminal → Run Task** for predefined tasks, **Testing** to run/debug Angular/Vitest tests, and **Run and Debug** for launch configurations.
+
+For coverage, run the **test: coverage** task (or `npm run test:coverage`). The Angular builder generates both `coverage/lcov.info` and `coverage/coverage-summary.json`. Use **test: coverage gate** (or `npm run coverage:check`) to enforce the 85% gate locally; the LCOV extension renders line and branch coverage directly in the editor.
+
 ## Install
 
 Install exactly the dependency graph recorded in the lockfile:
@@ -96,7 +122,28 @@ Run the Playwright smoke suite:
 npm run e2e
 ```
 
-The test foundation includes standalone component, service/data-access, HTTP, interceptor, routing, and browser-level smoke examples. Coverage gates enforce 80% statements/lines/functions and 75% branches. See [Testing](docs/testing/README.md).
+The test foundation includes standalone component, service/data-access, HTTP, interceptor, routing, and browser-level smoke examples. Coverage gates enforce 85% for statements, branches, functions, and lines. See [Testing](docs/testing/README.md).
+
+## Continuous integration
+
+Pull requests to `main` and pushes to `main` run the GitHub Actions CI gate:
+
+```bash
+npm ci
+npm run format:check
+npm run lint
+npm run test:coverage
+npm run coverage:check
+npm run build
+npx playwright install --with-deps chromium
+npm run e2e
+```
+
+After dependencies and the browser are installed, use `npm run ci:verify` for the equivalent application gates locally. `npm run ci:base` remains available for the original v0.7 baseline.
+
+Dependabot monitors npm and GitHub Actions, and CodeQL analyzes JavaScript/TypeScript on PRs, main, and a weekly schedule. Executable Actions are pinned to immutable commit SHAs.
+
+See [Continuous Integration](docs/ci/README.md) for triggers, permissions, concurrency, dependency automation, CodeQL, Action pinning, branch protection, and failure diagnosis.
 
 ## Code quality
 
@@ -196,6 +243,9 @@ The template currently includes:
 - **v0.5.2 Dependency & browser security hardening** — dependency audit policy, Angular autoCSP, browser response headers, CORS guidance, and secure-cookie hardening;
 - **v0.6 Telemetry foundation** — vendor-neutral structured telemetry, local/no-op providers, sanitization, and global error reporting;
 - **v0.6.1 HTTP telemetry & correlation** — request duration/status/outcome events, correlation handling, and single-path HTTP failure reporting;
-- **v0.6.2 Performance telemetry & OpenTelemetry adapter** — safe route navigation telemetry, selected LCP/CLS metrics, configurable collection, and an optional collector-free exporter bridge.
+- **v0.6.2 Performance telemetry & OpenTelemetry adapter** — safe route navigation telemetry, selected LCP/CLS metrics, configurable collection, and an optional collector-free exporter bridge;
+- **v0.7 CI foundation** — PR/main GitHub Actions gate for formatting, lint/guardrails, unit tests, and production build;
+- **v0.7.1 Coverage & E2E in CI** — enforced coverage thresholds, reproducible Chromium installation, headless Playwright smoke tests, and failure-only diagnostics;
+- **v0.7.2 Dependency automation & CodeQL** — grouped Dependabot updates, JavaScript/TypeScript CodeQL scanning, immutable Action pins, and documented main-branch protection.
 
-The v0.6 observability block is complete. CI/CD and BFF integration remain later roadmap phases.
+The v0.7 CI/CD block is complete. BFF integration remains the next functional roadmap block.
