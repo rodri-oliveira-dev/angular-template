@@ -3,7 +3,9 @@
   "version": 1,
   "cli": {
     "packageManager": "npm",
-    "schematicCollections": ["angular-eslint"]
+    "schematicCollections": [
+      "angular-eslint"
+    ]
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -30,7 +32,9 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.scss"],
+            "styles": [
+              "src/styles.scss"
+            ],
             "security": {
               "autoCsp": true
             }
@@ -54,6 +58,17 @@
             "development": {
               "optimization": false,
               "extractLicenses": false,
+              "sourceMap": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/app/core/config/api.runtime-config.ts",
+                  "with": "src/app/core/config/api.runtime-config.mock.ts"
+                }
+              ]
+            },
+            "bff": {
+              "optimization": false,
+              "extractLicenses": false,
               "sourceMap": true
             }
           },
@@ -67,6 +82,10 @@
             },
             "development": {
               "buildTarget": "angular-template:build:development"
+            },
+            "bff": {
+              "buildTarget": "angular-template:build:bff",
+              "proxyConfig": "src/proxy.bff.conf.json"
             }
           },
           "defaultConfiguration": "development"
@@ -80,15 +99,30 @@
               "functions": 85,
               "lines": 85
             },
-            "coverageInclude": ["src/app/**/*.ts"],
-            "coverageExclude": ["src/**/*.spec.ts", "src/main.ts", "src/app/app.config.ts"],
-            "coverageReporters": ["html", "lcov", "text-summary", "json-summary", "text"]
+            "coverageInclude": [
+              "src/app/**/*.ts"
+            ],
+            "coverageExclude": [
+              "src/**/*.spec.ts",
+              "src/main.ts",
+              "src/app/app.config.ts"
+            ],
+            "coverageReporters": [
+              "html",
+              "lcov",
+              "text-summary",
+              "json-summary",
+              "text"
+            ]
           }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
           }
         }
       }
