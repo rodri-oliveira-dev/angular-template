@@ -6,6 +6,8 @@ This directory is the technical documentation index for the Angular template.
 
 ## Start here
 
+- [Angular Schematics distribution](schematics.md) — recommended installation, generation options,
+  package development, and release flow.
 - [Getting Started](getting-started.md) — clean checkout, runtime modes, and first customization.
 - [Template Repository Setup](template-repository.md) — enable and consume the GitHub template repository.
 - [Architecture](architecture/README.md) — feature-first boundaries and dependency direction.
@@ -24,6 +26,7 @@ This directory is the technical documentation index for the Angular template.
 
 ## Releases
 
+- [v1.1.0](releases/v1.1.0.md)
 - [v1.0.0](releases/v1.0.0.md)
 
 Repository-level contribution and vulnerability-reporting policies live in [CONTRIBUTING.md](../CONTRIBUTING.md) and [SECURITY.md](../SECURITY.md).

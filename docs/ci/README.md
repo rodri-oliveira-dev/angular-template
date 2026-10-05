@@ -4,6 +4,19 @@
 
 The repository uses GitHub Actions as the quality gate for pull requests and for the `main` branch.
 
+## Packaged Schematics validation
+
+Pull-request CI has a separate `Packaged Schematics consumer` job. It installs only the collection
+toolchain, runs virtual-tree tests, inspects and clean-installs the exact `npm pack` archive, then
+generates a temporary application through the installed package and runs its full quality,
+coverage, build, bootstrap, mock E2E, and BFF E2E gates. Temporary output is outside the checkout
+and is removed in `finally` on success or failure.
+
+`.github/workflows/publish-schematics.yml` is independent of ordinary branch CI. It accepts only a
+version tag whose value matches `schematics/package.json`, runs only in the canonical repository,
+repeats package/consumer validation, and publishes through npm trusted publishing with OIDC. See
+[Angular Schematics distribution](../schematics.md#release-and-publish).
+
 ## Workflow
 
 The permanent workflow is `.github/workflows/ci.yml`.

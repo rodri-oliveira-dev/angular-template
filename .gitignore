@@ -39,6 +39,7 @@ coverage/
 
 # Playwright
 /playwright-report/
+/playwright-report-bff/
 /test-results/
 
 # OWASP ZAP

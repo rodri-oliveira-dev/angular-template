@@ -33,7 +33,24 @@ O modo padrão de desenvolvimento usa um mock em memória. Assim, um checkout no
 
 As versões versionadas são validadas em conjunto pelo CI. Não force combinações de dependências não suportadas com `--force` ou `--legacy-peer-deps`.
 
-## Início rápido
+## Criar um projeto com Angular Schematics (recomendado)
+
+Instale o Angular CLI suportado e a coleção do template, depois use o comando padrão de workspace
+do Angular:
+
+```bash
+npm install --global @angular/cli@22.2.1 @rodri/angular-template@1.1.0
+ng new my-app --collection=@rodri/angular-template
+cd my-app
+npm start
+```
+
+A geração é determinística, aplica o baseline completo e não exige edição manual. O projeto padrão
+usa SCSS, routing, mock local da API, observabilidade, Playwright e threshold de cobertura de 85%.
+Consulte [Distribuição via Angular Schematics](docs/pt-BR/schematics.md) para instalação local ao
+projeto, todas as opções, exemplos BFF, desenvolvimento, packaging e release.
+
+## Executar este repositório
 
 Use a versão de Node.js definida pelo repositório:
 
@@ -59,7 +76,7 @@ O modo padrão usa o mock local e não exige serviços externos.
 
 Para o passo a passo completo, consulte [Primeiros passos](docs/pt-BR/getting-started.md).
 
-## Usar como GitHub Template
+## GitHub Template como fallback
 
 Depois que este repositório estiver marcado como **Template repository** no GitHub, crie um novo repositório com **Use this template → Create a new repository**. O novo repositório recebe os arquivos do template sem herdar o histórico Git deste projeto.
 
@@ -191,6 +208,8 @@ Pull requests para `main` e pushes em `main` validam:
 - análise JavaScript/TypeScript do CodeQL;
 - upload LCOV para Codecov quando configurado;
 - política de review do CodeRabbit via `.coderabbit.yaml`.
+- testes unitários dos Schematics, tarball npm exato, instalação limpa como consumidor e quality
+  gates do projeto gerado.
 
 Dependabot monitora npm e GitHub Actions. Actions executáveis são pinadas por SHA imutável.
 
@@ -226,6 +245,7 @@ O workspace recomenda Angular, ESLint, Prettier, Playwright, GitHub Actions, YAM
 
 Comece pelo [índice de documentação](docs/pt-BR/README.md), que reúne:
 
+- instalação, opções, desenvolvimento do pacote e release dos Angular Schematics;
 - primeiros passos;
 - arquitetura e ADRs;
 - HTTP/API;
@@ -246,4 +266,6 @@ Para vulnerabilidades, siga a orientação de reporte privado em [SECURITY.pt-BR
 
 ## Release
 
-O baseline production-ready é **v1.0.0**. Consulte [CHANGELOG.pt-BR.md](CHANGELOG.pt-BR.md) e as [release notes v1.0.0](docs/pt-BR/releases/v1.0.0.md).
+A distribuição npm/Schematics é a **v1.1.0**. Consulte [CHANGELOG.pt-BR.md](CHANGELOG.pt-BR.md),
+as [release notes v1.1.0](docs/pt-BR/releases/v1.1.0.md) e o
+[fluxo de release](docs/pt-BR/schematics.md#release-e-publish).
