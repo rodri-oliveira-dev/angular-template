@@ -39,7 +39,8 @@
     "docs:localization:check": "node scripts/check-doc-localization.mjs",
     "schematics:install": "npm ci --prefix schematics",
     "schematics:build": "npm run build --prefix schematics",
-    "schematics:test": "npm test --prefix schematics"
+    "schematics:test": "npm test --prefix schematics",
+    "schematics:integration": "npm run integration --prefix schematics"
   },
   "engines": {
     "node": "^24.15.0"

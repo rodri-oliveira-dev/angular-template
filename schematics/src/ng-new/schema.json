@@ -65,6 +65,14 @@
       "maximum": 100,
       "default": 85
     },
+    "version": {
+      "type": "string",
+      "description": "Angular CLI version supplied by the invoking CLI.",
+      "visible": false,
+      "$default": {
+        "$source": "ng-cli-version"
+      }
+    },
     "skipGit": {
       "type": "boolean",
       "description": "Do not initialize a Git repository.",

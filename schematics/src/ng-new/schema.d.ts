@@ -10,4 +10,5 @@ export interface NgNewSchema {
   skipGit?: boolean;
   skipInstall?: boolean;
   style?: 'css' | 'scss';
+  version?: string;
 }

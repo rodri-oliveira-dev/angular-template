@@ -1,4 +1,4 @@
-import { cp, mkdir } from 'node:fs/promises';
+import { cp, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 
 const sourceRoot = new URL('../src/', import.meta.url);
 const outputRoot = new URL('../dist/', import.meta.url);
@@ -50,3 +50,20 @@ await mkdir(templateRoot, { recursive: true });
 for (const entry of templateEntries) {
   await cp(new URL(entry, repositoryRoot), new URL(entry, templateRoot), { recursive: true });
 }
+
+async function normalizeTextFiles(directory) {
+  for (const entry of await readdir(directory, { withFileTypes: true })) {
+    const entryUrl = new URL(entry.name, directory);
+    if (entry.isDirectory()) {
+      await normalizeTextFiles(new URL(`${entry.name}/`, directory));
+      continue;
+    }
+
+    const content = await readFile(entryUrl);
+    if (!content.includes(0)) {
+      await writeFile(entryUrl, content.toString('utf-8').replace(/\r\n/g, '\n'));
+    }
+  }
+}
+
+await normalizeTextFiles(templateRoot);

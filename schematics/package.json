@@ -31,13 +31,15 @@
     "clean": "node scripts/clean.mjs",
     "build": "npm run clean && tsc -p tsconfig.json && node scripts/copy-assets.mjs",
     "test": "npm run build && node --test test/**/*.test.cjs",
+    "integration": "node scripts/integration-test.mjs",
     "prepack": "npm test"
   },
   "dependencies": {
     "@angular-devkit/core": "22.2.1",
     "@angular-devkit/schematics": "22.2.1",
     "@schematics/angular": "22.2.1",
-    "jsonc-parser": "3.3.1"
+    "jsonc-parser": "3.3.1",
+    "prettier": "3.9.9"
   },
   "devDependencies": {
     "typescript": "~6.0.2"

@@ -11,6 +11,7 @@ import {
   url,
 } from '@angular-devkit/schematics';
 import { applyEdits, modify } from 'jsonc-parser';
+import { format } from 'prettier';
 
 import type { NgNewSchema } from './schema';
 
@@ -372,6 +373,9 @@ test.describe('application smoke', () => {
 
 function configureGeneratedWorkspace(options: NormalizedOptions): Rule {
   return (tree) => {
+    tree.delete(workspacePath(options.root, '.prettierrc'));
+    deleteDirectory(tree, workspacePath(options.root, '.vscode'));
+
     updateJson(tree, workspacePath(options.root, 'package.json'), (packageJson) => {
       packageJson['name'] = options.projectName;
       packageJson['version'] = '0.0.0';
@@ -509,6 +513,46 @@ function configureGeneratedWorkspace(options: NormalizedOptions): Rule {
   };
 }
 
+function formatTransformedFiles(options: NormalizedOptions): Rule {
+  return async (tree) => {
+    const files = [
+      '.github/workflows/ci.yml',
+      'angular.json',
+      'package.json',
+      `${options.projectName}.code-workspace`,
+      'scripts/check-coverage-gate.mjs',
+      'scripts/report-ci-pr-status.mjs',
+      'scripts/serve-security-baseline.mjs',
+      'scripts/verify-clean-bootstrap.mjs',
+      'src/app/app.config.ts',
+      'src/app/app.html',
+      'src/app/app.spec.ts',
+      'src/app/app.ts',
+      'src/proxy.bff.conf.json',
+    ];
+    if (options.e2e) {
+      files.push('e2e/app.spec.ts', 'playwright.config.ts');
+    }
+
+    for (const file of files) {
+      const path = workspacePath(options.root, file);
+      if (tree.exists(path)) {
+        tree.overwrite(
+          path,
+          await format(readText(tree, path), {
+            filepath: file,
+            printWidth: 100,
+            semi: true,
+            singleQuote: true,
+            trailingComma: 'all',
+          }),
+        );
+      }
+    }
+    return tree;
+  };
+}
+
 /** Compose Angular CLI workspace generation with the production-ready template baseline. */
 export function ngNew(options: NgNewSchema): Rule {
   const projectName = strings.dasherize(options.name);
@@ -573,9 +617,10 @@ export function ngNew(options: NgNewSchema): Rule {
       standalone: true,
       strict: true,
       style: normalized.style,
-      version: '22.2.1',
+      version: options.version ?? '22.2.1',
     }),
     mergeWith(apply(url('./files'), [move(root)]), MergeStrategy.Overwrite),
     configureGeneratedWorkspace(normalized),
+    formatTransformedFiles(normalized),
   ]);
 }

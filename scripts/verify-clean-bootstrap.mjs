@@ -30,10 +30,12 @@ export function shouldCopy(source) {
 }
 
 function runNpm(args, cwd) {
-  const command = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+  const npmCli = process.env.npm_execpath;
+  const command = npmCli ? process.execPath : process.platform === 'win32' ? 'npm.cmd' : 'npm';
+  const commandArgs = npmCli ? [npmCli, ...args] : args;
 
   return new Promise((resolve, reject) => {
-    const child = spawn(command, args, {
+    const child = spawn(command, commandArgs, {
       cwd,
       env: { ...process.env, CI: 'true' },
       stdio: 'inherit',
