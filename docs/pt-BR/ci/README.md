@@ -86,7 +86,7 @@ O gate lê `coverage/coverage-summary.json`, valida as quatro métricas e també
 
 ## Codecov
 
-Depois que a cobertura unitária é gerada, o CI envia `coverage/lcov.info` usando a Action oficial do Codecov. A Action é pinada por SHA imutável, seguindo a mesma política de supply chain do restante do workflow.
+Depois que a cobertura unitária é gerada, o CI envia `coverage/angular-template/lcov.info` usando a Action oficial do Codecov. A Action é pinada por SHA imutável, seguindo a mesma política de supply chain do restante do workflow.
 
 `codecov.yml` mantém a cobertura global alinhada ao gate local de 85% e trata patch coverage como informativa.
 

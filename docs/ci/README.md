@@ -20,7 +20,7 @@ The CI gate:
 3. runs ESLint plus architecture, frontend-security, and documentation-localization guardrails;
 4. runs the security scanner tests and `npm audit --audit-level=high`;
 5. runs the unit suite with coverage;
-6. uploads `coverage/lcov.info` to Codecov when that integration is configured;
+6. uploads `coverage/angular-template/lcov.info` to Codecov when that integration is configured;
 7. applies the explicit 85% coverage gate against `coverage/coverage-summary.json`;
 8. produces a production build;
 9. validates a clean template bootstrap from an isolated copy;

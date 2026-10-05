@@ -256,7 +256,7 @@ ou execute a task **test: coverage**.
 A extensão recomendada **Code Coverage LCOV** (`rherrmannr.code-coverage-lcov`) está configurada para ler:
 
 ```text
-coverage/lcov.info
+coverage/angular-template/lcov.info
 ```
 
 O workspace habilita:
