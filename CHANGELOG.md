@@ -1,3 +1,5 @@
+> 🌐 Language: **English** | [Português (Brasil)](CHANGELOG.pt-BR.md)
+
 # Changelog
 
 All notable changes to the production-ready template are documented here.

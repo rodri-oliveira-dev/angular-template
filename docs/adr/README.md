@@ -1,3 +1,5 @@
+> 🌐 Language: **English** | [Português (Brasil)](../pt-BR/adr/README.md)
+
 # Architecture Decision Records
 
 ADRs record decisions that shape the reusable template and should remain stable across generated applications.

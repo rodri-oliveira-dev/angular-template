@@ -1,4 +1,14 @@
+> 🌐 Language: **English** | [Português (Brasil)](README.pt-BR.md)
+
 # Angular Template
+
+[![CI](https://github.com/rodri-oliveira-dev/angular-template/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/rodri-oliveira-dev/angular-template/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/rodri-oliveira-dev/angular-template/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/rodri-oliveira-dev/angular-template/actions/workflows/codeql.yml)
+[![codecov](https://codecov.io/gh/rodri-oliveira-dev/angular-template/branch/main/graph/badge.svg)](https://codecov.io/gh/rodri-oliveira-dev/angular-template)
+[![Angular](https://img.shields.io/badge/Angular-22.2-DD0031?logo=angular&logoColor=white)](https://angular.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-24-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![License: MIT](https://img.shields.io/github/license/rodri-oliveira-dev/angular-template)](LICENSE)
 
 Production-ready Angular starter focused on maintainable architecture, secure browser/BFF boundaries, automated quality gates, testing, and observability.
 
@@ -17,7 +27,7 @@ The default development mode uses an in-memory mock, so a fresh checkout runs wi
 - Playwright browser tests
 - ESLint + Prettier
 - coverage gate of 85% for statements, branches, functions, and lines
-- CodeQL, Dependabot, npm audit, and OWASP ZAP
+- CodeQL, Codecov, CodeRabbit, Dependabot, npm audit, and OWASP ZAP
 - same-origin optional BFF integration with XSRF support
 - vendor-neutral telemetry foundation
 
@@ -178,7 +188,9 @@ Pull requests to `main` and pushes to `main` validate:
 - clean template bootstrap;
 - OWASP ZAP baseline;
 - Playwright mock and BFF browser flows;
-- CodeQL JavaScript/TypeScript analysis.
+- CodeQL JavaScript/TypeScript analysis;
+- Codecov LCOV upload when configured;
+- CodeRabbit repository review policy through `.coderabbit.yaml`.
 
 Dependabot monitors npm and GitHub Actions. Executable Actions are pinned to immutable SHAs.
 

@@ -1,3 +1,5 @@
+> 🌐 Language: **English** | [Português (Brasil)](../pt-BR/http/README.md)
+
 # HTTP and API integration
 
 The template keeps transport concerns outside components and pages.

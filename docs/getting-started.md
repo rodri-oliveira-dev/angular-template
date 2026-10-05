@@ -1,3 +1,5 @@
+> 🌐 Language: **English** | [Português (Brasil)](pt-BR/getting-started.md)
+
 # Getting Started
 
 ## 1. Create or clone

@@ -16,7 +16,7 @@
     "e2e:bff": "playwright test --config=playwright.bff.config.ts",
     "e2e:ui": "playwright test --ui",
     "e2e:report": "playwright show-report",
-    "lint": "ng lint && npm run architecture:check && npm run security:check",
+    "lint": "ng lint && npm run architecture:check && npm run security:check && npm run docs:localization:check",
     "lint:fix": "ng lint --fix && npm run architecture:check && npm run security:check",
     "architecture:check": "node scripts/check-feature-boundaries.mjs",
     "format": "prettier --write .",
@@ -35,7 +35,8 @@
     "start:mock": "ng serve --configuration development",
     "start:bff": "ng serve --configuration bff",
     "build:bff": "ng build --configuration bff",
-    "bootstrap:verify": "node scripts/verify-clean-bootstrap.mjs"
+    "bootstrap:verify": "node scripts/verify-clean-bootstrap.mjs",
+    "docs:localization:check": "node scripts/check-doc-localization.mjs"
   },
   "engines": {
     "node": "^24.15.0"

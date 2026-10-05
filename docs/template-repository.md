@@ -1,3 +1,5 @@
+> 🌐 Language: **English** | [Português (Brasil)](pt-BR/template-repository.md)
+
 # GitHub Template Repository Setup
 
 The v1.0 repository is designed to be consumed as a GitHub Template Repository.

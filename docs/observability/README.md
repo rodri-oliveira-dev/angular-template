@@ -1,3 +1,5 @@
+> 🌐 Language: **English** | [Português (Brasil)](../pt-BR/observability/README.md)
+
 # Observability
 
 The template starts with a vendor-neutral telemetry boundary instead of binding feature code directly to a monitoring SDK.
@@ -165,7 +167,7 @@ Collector availability must not be required for application bootstrap. Synchrono
 
 Records are sanitized before they are added to the local buffer **and before they are passed to an optional exporter**.
 
-## v0.6 responsibility boundaries
+## Responsibility boundaries
 
 The completed observability block provides:
 

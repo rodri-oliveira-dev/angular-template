@@ -1,3 +1,5 @@
+> 🌐 Language: **English** | [Português (Brasil)](../pt-BR/adr/0001-feature-first-architecture.md)
+
 # ADR 0001: Feature-first Angular architecture
 
 - Status: Accepted

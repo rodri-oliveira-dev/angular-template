@@ -1,3 +1,5 @@
+> 🌐 Language: **English** | [Português (Brasil)](SECURITY.pt-BR.md)
+
 # Security Policy
 
 ## Supported versions

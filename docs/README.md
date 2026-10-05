@@ -1,3 +1,5 @@
+> 🌐 Language: **English** | [Português (Brasil)](pt-BR/README.md)
+
 # Documentation
 
 This directory is the technical documentation index for the Angular template.

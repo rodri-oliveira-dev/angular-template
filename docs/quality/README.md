@@ -1,3 +1,5 @@
+> 🌐 Language: **English** | [Português (Brasil)](../pt-BR/quality/README.md)
+
 # Code quality
 
 The template separates static analysis from formatting:

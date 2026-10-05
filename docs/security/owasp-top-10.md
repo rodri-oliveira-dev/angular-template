@@ -1,3 +1,5 @@
+> 🌐 Language: **English** | [Português (Brasil)](../pt-BR/security/owasp-top-10.md)
+
 # OWASP Top 10:2025 coverage
 
 This document maps the template's current security controls to the OWASP Top 10:2025.

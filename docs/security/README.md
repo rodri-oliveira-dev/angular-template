@@ -1,8 +1,10 @@
+> 🌐 Language: **English** | [Português (Brasil)](../pt-BR/security/README.md)
+
 # Frontend security baseline
 
 This template treats browser code, bundled configuration, and browser storage as **untrusted client-side territory**. Anything shipped to the browser can be inspected or modified by a user or by JavaScript running in the same origin.
 
-The v0.5 block combines source guardrails, dependency auditing, Angular CSP hardening, and deployment-header guidance.
+The baseline combines source guardrails, dependency auditing, Angular CSP hardening, and deployment-header guidance.
 
 ## HTML binding and sanitization
 

@@ -1,3 +1,5 @@
+> 🌐 Language: **English** | [Português (Brasil)](CONTRIBUTING.pt-BR.md)
+
 # Contributing
 
 Contributions are welcome when they preserve the repository's role as a reusable Angular template rather than adding application-specific product behavior.
