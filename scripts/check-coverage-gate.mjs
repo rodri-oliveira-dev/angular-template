@@ -61,9 +61,7 @@ for (const metric of metrics) {
   );
 
   if (percentage < required) {
-    failures.push(
-      `${metric}: ${percentage.toFixed(2)}% is below required ${required.toFixed(2)}%`,
-    );
+    failures.push(`${metric}: ${percentage.toFixed(2)}% is below required ${required.toFixed(2)}%`);
   }
 }
 
