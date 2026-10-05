@@ -60,11 +60,11 @@ jobs:
       - name: BFF dev server configuration
         shell: bash
         run: |
-          npm run start:bff -- --host 127.0.0.1 > /tmp/angular-bff.log 2>&1 &
+          setsid npm run start:bff -- --host 127.0.0.1 > /tmp/angular-bff.log 2>&1 &
           server_pid=$!
 
           cleanup() {
-            kill "$server_pid" 2>/dev/null || true
+            kill -- "-$server_pid" 2>/dev/null || true
           }
 
           trap cleanup EXIT
