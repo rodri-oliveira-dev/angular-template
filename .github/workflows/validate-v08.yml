@@ -1,0 +1,92 @@
+name: Validate v0.8 BFF foundation
+
+on:
+  push:
+    branches:
+      - phase/08-bff-integration
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-v08-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    env:
+      CI: true
+      COVERAGE_GATE: 85
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24.15.0
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Format check
+        run: npm run format:check
+
+      - name: Lint and guardrails
+        run: npm run lint
+
+      - name: Security checks
+        run: npm run security:all
+
+      - name: Unit tests with coverage
+        run: npm run test:coverage
+
+      - name: Coverage gate
+        run: npm run coverage:check
+
+      - name: Production build
+        run: npm run build
+
+      - name: BFF development build
+        run: npm run build:bff
+
+      - name: BFF dev server configuration
+        shell: bash
+        run: |
+          npm run start:bff -- --host 127.0.0.1 > /tmp/angular-bff.log 2>&1 &
+          server_pid=$!
+
+          cleanup() {
+            kill "$server_pid" 2>/dev/null || true
+          }
+
+          trap cleanup EXIT
+
+          for attempt in {1..60}; do
+            if curl --fail --silent http://127.0.0.1:4200/ > /dev/null; then
+              exit 0
+            fi
+
+            if ! kill -0 "$server_pid" 2>/dev/null; then
+              cat /tmp/angular-bff.log
+              exit 1
+            fi
+
+            sleep 1
+          done
+
+          cat /tmp/angular-bff.log
+          exit 1
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Playwright E2E
+        run: npm run e2e
