@@ -12,6 +12,7 @@ permissions:
   contents: read
   issues: write
   pull-requests: write
+  id-token: write
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -78,8 +79,8 @@ jobs:
           disable_search: true
           flags: unit
           name: angular-unit-tests
-          fail_ci_if_error: ${{ secrets.CODECOV_TOKEN != '' }}
-          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+          use_oidc: true
 
       - name: Coverage gate (>= 85%)
         id: coverage_gate

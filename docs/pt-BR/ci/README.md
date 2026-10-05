@@ -90,13 +90,15 @@ Depois que a cobertura unitária é gerada, o CI envia `coverage/angular-templat
 
 `codecov.yml` mantém a cobertura global alinhada ao gate local de 85% e trata patch coverage como informativa.
 
-Para habilitar Codecov completamente num repositório criado a partir deste template:
+A autenticação do Codecov usa GitHub OIDC, portanto não é necessário manter um secret de longa duração `CODECOV_TOKEN`. O workflow concede `id-token: write` apenas para que a Action oficial do Codecov solicite um token OIDC de curta duração.
+
+Para habilitar Codecov num repositório criado a partir deste template:
 
 1. instale/autorize o Codecov GitHub App para o repositório;
 2. configure o repositório no Codecov;
-3. adicione o secret `CODECOV_TOKEN` fornecido na tela de setup do Codecov.
+3. mantenha a configuração OIDC já versionada.
 
-Repositórios gerados a partir de template não herdam GitHub secrets. Por isso, o upload permanece não bloqueante enquanto `CODECOV_TOKEN` estiver ausente e passa a falhar rapidamente quando o token está configurado.
+O upload permanece não bloqueante por padrão para que um repositório recém-gerado não quebre o CI antes de o Codecov ser autorizado. Times que quiserem Codecov como gate externo obrigatório podem alterar `fail_ci_if_error` para `true` depois que o GitHub App estiver ativo.
 
 O gate local `coverage:check` continua autoritativo e sempre roda, independentemente da disponibilidade do Codecov.
 

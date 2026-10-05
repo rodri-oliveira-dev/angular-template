@@ -55,6 +55,7 @@ permissions:
   contents: read
   issues: write
   pull-requests: write
+  id-token: write
 ```
 
 `contents: read` is sufficient for source validation. The issue/PR write permissions are used only by the sticky CI status comment that reports the failed or passed gates on pull requests.
@@ -100,13 +101,15 @@ After unit coverage is generated, CI uploads `coverage/lcov.info` with the offic
 
 The repository-level `codecov.yml` keeps overall project coverage aligned with the local 85% gate and reports patch coverage as informational.
 
-To fully enable Codecov on a repository created from this template:
+Codecov authentication uses GitHub OIDC, so no long-lived `CODECOV_TOKEN` secret is required. The workflow grants `id-token: write` only so the official Codecov Action can request a short-lived OIDC token.
+
+To enable Codecov on a repository created from this template:
 
 1. install/authorize the Codecov GitHub App for the repository;
 2. configure the repository in Codecov;
-3. add the `CODECOV_TOKEN` repository secret from the Codecov setup page.
+3. keep the checked-in OIDC configuration.
 
-Repositories created from a GitHub template do not inherit secrets. The Codecov upload is therefore non-blocking while `CODECOV_TOKEN` is absent and becomes fail-fast once the token is configured.
+The upload remains non-blocking by default so a newly generated repository does not fail CI before Codecov has been authorized. Teams that require Codecov as a mandatory external gate can change `fail_ci_if_error` to `true` after the GitHub App is active.
 
 The local `coverage:check` gate remains authoritative and always runs independently of Codecov availability.
 
