@@ -13,6 +13,7 @@ test('reports success only when every required gate succeeds', () => {
       ['SETUP_NODE_OUTCOME', 'success'],
       ['RUNTIME_VERSIONS_OUTCOME', 'success'],
       ['INSTALL_DEPENDENCIES_OUTCOME', 'success'],
+      ['REPORTER_TESTS_OUTCOME', 'success'],
       ['FORMAT_CHECK_OUTCOME', 'success'],
       ['LINT_GUARDRAILS_OUTCOME', 'success'],
       ['SECURITY_GATE_OUTCOME', 'success'],
