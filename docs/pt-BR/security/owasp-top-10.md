@@ -8,18 +8,18 @@ O mapeamento representa um baseline de segurança, não uma certificação de co
 
 ## Matriz de cobertura
 
-| Categoria OWASP                               | Cobertura do template Angular   | Controles principais                                                                                                           |
-| --------------------------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| A01 — Broken Access Control                   | Parcial / depende do servidor   | fronteira BFF same-origin, sem topologia downstream no Angular, autorização server-side documentada                            |
-| A02 — Security Misconfiguration               | Baseline frontend forte         | Angular autoCSP, API same-origin, baseline de response headers e políticas restritivas do browser                              |
-| A03 — Software Supply Chain Failures          | Aplicado                        | lockfile + `npm ci`, Dependabot, GitHub Actions por SHA, `npm audit --audit-level=high` como gate obrigatório               |
-| A04 — Cryptographic Failures                  | Parcial / depende do deployment | orientação HTTPS, Secure cookie e HSTS; criptografia e terminação TLS fora do Angular                                           |
-| A05 — Injection                               | Baseline frontend forte         | sanitização contextual Angular, bloqueio de bypass, CSP, guardrails ESLint/AST e CodeQL                                        |
-| A06 — Insecure Design                         | Parcial                         | fronteiras de feature/BFF, sessão gerenciada pelo servidor, design CSRF e divisão explícita de responsabilidades               |
-| A07 — Authentication Failures                 | Parcial / depende do BFF        | orientação HttpOnly/Secure/SameSite, sem access/refresh tokens no Web Storage, sessão de autenticação pertencente ao BFF       |
-| A08 — Software or Data Integrity Failures     | Baseline forte de build         | Action SHAs imutáveis, lockfile, instalação determinística, CodeQL e automação de dependências                                 |
-| A09 — Security Logging & Alerting Failures    | Parcial                         | telemetria sanitizada, correlation IDs, sem logging sensível em console; alertas operacionais dependem do deployment            |
-| A10 — Mishandling of Exceptional Conditions   | Baseline frontend forte         | Problem Details / `ApiError` padronizados, fluxos determinísticos de erro e cobertura unit/integration/E2E                   |
+| Categoria OWASP                             | Cobertura do template Angular   | Controles principais                                                                                                     |
+| ------------------------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| A01 — Broken Access Control                 | Parcial / depende do servidor   | fronteira BFF same-origin, sem topologia downstream no Angular, autorização server-side documentada                      |
+| A02 — Security Misconfiguration             | Baseline frontend forte         | Angular autoCSP, API same-origin, baseline de response headers e políticas restritivas do browser                        |
+| A03 — Software Supply Chain Failures        | Aplicado                        | lockfile + `npm ci`, Dependabot, GitHub Actions por SHA, `npm audit --audit-level=high` como gate obrigatório            |
+| A04 — Cryptographic Failures                | Parcial / depende do deployment | orientação HTTPS, Secure cookie e HSTS; criptografia e terminação TLS fora do Angular                                    |
+| A05 — Injection                             | Baseline frontend forte         | sanitização contextual Angular, bloqueio de bypass, CSP, guardrails ESLint/AST e CodeQL                                  |
+| A06 — Insecure Design                       | Parcial                         | fronteiras de feature/BFF, sessão gerenciada pelo servidor, design CSRF e divisão explícita de responsabilidades         |
+| A07 — Authentication Failures               | Parcial / depende do BFF        | orientação HttpOnly/Secure/SameSite, sem access/refresh tokens no Web Storage, sessão de autenticação pertencente ao BFF |
+| A08 — Software or Data Integrity Failures   | Baseline forte de build         | Action SHAs imutáveis, lockfile, instalação determinística, CodeQL e automação de dependências                           |
+| A09 — Security Logging & Alerting Failures  | Parcial                         | telemetria sanitizada, correlation IDs, sem logging sensível em console; alertas operacionais dependem do deployment     |
+| A10 — Mishandling of Exceptional Conditions | Baseline frontend forte         | Problem Details / `ApiError` padronizados, fluxos determinísticos de erro e cobertura unit/integration/E2E               |
 
 ## Gates automatizados de segurança
 

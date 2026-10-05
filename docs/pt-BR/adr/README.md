@@ -4,8 +4,8 @@
 
 ADRs registram decisões que moldam o template reutilizável e devem permanecer estáveis entre aplicações geradas.
 
-| ADR                                        | Status | Decisão                            |
-| ------------------------------------------ | ------ | ---------------------------------- |
+| ADR                                        | Status | Decisão                           |
+| ------------------------------------------ | ------ | --------------------------------- |
 | [0001](0001-feature-first-architecture.md) | Aceito | Arquitetura Angular feature-first |
 
 ## Adicionando um ADR

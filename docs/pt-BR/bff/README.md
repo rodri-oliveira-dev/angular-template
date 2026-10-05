@@ -20,10 +20,10 @@ Angular conhece apenas o contrato browser-facing do BFF. Ele não deve conter ho
 
 O template possui dois modos de API frontend:
 
-| Modo   | Objetivo                            | Base path da API   |
-| ------ | ----------------------------------- | ------------------ |
-| `mock` | desenvolvimento local sem backend | `/api`           |
-| `bff`  | conectividade com BFF real         | `/api` por padrão |
+| Modo   | Objetivo                          | Base path da API  |
+| ------ | --------------------------------- | ----------------- |
+| `mock` | desenvolvimento local sem backend | `/api`            |
+| `bff`  | conectividade com BFF real        | `/api` por padrão |
 
 Builds de produção usam a configuração BFF por padrão.
 
@@ -138,9 +138,9 @@ Requests de escrita autenticadas por cookie exigem proteção CSRF além de `Sam
 
 O client Angular usa explicitamente o contrato convencional de XSRF:
 
-| Objetivo         | Nome            |
-| ---------------- | --------------- |
-| cookie anti-CSRF | `XSRF-TOKEN`  |
+| Objetivo         | Nome           |
+| ---------------- | -------------- |
+| cookie anti-CSRF | `XSRF-TOKEN`   |
 | request header   | `X-XSRF-TOKEN` |
 
 O BFF deve emitir um cookie aleatório anti-CSRF chamado `XSRF-TOKEN`. Diferente do cookie de autenticação/sessão, esse cookie deve ser legível pelo Angular, portanto **não** é `HttpOnly`.
@@ -183,9 +183,9 @@ A feature de referência prova que o mesmo client de data access Angular funcion
 
 O contrato browser-facing é pequeno de propósito:
 
-| Operação | Rota do browser       | Request                | Resposta de sucesso        |
-| -------- | --------------------- | ---------------------- | -------------------------- |
-| Listar   | `GET /api/examples`  | sem body               | `200` + `ExampleItemDto[]` |
+| Operação | Rota do browser      | Request              | Resposta de sucesso        |
+| -------- | -------------------- | -------------------- | -------------------------- |
+| Listar   | `GET /api/examples`  | sem body             | `200` + `ExampleItemDto[]` |
 | Criar    | `POST /api/examples` | `{ "name": string }` | `201` + `ExampleItemDto`   |
 
 `ExampleItemDto` contém `id` e `name`. A camada de data access mapeia o DTO para o model `ExampleItem` da UI, evitando que components/pages dependam diretamente da representação de transporte.
@@ -220,7 +220,7 @@ A telemetria HTTP frontend registra apenas metadados de baixa cardinalidade: mé
 
 | Camada           | Responsabilidades                                                                                                                                    |
 | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Angular          | estado de UI, data access da feature, mapeamento de DTO browser-facing, header XSRF, consumo de correlação/telemetria                                 |
+| Angular          | estado de UI, data access da feature, mapeamento de DTO browser-facing, header XSRF, consumo de correlação/telemetria                                |
 | BFF              | sessão do browser, validação CSRF, fronteira de autorização, contrato `/api`, orquestração downstream, Problem Details, propagação correlation/trace |
 | Serviços domínio | capacidades de negócio, autorização/invariantes de serviço, persistência/integração; sem responsabilidades de sessão do browser                      |
 

@@ -83,13 +83,13 @@ Isso é defense in depth, não permissão para enviar objetos arbitrários. O ca
 
 O pipeline HTTP emite exatamente um evento `http.client.request` para cada request concluída, falha ou cancelada.
 
-| Atributo        | Significado                                                                  |
-| --------------- | ---------------------------------------------------------------------------- |
-| `method`      | método HTTP, como GET ou POST                                                |
-| `outcome`     | `success`, `error` ou `cancelled`                                      |
-| `status`      | status HTTP quando disponível                                                |
-| `durationMs`  | duração observada pelo client em milissegundos                               |
-| `correlationId` | ID da resposta quando disponível; senão, o ID enviado                      |
+| Atributo        | Significado                                           |
+| --------------- | ----------------------------------------------------- |
+| `method`        | método HTTP, como GET ou POST                         |
+| `outcome`       | `success`, `error` ou `cancelled`                     |
+| `status`        | status HTTP quando disponível                         |
+| `durationMs`    | duração observada pelo client em milissegundos        |
+| `correlationId` | ID da resposta quando disponível; senão, o ID enviado |
 
 O evento omite URLs/query strings completas, bodies, headers, cookies e valores de autenticação.
 

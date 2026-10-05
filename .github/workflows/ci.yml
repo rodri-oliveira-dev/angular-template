@@ -57,10 +57,7 @@ jobs:
 
       - name: Format check
         id: format_check
-        run: |
-          npx prettier --write .coderabbit.yaml codecov.yml docs/pt-BR/adr/README.md docs/pt-BR/bff/README.md docs/pt-BR/observability/README.md docs/pt-BR/security/owasp-top-10.md
-          git diff -- .coderabbit.yaml codecov.yml docs/pt-BR/adr/README.md docs/pt-BR/bff/README.md docs/pt-BR/observability/README.md docs/pt-BR/security/owasp-top-10.md
-          exit 1
+        run: npm run format:check
 
       - name: Lint and guardrails
         id: lint_guardrails

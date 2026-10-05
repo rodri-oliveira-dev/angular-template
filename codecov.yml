@@ -4,7 +4,7 @@ codecov:
 coverage:
   precision: 2
   round: down
-  range: "85...100"
+  range: '85...100'
   status:
     project:
       default:
@@ -16,7 +16,7 @@ coverage:
         informational: true
 
 comment:
-  layout: "condensed_header, condensed_files, condensed_footer"
+  layout: 'condensed_header, condensed_files, condensed_footer'
   behavior: default
   require_changes: false
   require_base: false
