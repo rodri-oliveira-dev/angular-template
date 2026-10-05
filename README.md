@@ -134,13 +134,15 @@ Watch mode:
 npm run test:unit:watch
 ```
 
-Run the Playwright smoke suite:
+Run both Playwright smoke modes:
 
 ```bash
 npm run e2e
 ```
 
-The test foundation includes standalone component, service/data-access, HTTP, interceptor, routing, and browser-level smoke examples. Coverage gates enforce 85% for statements, branches, functions, and lines. See [Testing](docs/testing/README.md).
+Use `npm run e2e:mock` or `npm run e2e:bff` when you need to run one browser contract independently.
+
+The test foundation includes standalone component, service/data-access, HTTP, interceptor, routing, local-mock browser flows, and BFF-mode browser contract flows. Coverage gates enforce 85% for statements, branches, functions, and lines. See [Testing](docs/testing/README.md).
 
 ## Continuous integration
 
@@ -266,6 +268,7 @@ The template currently includes:
 - **v0.7.1 Coverage & E2E in CI** — enforced coverage thresholds, reproducible Chromium installation, headless Playwright smoke tests, and failure-only diagnostics;
 - **v0.7.2 Dependency automation & CodeQL** — grouped Dependabot updates, JavaScript/TypeScript CodeQL scanning, immutable Action pins, and documented main-branch protection;
 - **v0.8 BFF connectivity foundation** — same-origin `/api`, mock/BFF runtime modes, local Angular proxy, and topology-safe API configuration;
-- **v0.8.1 BFF session security & XSRF** — server-managed session-cookie boundary, Angular XSRF configuration, no sensitive Web Storage credentials, and no global cross-origin credential opt-in.
+- **v0.8.1 BFF session security & XSRF** — server-managed session-cookie boundary, Angular XSRF configuration, no sensitive Web Storage credentials, and no global cross-origin credential opt-in;
+- **v0.8.2 BFF reference integration & contracts** — reference data-access contract, Problem Details/correlation preservation, Angular/BFF/domain responsibility boundaries, and mock + BFF browser verification.
 
-The v0.8 BFF integration block continues with v0.8.2 reference integration and contracts.
+The v0.8 BFF integration block is complete. The BFF remains optional: normal development can run entirely against the local mock.
