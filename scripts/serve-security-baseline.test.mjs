@@ -19,21 +19,12 @@ test('loads the documented production security headers', () => {
 
 test('uses explicit content types for executable browser assets', () => {
   assert.equal(contentTypeFor('index.html'), 'text/html; charset=utf-8');
-  assert.equal(
-    contentTypeFor('main-ABC12345.js'),
-    'text/javascript; charset=utf-8',
-  );
-  assert.equal(
-    contentTypeFor('styles-ABC12345.css'),
-    'text/css; charset=utf-8',
-  );
+  assert.equal(contentTypeFor('main-ABC12345.js'), 'text/javascript; charset=utf-8');
+  assert.equal(contentTypeFor('styles-ABC12345.css'), 'text/css; charset=utf-8');
 });
 
 test('keeps the entry document non-storable while allowing fingerprinted assets', () => {
   assert.equal(cacheControlFor('index.html'), 'no-store');
-  assert.equal(
-    cacheControlFor('main-ABC12345.js'),
-    'public, max-age=31536000, immutable',
-  );
+  assert.equal(cacheControlFor('main-ABC12345.js'), 'public, max-age=31536000, immutable');
   assert.equal(cacheControlFor('favicon.ico'), 'no-cache');
 });
