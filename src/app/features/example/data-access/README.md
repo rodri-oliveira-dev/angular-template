@@ -19,7 +19,6 @@ The data-access layer may know `/api/examples` because it is part of the browser
 
 Runtime mode is selected in the composition/configuration layer, not inside the feature.
 
-
 ## Reference contract
 
 The browser-facing transport contract is:
