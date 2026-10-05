@@ -9,10 +9,11 @@ on:
 permissions:
   contents: read
   id-token: write
+  packages: write
 
 jobs:
   publish:
-    name: Validate and publish npm package
+    name: Validate and publish packages
     if: github.repository == 'rodri-oliveira-dev/angular-template'
     runs-on: ubuntu-latest
     timeout-minutes: 35
@@ -48,6 +49,92 @@ jobs:
           CI: true
         run: npm run schematics:integration
 
-      - name: Publish through npm trusted publishing
+      - name: Read package metadata
+        id: package
+        shell: bash
+        run: |
+          NAME="$(node -p "require('./schematics/package.json').name")"
+          VERSION="$(node -p "require('./schematics/package.json').version")"
+
+          echo "name=$NAME" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Check npm registry
+        id: npmjs
+        env:
+          PACKAGE_NAME: ${{ steps.package.outputs.name }}
+          PACKAGE_VERSION: ${{ steps.package.outputs.version }}
+        shell: bash
+        run: |
+          set +e
+          PUBLISHED_VERSION="$(npm view "$PACKAGE_NAME@$PACKAGE_VERSION" version --registry=https://registry.npmjs.org 2>/tmp/npm-view.err)"
+          STATUS=$?
+          set -e
+
+          if [ "$STATUS" -eq 0 ]; then
+            echo "Version $PACKAGE_NAME@$PACKAGE_VERSION already exists on npm."
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          elif grep -Eq 'E404|404 Not Found' /tmp/npm-view.err; then
+            echo "Version $PACKAGE_NAME@$PACKAGE_VERSION is not published on npm yet."
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          else
+            cat /tmp/npm-view.err >&2
+            exit "$STATUS"
+          fi
+
+      - name: Publish to npm through trusted publishing
+        if: steps.npmjs.outputs.exists != 'true'
         working-directory: schematics
         run: npm publish --access public
+
+      - name: Skip npm publish when version already exists
+        if: steps.npmjs.outputs.exists == 'true'
+        env:
+          PACKAGE_NAME: ${{ steps.package.outputs.name }}
+          PACKAGE_VERSION: ${{ steps.package.outputs.version }}
+        run: echo "Skipping npm publish because $PACKAGE_NAME@$PACKAGE_VERSION already exists."
+
+      - name: Setup Node.js for GitHub Packages
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24.15.0
+          registry-url: https://npm.pkg.github.com
+          scope: '@rodri-oliveira-dev'
+
+      - name: Check GitHub Packages
+        id: github_packages
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PACKAGE_NAME: ${{ steps.package.outputs.name }}
+          PACKAGE_VERSION: ${{ steps.package.outputs.version }}
+        shell: bash
+        run: |
+          set +e
+          PUBLISHED_VERSION="$(npm view "$PACKAGE_NAME@$PACKAGE_VERSION" version --registry=https://npm.pkg.github.com 2>/tmp/github-packages-view.err)"
+          STATUS=$?
+          set -e
+
+          if [ "$STATUS" -eq 0 ]; then
+            echo "Version $PACKAGE_NAME@$PACKAGE_VERSION already exists on GitHub Packages."
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          elif grep -Eq 'E404|404 Not Found' /tmp/github-packages-view.err; then
+            echo "Version $PACKAGE_NAME@$PACKAGE_VERSION is not published on GitHub Packages yet."
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          else
+            cat /tmp/github-packages-view.err >&2
+            exit "$STATUS"
+          fi
+
+      - name: Publish to GitHub Packages
+        if: steps.github_packages.outputs.exists != 'true'
+        working-directory: schematics
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm publish --registry=https://npm.pkg.github.com --access public
+
+      - name: Skip GitHub Packages publish when version already exists
+        if: steps.github_packages.outputs.exists == 'true'
+        env:
+          PACKAGE_NAME: ${{ steps.package.outputs.name }}
+          PACKAGE_VERSION: ${{ steps.package.outputs.version }}
+        run: echo "Skipping GitHub Packages publish because $PACKAGE_NAME@$PACKAGE_VERSION already exists."
