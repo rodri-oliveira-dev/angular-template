@@ -51,7 +51,7 @@ for (const entry of templateEntries) {
 }
 await cp(new URL('.gitignore', repositoryRoot), new URL('gitignore.template', templateRoot));
 
-for (const workflow of ['publish-schematics.yml', 'initialize-template.yml']) {
+for (const workflow of ['publish-schematics.yml', 'release.yml', 'initialize-template.yml']) {
   await rm(new URL(`.github/workflows/${workflow}`, templateRoot), { force: true });
 }
 const applicationCiUrl = new URL('.github/workflows/ci.yml', templateRoot);
