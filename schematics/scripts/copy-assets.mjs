@@ -1,4 +1,4 @@
-import { cp, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
+import { cp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 
 const sourceRoot = new URL('../src/', import.meta.url);
 const outputRoot = new URL('../dist/', import.meta.url);
@@ -50,6 +50,11 @@ await mkdir(templateRoot, { recursive: true });
 for (const entry of templateEntries) {
   await cp(new URL(entry, repositoryRoot), new URL(entry, templateRoot), { recursive: true });
 }
+
+await rm(new URL('.github/workflows/publish-schematics.yml', templateRoot), { force: true });
+const applicationCiUrl = new URL('.github/workflows/ci.yml', templateRoot);
+const applicationCi = await readFile(applicationCiUrl, 'utf-8');
+await writeFile(applicationCiUrl, applicationCi.replace(/\r?\n  schematics:\r?\n[\s\S]*$/, '\n'));
 
 async function normalizeTextFiles(directory) {
   for (const entry of await readdir(directory, { withFileTypes: true })) {

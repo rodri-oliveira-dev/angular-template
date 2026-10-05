@@ -16,6 +16,20 @@ npm run schematics:test
 `src/collection.json` exposes the `ng-new` entry point. Package metadata points Angular CLI to the
 compiled `dist/collection.json`; the build copies JSON assets next to the compiled JavaScript.
 
+Validate the exact npm artifact and its clean installation with:
+
+```bash
+npm run schematics:package:validate
+npm run schematics:integration
+```
+
+Package versions follow template releases (`v1.1.0` publishes package `1.1.0`). Publishing is only
+triggered by an exact matching Git tag through `.github/workflows/publish-schematics.yml`. The npm
+package must trust that workflow for `rodri-oliveira-dev/angular-template`; GitHub OIDC then supplies
+short-lived credentials and npm attaches provenance without a committed token. The `npm` GitHub
+environment should require maintainer approval. The first package must be claimed by the owner of
+the `@rodri` scope before trusted publishing can be configured.
+
 ## Stable generation options
 
 | Option              | Default                 | Semantics                                                     |

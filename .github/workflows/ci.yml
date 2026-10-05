@@ -190,6 +190,9 @@ jobs:
       - name: Schematics unit tests
         run: npm run schematics:test
 
+      - name: Validate npm package contents and clean install
+        run: npm run schematics:package:validate
+
       - name: Packaged generated-project integration
         env:
           CI: true

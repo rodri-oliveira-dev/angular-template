@@ -27,10 +27,15 @@
   "engines": {
     "node": "^24.15.0"
   },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
     "clean": "node scripts/clean.mjs",
     "build": "npm run clean && tsc -p tsconfig.json && node scripts/copy-assets.mjs",
     "test": "npm run build && node --test test/**/*.test.cjs",
+    "package:validate": "npm test && node scripts/validate-package.mjs",
     "integration": "node scripts/integration-test.mjs",
     "prepack": "npm test"
   },

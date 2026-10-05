@@ -40,6 +40,7 @@
     "schematics:install": "npm ci --prefix schematics",
     "schematics:build": "npm run build --prefix schematics",
     "schematics:test": "npm test --prefix schematics",
+    "schematics:package:validate": "npm run package:validate --prefix schematics",
     "schematics:integration": "npm run integration --prefix schematics"
   },
   "engines": {

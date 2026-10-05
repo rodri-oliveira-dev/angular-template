@@ -1,0 +1,52 @@
+name: Publish Schematics
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    name: Validate and publish npm package
+    if: github.repository == 'rodri-oliveira-dev/angular-template'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    environment: npm
+
+    steps:
+      - name: Checkout release tag
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js and npm registry
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24.15.0
+          registry-url: https://registry.npmjs.org
+
+      - name: Use trusted-publishing-compatible npm
+        run: npm install --global npm@11.19.0
+
+      - name: Install Schematics dependencies
+        run: npm ci --prefix schematics
+
+      - name: Verify tag matches package version
+        working-directory: schematics
+        run: node scripts/verify-release-tag.mjs
+
+      - name: Validate package contents and clean installation
+        run: npm run schematics:package:validate
+
+      - name: Validate generated consumer project
+        env:
+          CI: true
+        run: npm run schematics:integration
+
+      - name: Publish through npm trusted publishing
+        working-directory: schematics
+        run: npm publish --access public
