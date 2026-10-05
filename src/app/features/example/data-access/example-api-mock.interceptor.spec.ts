@@ -80,7 +80,7 @@ describe('exampleApiMockInterceptor', () => {
           name: '   ',
         }),
       ),
-    ).rejects.toMatchObject<ApiError>({
+    ).rejects.toMatchObject({
       status: 400,
       message: 'The example name is required.',
     });
