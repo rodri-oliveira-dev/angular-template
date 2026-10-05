@@ -46,16 +46,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Temporary formatter for branch validation
-        run: npm run format
-
-      - name: Show temporary formatting diff
-        run: |
-          git diff -- docs/bff/README.md
-          git diff -- src/app/features/example/data-access/example-bff-contract.spec.ts
-          git diff -- src/app/features/example/data-access/README.md
-          git diff -- src/app/features/example/pages/example-page/example-page.html
-
       - name: Format check
         run: npm run format:check
 
