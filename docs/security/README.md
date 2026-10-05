@@ -94,7 +94,7 @@ For a host-only session cookie, prefer the `__Host-` prefix with `Secure`, `Path
 
 `SameSite` is defense in depth and does not replace a CSRF strategy for cookie-authenticated state-changing requests.
 
-The concrete BFF/session implementation is introduced later in the roadmap.
+The same-origin BFF connectivity foundation is now present. Session-cookie and XSRF behavior is introduced in v0.8.1.
 
 ## Logging and sensitive data
 
