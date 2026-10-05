@@ -67,7 +67,7 @@ Reviewed exceptions live in `.zap/rules.tsv`. The baseline currently ignores onl
 - ZAP's informational "Modern Web Application" classification;
 - optional `Cross-Origin-Embedder-Policy`, which is application-specific unless cross-origin isolation is required.
 
-Each ignored alert carries its rationale in the rules file. Do not globally disable ZAP alert classes merely to make CI green.
+Each ignored alert is documented in [`.zap/README.md`](../../.zap/README.md). The TSV stays parser-only so malformed comments cannot silently disable the exception policy. Do not globally disable ZAP alert classes merely to make CI green.
 
 ## Responsibility boundary
 
