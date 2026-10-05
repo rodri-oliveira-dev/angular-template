@@ -1,4 +1,4 @@
-10049	IGNORE	(Fingerprinted static assets and non-storable entry/error responses follow the documented cache policy.)
-10055	IGNORE	(Angular autoCsp owns script policy; the complementary HTTP CSP intentionally omits default-src and script-src.)
-10109	IGNORE	(Informational classification: this target is intentionally a modern JavaScript web application.)
-90004	IGNORE	(Cross-Origin-Embedder-Policy is application-specific unless the application requires cross-origin isolation.)
+10049	IGNORE	(Fingerprinted static assets and the SPA shell use an intentional cache policy.)
+10055	IGNORE	(Angular autoCsp owns script policy; the HTTP CSP is intentionally complementary.)
+10109	IGNORE	(The target is intentionally a modern JavaScript web application.)
+90004	IGNORE	(COEP is application-specific unless cross-origin isolation is required.)
