@@ -51,10 +51,7 @@ test('defaults reproduce the recommended mock, routing, observability, and E2E b
   assert.ok(!tree.files.includes('/sample-app/.github/workflows/initialize-template.yml'));
   assert.ok(!tree.files.includes('/sample-app/.github/workflows/pages.yml'));
   assert.ok(!tree.files.includes('/sample-app/scripts/prepare-pages.mjs'));
-  assert.doesNotMatch(
-    tree.readContent('/sample-app/README.md'),
-    /^### GitHub Pages live demo$/m,
-  );
+  assert.doesNotMatch(tree.readContent('/sample-app/README.md'), /^### GitHub Pages live demo$/m);
   assert.doesNotMatch(
     tree.readContent('/sample-app/README.pt-BR.md'),
     /^### Demo online no GitHub Pages$/m,
