@@ -66,6 +66,31 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "pages": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "optimization": true,
+              "extractLicenses": true,
+              "sourceMap": false,
+              "outputHashing": "all",
+              "baseHref": "/angular-template/",
+              "fileReplacements": [
+                {
+                  "replace": "src/app/core/config/api.runtime-config.ts",
+                  "with": "src/app/core/config/api.runtime-config.mock.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"

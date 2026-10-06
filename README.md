@@ -5,12 +5,15 @@
 [![CI](https://github.com/rodri-oliveira-dev/angular-template/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/rodri-oliveira-dev/angular-template/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/rodri-oliveira-dev/angular-template/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/rodri-oliveira-dev/angular-template/actions/workflows/codeql.yml)
 [![codecov](https://codecov.io/gh/rodri-oliveira-dev/angular-template/branch/main/graph/badge.svg)](https://codecov.io/gh/rodri-oliveira-dev/angular-template)
+[![GitHub Pages](https://github.com/rodri-oliveira-dev/angular-template/actions/workflows/pages.yml/badge.svg?branch=main)](https://github.com/rodri-oliveira-dev/angular-template/actions/workflows/pages.yml)
 [![Angular](https://img.shields.io/badge/Angular-22.2-DD0031?logo=angular&logoColor=white)](https://angular.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-24-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 [![License: MIT](https://img.shields.io/github/license/rodri-oliveira-dev/angular-template)](LICENSE)
 
 Production-ready Angular starter focused on maintainable architecture, secure browser/BFF boundaries, automated quality gates, testing, and observability.
+
+**Live demo:** https://rodri-oliveira-dev.github.io/angular-template/ — a static GitHub Pages showcase that always uses the local mock and never requires the BFF.
 
 The default development mode uses an in-memory mock, so a fresh checkout runs without a backend, cloud account, database, identity provider, or other external infrastructure.
 
@@ -105,6 +108,43 @@ The browser calls the same-origin `/api` path and the Angular dev server proxies
 Angular does not contain downstream/internal service URLs. The BFF owns browser session/authentication concerns, while Angular handles UI state, browser-facing DTO mapping, XSRF header behavior, correlation, and frontend telemetry.
 
 See [BFF](docs/bff/README.md).
+
+### GitHub Pages live demo
+
+```bash
+npm run build:pages
+```
+
+The `pages` build is a production-optimized static showcase hosted below `/angular-template/`. It replaces the normal runtime API configuration with `api.runtime-config.mock.ts`, so the reference flow stays entirely in the browser and does not call a BFF or external API.
+
+The script produces `dist/angular-template/browser`, copies `index.html` to `404.html` for Angular Router deep-link/refresh fallback, and adds `.nojekyll`. The underlying Angular target is equivalent to:
+
+```bash
+ng build --configuration pages --base-href /angular-template/
+```
+
+The repository deploys this artifact through `.github/workflows/pages.yml` with the official GitHub Pages actions. For the first deployment, repository administrators must set **Settings → Pages → Build and deployment → Source** to **GitHub Actions** if it is not already enabled.
+
+GitHub Pages remains a static demo environment: it has no real authentication, server-side rendering, BFF, production API, secrets, or session/cookie dependency. A direct deep link such as `/angular-template/example` is served through GitHub Pages' custom `404.html` fallback; the browser still boots Angular at the requested URL, although the initial HTTP response for that deep link can retain a 404 status.
+
+If a deployment fails, check the **GitHub Pages** workflow first, confirm the Pages source is **GitHub Actions**, and verify that the uploaded artifact contains `index.html`, `404.html`, and assets under `dist/angular-template/browser`.
+
+### Production build
+
+```bash
+npm run build
+```
+
+The default production build keeps the real same-origin BFF runtime configuration. It is intentionally separate from the GitHub Pages demo.
+
+### Runtime mode summary
+
+| Mode        | Command               | API behavior                                | Intended use                               |
+| ----------- | --------------------- | ------------------------------------------- | ------------------------------------------ |
+| Development | `npm start`           | In-memory mock                              | Local development with zero infrastructure |
+| Pages       | `npm run build:pages` | In-memory mock                              | Static live demo on GitHub Pages           |
+| BFF         | `npm run start:bff`   | Same-origin `/api` proxied to the local BFF | Local frontend/BFF integration             |
+| Production  | `npm run build`       | Same-origin BFF runtime                     | Real deployment behind the application BFF |
 
 ## Validation
 

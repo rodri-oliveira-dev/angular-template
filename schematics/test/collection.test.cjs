@@ -21,6 +21,7 @@ test('defaults reproduce the recommended mock, routing, observability, and E2E b
   assert.equal(packageJson.name, 'sample-app');
   assert.equal(packageJson.private, true);
   assert.equal(packageJson.scripts['schematics:build'], undefined);
+  assert.equal(packageJson.scripts['build:pages'], undefined);
 
   const angularJson = JSON.parse(tree.readContent('/sample-app/angular.json'));
   assert.ok(angularJson.projects['sample-app']);
@@ -39,6 +40,7 @@ test('defaults reproduce the recommended mock, routing, observability, and E2E b
   assert.ok(
     angularJson.projects['sample-app'].architect.build.configurations.development.fileReplacements,
   );
+  assert.equal(angularJson.projects['sample-app'].architect.build.configurations.pages, undefined);
   assert.match(tree.readContent('/sample-app/src/app/app.config.ts'), /enabled: true/);
   assert.ok(tree.files.includes('/sample-app/playwright.config.ts'));
   assert.match(tree.readContent('/sample-app/playwright.config.ts'), /npm run start:mock/);
@@ -47,6 +49,13 @@ test('defaults reproduce the recommended mock, routing, observability, and E2E b
   assert.ok(tree.files.includes('/sample-app/.gitignore'));
   assert.ok(!tree.files.includes('/sample-app/gitignore.template'));
   assert.ok(!tree.files.includes('/sample-app/.github/workflows/initialize-template.yml'));
+  assert.ok(!tree.files.includes('/sample-app/.github/workflows/pages.yml'));
+  assert.ok(!tree.files.includes('/sample-app/scripts/prepare-pages.mjs'));
+  assert.doesNotMatch(tree.readContent('/sample-app/README.md'), /^### GitHub Pages live demo$/m);
+  assert.doesNotMatch(
+    tree.readContent('/sample-app/README.pt-BR.md'),
+    /^### Demo online no GitHub Pages$/m,
+  );
   assert.match(tree.readContent('/sample-app/.gitignore'), /^\/playwright-report-bff\/$/m);
   assert.match(tree.readContent('/sample-app/.gitignore'), /^\/report_html\.html$/m);
   assert.doesNotMatch(tree.readContent('/sample-app/.gitignore'), /^\/schematics\//m);

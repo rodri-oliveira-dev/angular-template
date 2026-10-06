@@ -5,12 +5,15 @@
 [![CI](https://github.com/rodri-oliveira-dev/angular-template/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/rodri-oliveira-dev/angular-template/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/rodri-oliveira-dev/angular-template/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/rodri-oliveira-dev/angular-template/actions/workflows/codeql.yml)
 [![codecov](https://codecov.io/gh/rodri-oliveira-dev/angular-template/branch/main/graph/badge.svg)](https://codecov.io/gh/rodri-oliveira-dev/angular-template)
+[![GitHub Pages](https://github.com/rodri-oliveira-dev/angular-template/actions/workflows/pages.yml/badge.svg?branch=main)](https://github.com/rodri-oliveira-dev/angular-template/actions/workflows/pages.yml)
 [![Angular](https://img.shields.io/badge/Angular-22.2-DD0031?logo=angular&logoColor=white)](https://angular.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-24-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 [![License: MIT](https://img.shields.io/github/license/rodri-oliveira-dev/angular-template)](LICENSE)
 
 Template Angular pronto para produção, focado em arquitetura sustentável, fronteiras seguras entre browser e BFF, quality gates automatizados, testes e observabilidade.
+
+**Demo online:** https://rodri-oliveira-dev.github.io/angular-template/ — uma vitrine estática no GitHub Pages que sempre usa o mock local e nunca exige o BFF.
 
 O modo padrão de desenvolvimento usa um mock em memória. Assim, um checkout novo funciona sem backend, conta em cloud, banco de dados, provedor de identidade ou qualquer outra infraestrutura externa.
 
@@ -105,6 +108,43 @@ O browser chama o caminho same-origin `/api` e o dev server do Angular faz proxy
 O Angular não contém URLs de serviços internos/downstream. O BFF é responsável pela sessão/autenticação do browser; o Angular cuida do estado de UI, mapeamento de DTOs expostos ao browser, comportamento de XSRF, correlação e telemetria frontend.
 
 Consulte [BFF](docs/pt-BR/bff/README.md).
+
+### Demo online no GitHub Pages
+
+```bash
+npm run build:pages
+```
+
+O build `pages` é uma vitrine estática otimizada para produção e hospedada abaixo de `/angular-template/`. Ele substitui a configuração normal de API por `api.runtime-config.mock.ts`, então o fluxo de referência permanece inteiramente no browser e não chama BFF nem API externa.
+
+O script gera `dist/angular-template/browser`, copia `index.html` para `404.html` para suportar deep links/refresh do Angular Router e adiciona `.nojekyll`. O target Angular subjacente é equivalente a:
+
+```bash
+ng build --configuration pages --base-href /angular-template/
+```
+
+O repositório publica esse artefato por `.github/workflows/pages.yml` usando as actions oficiais do GitHub Pages. No primeiro deployment, administradores do repositório devem configurar **Settings → Pages → Build and deployment → Source** como **GitHub Actions** caso ainda não esteja habilitado.
+
+O GitHub Pages continua sendo apenas um ambiente estático de demonstração: não há autenticação real, SSR, BFF, API de produção, secrets ou dependência de sessão/cookies. Um deep link direto como `/angular-template/example` é atendido pelo fallback `404.html` do GitHub Pages; o browser ainda inicializa o Angular na URL solicitada, embora a resposta HTTP inicial desse deep link possa manter status 404.
+
+Se um deployment falhar, verifique primeiro o workflow **GitHub Pages**, confirme que a origem do Pages é **GitHub Actions** e valide se o artefato enviado contém `index.html`, `404.html` e os assets em `dist/angular-template/browser`.
+
+### Build de produção
+
+```bash
+npm run build
+```
+
+O build de produção padrão mantém a configuração real de runtime same-origin para BFF. Ele fica intencionalmente separado da demo no GitHub Pages.
+
+### Resumo dos modos de execução
+
+| Modo        | Comando               | Comportamento de API                          | Uso                                      |
+| ----------- | --------------------- | --------------------------------------------- | ---------------------------------------- |
+| Development | `npm start`           | Mock em memória                               | Desenvolvimento local sem infraestrutura |
+| Pages       | `npm run build:pages` | Mock em memória                               | Demo estática no GitHub Pages            |
+| BFF         | `npm run start:bff`   | `/api` same-origin com proxy para o BFF local | Integração frontend/BFF local            |
+| Production  | `npm run build`       | Runtime same-origin para BFF                  | Deploy real atrás do BFF da aplicação    |
 
 ## Validação
 
