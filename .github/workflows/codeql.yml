@@ -21,7 +21,7 @@ concurrency:
 jobs:
   analyze:
     name: JavaScript / TypeScript
-    runs-on: ubuntu-24.04
+    runs-on: ${{ vars.RUNNER_OS || 'ubuntu-26.04' }}
     timeout-minutes: 15
 
     steps:
