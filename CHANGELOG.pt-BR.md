@@ -4,6 +4,24 @@
 
 Todas as mudanças relevantes do template production-ready são documentadas aqui.
 
+## [1.2.0] - 2026-10-24
+
+### Adicionado
+
+- demonstração no GitHub Pages com workflow dedicado de publicação;
+- atualizações semanais agrupadas do Dependabot para o projeto independente `schematics/`.
+
+### Alterado
+
+- dependências Angular 22 e ferramentas de desenvolvimento atualizadas com lockfiles consistentes;
+- manutenção dos workflows de CI, CodeQL, release e publicação para runners e actions atuais;
+- versões do template e do pacote npm Schematics alinhadas para a release.
+
+### Segurança
+
+- correção de `fast-uri` para `3.1.9` e `vite` para `8.3.5` via npm overrides;
+- auditoria de segurança, E2E, integração do Schematics e CI aprovados no PR de atualização das dependências.
+
 ## [1.1.0] - 2026-10-05
 
 ### Adicionado

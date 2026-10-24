@@ -9,20 +9,20 @@ de runtime e não entra nas dependências da aplicação gerada.
 
 ## Toolchain suportada
 
-- pacote/template: `1.1.0`;
+- pacote/template: `1.2.0`;
 - Angular e Angular CLI: `22.2.x` (a coleção compila com `22.2.1`);
 - Node.js: `24.15.0+` dentro da linha Node 24;
 - TypeScript dos projetos gerados: `~6.0.2`;
 - npm com o lockfile gerado e versionado.
 
-A v1.1 suporta apenas esta major do Angular. Não use `--force` ou `--legacy-peer-deps`.
+A v1.2 suporta apenas esta major do Angular. Não use `--force` ou `--legacy-peer-deps`.
 
 ## Instalar e criar
 
 Para a experiência concisa com ferramentas globais:
 
 ```bash
-npm install --global @angular/cli@22.2.1 @rodri-oliveira-dev/angular-template@1.1.0
+npm install --global @angular/cli@22.2.1 @rodri-oliveira-dev/angular-template@1.2.0
 ng new my-app --collection=@rodri-oliveira-dev/angular-template
 cd my-app
 npm start
@@ -33,7 +33,7 @@ Para ferramentas locais ao projeto, sem instalação global:
 ```bash
 mkdir angular-starter && cd angular-starter
 npm init -y
-npm install --save-dev @angular/cli@22.2.1 @rodri-oliveira-dev/angular-template@1.1.0
+npm install --save-dev @angular/cli@22.2.1 @rodri-oliveira-dev/angular-template@1.2.0
 npx ng new my-app --collection=@rodri-oliveira-dev/angular-template
 cd my-app
 npm start
@@ -127,8 +127,8 @@ carrega a coleção `ng-new`. O pacote contém apenas `package.json`, README, Ja
 
 ## Release e publish
 
-As versões do template e do pacote avançam juntas. A tag `v1.1.0` só pode publicar o pacote
-`1.1.0`. Execute `.github/workflows/release.yml` manualmente a partir da `main` para obter a
+As versões do template e do pacote avançam juntas. A tag `v1.2.0` só pode publicar o pacote
+`1.2.0`. Execute `.github/workflows/release.yml` manualmente a partir da `main` para obter a
 versão de `schematics/package.json`, criar e enviar a tag anotada correspondente e disparar
 explicitamente `.github/workflows/publish-schematics.yml` nessa tag. O workflow de publicação
 também mantém pushes diretos de tags de versão como fallback, revalida o tarball e o consumidor
