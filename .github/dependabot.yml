@@ -22,6 +22,23 @@ updates:
       prefix: deps
     rebase-strategy: auto
 
+  - package-ecosystem: npm
+    directory: /schematics
+    schedule:
+      interval: weekly
+      day: monday
+      time: '06:15'
+      timezone: Etc/UTC
+    open-pull-requests-limit: 5
+    groups:
+      npm-minor-patch:
+        update-types:
+          - minor
+          - patch
+    commit-message:
+      prefix: deps
+    rebase-strategy: auto
+
   - package-ecosystem: github-actions
     directory: /
     schedule:
