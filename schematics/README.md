@@ -23,7 +23,7 @@ npm run schematics:package:validate
 npm run schematics:integration
 ```
 
-Package versions follow template releases (`v1.1.0` publishes package `1.1.0`). Publishing is only
+Package versions follow template releases (`v1.2.0` publishes package `1.2.0`). Publishing is only
 triggered by an exact matching Git tag through `.github/workflows/publish-schematics.yml`. The npm
 package must trust that workflow for `rodri-oliveira-dev/angular-template`; GitHub OIDC then supplies
 short-lived credentials and npm attaches provenance without a committed token. The `npm` GitHub

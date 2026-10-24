@@ -42,7 +42,7 @@ Instale o Angular CLI suportado e a coleção do template, depois use o comando 
 do Angular:
 
 ```bash
-npm install --global @angular/cli@22.2.1 @rodri-oliveira-dev/angular-template@1.1.0
+npm install --global @angular/cli@22.2.1 @rodri-oliveira-dev/angular-template@1.2.0
 ng new my-app --collection=@rodri-oliveira-dev/angular-template
 cd my-app
 npm start
@@ -306,6 +306,6 @@ Para vulnerabilidades, siga a orientação de reporte privado em [SECURITY.pt-BR
 
 ## Release
 
-A distribuição npm/Schematics é a **v1.1.0**. Consulte [CHANGELOG.pt-BR.md](CHANGELOG.pt-BR.md),
-as [release notes v1.1.0](docs/pt-BR/releases/v1.1.0.md) e o
+A distribuição npm/Schematics é a **v1.2.0**. Consulte [CHANGELOG.pt-BR.md](CHANGELOG.pt-BR.md),
+as [release notes v1.2.0](docs/pt-BR/releases/v1.2.0.md) e o
 [fluxo de release](docs/pt-BR/schematics.md#release-e-publish).

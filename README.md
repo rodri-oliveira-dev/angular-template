@@ -42,7 +42,7 @@ Install the supported Angular CLI and the template collection, then use the stan
 workspace command:
 
 ```bash
-npm install --global @angular/cli@22.2.1 @rodri-oliveira-dev/angular-template@1.1.0
+npm install --global @angular/cli@22.2.1 @rodri-oliveira-dev/angular-template@1.2.0
 ng new my-app --collection=@rodri-oliveira-dev/angular-template
 cd my-app
 npm start
@@ -306,6 +306,6 @@ For vulnerabilities, follow the private-reporting guidance in [SECURITY.md](SECU
 
 ## Release
 
-The npm/Schematics distribution is **v1.1.0**. See [CHANGELOG.md](CHANGELOG.md), the
-[v1.1.0 release notes](docs/releases/v1.1.0.md), and the
+The npm/Schematics distribution is **v1.2.0**. See [CHANGELOG.md](CHANGELOG.md), the
+[v1.2.0 release notes](docs/releases/v1.2.0.md), and the
 [release workflow](docs/schematics.md#release-and-publish).

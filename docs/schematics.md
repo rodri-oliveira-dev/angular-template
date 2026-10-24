@@ -9,7 +9,7 @@ library and is not added to the generated application's dependencies.
 
 ## Supported toolchain
 
-- package/template: `1.1.0`;
+- package/template: `1.2.0`;
 - Angular and Angular CLI: `22.2.x` (the collection builds against `22.2.1`);
 - Node.js: `24.15.0+` within Node 24;
 - TypeScript in generated projects: `~6.0.2`;
@@ -22,7 +22,7 @@ Only this Angular major is supported by v1.1. Do not use `--force` or `--legacy-
 For the concise global-tooling experience:
 
 ```bash
-npm install --global @angular/cli@22.2.1 @rodri-oliveira-dev/angular-template@1.1.0
+npm install --global @angular/cli@22.2.1 @rodri-oliveira-dev/angular-template@1.2.0
 ng new my-app --collection=@rodri-oliveira-dev/angular-template
 cd my-app
 npm start
@@ -33,7 +33,7 @@ For project-local tooling without global installs:
 ```bash
 mkdir angular-starter && cd angular-starter
 npm init -y
-npm install --save-dev @angular/cli@22.2.1 @rodri-oliveira-dev/angular-template@1.1.0
+npm install --save-dev @angular/cli@22.2.1 @rodri-oliveira-dev/angular-template@1.2.0
 npx ng new my-app --collection=@rodri-oliveira-dev/angular-template
 cd my-app
 npm start
@@ -127,7 +127,7 @@ collection. The package contains only `package.json`, its README, compiled JavaS
 
 ## Release and publish
 
-Template and package versions move together. Tag `v1.1.0` can publish only package version `1.1.0`.
+Template and package versions move together. Tag `v1.2.0` can publish only package version `1.2.0`.
 Run `.github/workflows/release.yml` manually from `main` to resolve the version from
 `schematics/package.json`, create and push the matching annotated tag, and explicitly dispatch
 `.github/workflows/publish-schematics.yml` on that tag. The publish workflow also keeps direct
