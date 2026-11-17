@@ -40,11 +40,11 @@
     "prepack": "npm test"
   },
   "dependencies": {
-    "@angular-devkit/core": "22.2.5",
-    "@angular-devkit/schematics": "22.2.5",
-    "@schematics/angular": "22.2.5",
+    "@angular-devkit/core": "22.2.7",
+    "@angular-devkit/schematics": "22.2.7",
+    "@schematics/angular": "22.2.7",
     "jsonc-parser": "3.3.1",
-    "prettier": "3.9.10"
+    "prettier": "3.10.1"
   },
   "devDependencies": {
     "typescript": "~7.0.2"
