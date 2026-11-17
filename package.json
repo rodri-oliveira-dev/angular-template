@@ -26,7 +26,7 @@
     "security:test": "node --test scripts/check-frontend-security.test.mjs scripts/serve-security-baseline.test.mjs scripts/audit-dependencies.test.mjs",
     "security:audit": "node scripts/audit-dependencies.mjs",
     "security:dast:serve": "node scripts/serve-security-baseline.mjs",
-    "ci:report:test": "prettier --write scripts/audit-dependencies.mjs scripts/audit-dependencies.test.mjs && git diff -- scripts/audit-dependencies.mjs scripts/audit-dependencies.test.mjs && node --test scripts/report-ci-pr-status.test.mjs",
+    "ci:report:test": "node --test scripts/report-ci-pr-status.test.mjs",
     "security:all": "npm run security:test && npm run security:check && npm run security:audit",
     "architecture:test": "node --test scripts/check-feature-boundaries.test.mjs",
     "guardrails:test": "npm run architecture:test && npm run security:test",

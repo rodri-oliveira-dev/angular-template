@@ -44,20 +44,28 @@ export function assessAudit(report, lockfile, now = new Date()) {
     throw new Error('picomatch advisory changed or a remediation is available.');
   }
 
-  function originatesOnlyFromException(name, visiting = new Set()) {
-    if (visiting.has(name)) return false;
-    const item = report.vulnerabilities[name];
-    if (!item || !Array.isArray(item.via) || item.via.length === 0) return false;
-    if (name === exception.dependency) return true;
-    const next = new Set(visiting);
-    next.add(name);
-    return item.via.every(
-      (parent) => typeof parent === 'string' && originatesOnlyFromException(parent, next),
-    );
+  // npm audit can report cycles between tools (for example, Vitest and its coverage plugin).
+  // Reachability to the reviewed root handles cycles without allowing independent advisories.
+  function tracesToPicomatch(name) {
+    const pending = [name];
+    const visited = new Set();
+    while (pending.length > 0) {
+      const current = pending.pop();
+      if (current === exception.dependency) return true;
+      if (visited.has(current)) continue;
+      visited.add(current);
+      const item = report.vulnerabilities[current];
+      if (!Array.isArray(item?.via)) continue;
+      pending.push(...item.via.filter((parent) => typeof parent === 'string'));
+    }
+    return false;
   }
 
   for (const [name, item] of blocking) {
-    if (!originatesOnlyFromException(name)) {
+    if (
+      !tracesToPicomatch(name) ||
+      (name !== exception.dependency && item.via.some((via) => typeof via === 'object'))
+    ) {
       throw new Error(`Unapproved high/critical vulnerability found in ${name}.`);
     }
     if (!Array.isArray(item.nodes) || item.nodes.length === 0) {
@@ -86,9 +94,13 @@ function main() {
   try {
     report = JSON.parse(result.stdout);
   } catch {
-    throw new Error(`npm audit returned invalid JSON (exit code ${result.status}): ${result.stderr}`);
+    throw new Error(
+      `npm audit returned invalid JSON (exit code ${result.status}): ${result.stderr}`,
+    );
   }
-  const lockfile = JSON.parse(readFileSync(new URL('../package-lock.json', import.meta.url), 'utf8'));
+  const lockfile = JSON.parse(
+    readFileSync(new URL('../package-lock.json', import.meta.url), 'utf8'),
+  );
   const verdict = assessAudit(report, lockfile);
   if (![0, 1].includes(result.status) || (result.status === 1 && verdict.findings === 0)) {
     throw new Error(`npm audit failed unexpectedly (exit code ${result.status}).`);

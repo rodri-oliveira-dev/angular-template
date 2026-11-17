@@ -39,10 +39,10 @@ test('allows only the known dev-only picomatch advisory while no fix exists', ()
 });
 
 test('passes when the audit has no blocking vulnerabilities', () => {
-  assert.deepEqual(
-    assessAudit({ metadata: {}, vulnerabilities: {} }, lockfile, beforeExpiry),
-    { waived: 0, findings: 0 },
-  );
+  assert.deepEqual(assessAudit({ metadata: {}, vulnerabilities: {} }, lockfile, beforeExpiry), {
+    waived: 0,
+    findings: 0,
+  });
 });
 
 test('blocks a separate high-severity advisory', () => {
@@ -91,4 +91,40 @@ test('fails closed when audit output is missing or malformed', () => {
   const missingNodes = report();
   missingNodes.vulnerabilities.picomatch.nodes = [];
   assert.throws(() => assessAudit(missingNodes, lockfile, beforeExpiry), /omitted package nodes/);
+});
+
+test('allows cycles only when they also trace back to the approved picomatch advisory', () => {
+  const input = report();
+  input.vulnerabilities.vitest = {
+    severity: 'high',
+    via: ['picomatch', '@vitest/coverage-v8'],
+    nodes: ['node_modules/vitest'],
+  };
+  input.vulnerabilities['@vitest/coverage-v8'] = {
+    severity: 'high',
+    via: ['vitest'],
+    nodes: ['node_modules/@vitest/coverage-v8'],
+  };
+  const extendedLock = structuredClone(lockfile);
+  extendedLock.packages['node_modules/vitest'] = { version: '5.0.0', dev: true };
+  extendedLock.packages['node_modules/@vitest/coverage-v8'] = {
+    version: '5.1.0',
+    dev: true,
+  };
+  assert.deepEqual(assessAudit(input, extendedLock, beforeExpiry), { waived: 4, findings: 4 });
+});
+
+test('rejects cycles disconnected from the approved advisory', () => {
+  const input = report();
+  input.vulnerabilities.unrelated = {
+    severity: 'high',
+    via: ['other'],
+    nodes: ['node_modules/unrelated'],
+  };
+  input.vulnerabilities.other = {
+    severity: 'high',
+    via: ['unrelated'],
+    nodes: ['node_modules/other'],
+  };
+  assert.throws(() => assessAudit(input, lockfile, beforeExpiry), /Unapproved/);
 });
