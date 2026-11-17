@@ -1,19 +1,33 @@
 version: 2
 
 updates:
+  # Keep routine npm upgrades in one monthly PR across the app and Schematics.
   - package-ecosystem: npm
-    directory: /
+    directories:
+      - /
+      - /schematics
     schedule:
-      interval: weekly
-      day: monday
+      interval: monthly
       time: '06:00'
       timezone: Etc/UTC
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 2
+    # Wait for newly published releases to settle before including them.
+    # Cooldowns do not delay security updates.
+    cooldown:
+      default-days: 7
+      semver-major-days: 21
+      semver-minor-days: 7
+      semver-patch-days: 3
     groups:
-      npm-minor-patch:
-        update-types:
-          - minor
-          - patch
+      npm-monthly:
+        applies-to: version-updates
+        patterns:
+          - '*'
+      npm-security:
+        applies-to: security-updates
+        patterns:
+          - '*'
+    # TypeScript major upgrades require an explicit compatibility review.
     ignore:
       - dependency-name: typescript
         update-types:
@@ -22,33 +36,21 @@ updates:
       prefix: deps
     rebase-strategy: auto
 
-  - package-ecosystem: npm
-    directory: /schematics
-    schedule:
-      interval: weekly
-      day: monday
-      time: '06:15'
-      timezone: Etc/UTC
-    open-pull-requests-limit: 5
-    groups:
-      npm-minor-patch:
-        update-types:
-          - minor
-          - patch
-    commit-message:
-      prefix: deps
-    rebase-strategy: auto
-
+  # Batch GitHub Actions upgrades separately from application dependencies.
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: weekly
-      day: monday
+      interval: monthly
       time: '06:30'
       timezone: Etc/UTC
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 1
     groups:
-      github-actions:
+      github-actions-monthly:
+        applies-to: version-updates
+        patterns:
+          - '*'
+      github-actions-security:
+        applies-to: security-updates
         patterns:
           - '*'
     commit-message:
